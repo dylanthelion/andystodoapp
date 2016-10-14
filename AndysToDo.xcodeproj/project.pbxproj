@@ -7,13 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		74260DFC1DB0654900DE5F57 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */; };
 		74C2BDA41DAEA5C1006D683D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C2BDA31DAEA5C1006D683D /* AppDelegate.swift */; };
-		74C2BDA61DAEA5C1006D683D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C2BDA51DAEA5C1006D683D /* ViewController.swift */; };
 		74C2BDA91DAEA5C1006D683D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74C2BDA71DAEA5C1006D683D /* Main.storyboard */; };
 		74C2BDAB1DAEA5C1006D683D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 74C2BDAA1DAEA5C1006D683D /* Assets.xcassets */; };
 		74C2BDAE1DAEA5C1006D683D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 74C2BDAC1DAEA5C1006D683D /* LaunchScreen.storyboard */; };
 		74C2BDB91DAEA5C1006D683D /* AndysToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C2BDB81DAEA5C1006D683D /* AndysToDoTests.swift */; };
 		74C2BDC41DAEA5C1006D683D /* AndysToDoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C2BDC31DAEA5C1006D683D /* AndysToDoUITests.swift */; };
+		74C500041DAFE0B300CF7421 /* MainLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C500031DAFE0B300CF7421 /* MainLoginViewController.swift */; };
+		74C500071DAFE24D00CF7421 /* HTTPRequestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C500061DAFE24D00CF7421 /* HTTPRequestHelper.swift */; };
+		74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74C500081DAFE3AE00CF7421 /* Constants.swift */; };
+		74C5000C1DAFE87500CF7421 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74C5000B1DAFE87500CF7421 /* Bolts.framework */; };
+		74C5000F1DAFE88400CF7421 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74C5000D1DAFE88400CF7421 /* FBSDKCoreKit.framework */; };
+		74C500101DAFE88400CF7421 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74C5000E1DAFE88400CF7421 /* FBSDKLoginKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +40,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = "../../../../../Documents/FacebookSDKs-iOS-4/FBSDKShareKit.framework"; sourceTree = "<group>"; };
+		74260DFD1DB0707300DE5F57 /* AndysToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndysToDo.entitlements; sourceTree = "<group>"; };
 		74C2BDA01DAEA5C1006D683D /* AndysToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndysToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		74C2BDA31DAEA5C1006D683D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		74C2BDA51DAEA5C1006D683D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		74C2BDA81DAEA5C1006D683D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		74C2BDAA1DAEA5C1006D683D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		74C2BDAD1DAEA5C1006D683D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,6 +54,12 @@
 		74C2BDBF1DAEA5C1006D683D /* AndysToDoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AndysToDoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		74C2BDC31DAEA5C1006D683D /* AndysToDoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndysToDoUITests.swift; sourceTree = "<group>"; };
 		74C2BDC51DAEA5C1006D683D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		74C500031DAFE0B300CF7421 /* MainLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainLoginViewController.swift; sourceTree = "<group>"; };
+		74C500061DAFE24D00CF7421 /* HTTPRequestHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPRequestHelper.swift; sourceTree = "<group>"; };
+		74C500081DAFE3AE00CF7421 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		74C5000B1DAFE87500CF7421 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../../../../../Downloads/FacebookSDKs-iOS-4/Bolts.framework"; sourceTree = "<group>"; };
+		74C5000D1DAFE88400CF7421 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = "../../../../../Downloads/FacebookSDKs-iOS-4/FBSDKCoreKit.framework"; sourceTree = "<group>"; };
+		74C5000E1DAFE88400CF7421 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = "../../../../../Downloads/FacebookSDKs-iOS-4/FBSDKLoginKit.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +67,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				74260DFC1DB0654900DE5F57 /* FBSDKShareKit.framework in Frameworks */,
+				74C5000C1DAFE87500CF7421 /* Bolts.framework in Frameworks */,
+				74C5000F1DAFE88400CF7421 /* FBSDKCoreKit.framework in Frameworks */,
+				74C500101DAFE88400CF7421 /* FBSDKLoginKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +94,7 @@
 		74C2BD971DAEA5C1006D683D = {
 			isa = PBXGroup;
 			children = (
+				74C5000A1DAFE85300CF7421 /* Frameworks */,
 				74C2BDA21DAEA5C1006D683D /* AndysToDo */,
 				74C2BDB71DAEA5C1006D683D /* AndysToDoTests */,
 				74C2BDC21DAEA5C1006D683D /* AndysToDoUITests */,
@@ -97,8 +115,10 @@
 		74C2BDA21DAEA5C1006D683D /* AndysToDo */ = {
 			isa = PBXGroup;
 			children = (
+				74260DFD1DB0707300DE5F57 /* AndysToDo.entitlements */,
+				74C500051DAFE23500CF7421 /* Helpers */,
 				74C2BDA31DAEA5C1006D683D /* AppDelegate.swift */,
-				74C2BDA51DAEA5C1006D683D /* ViewController.swift */,
+				74C500031DAFE0B300CF7421 /* MainLoginViewController.swift */,
 				74C2BDA71DAEA5C1006D683D /* Main.storyboard */,
 				74C2BDAA1DAEA5C1006D683D /* Assets.xcassets */,
 				74C2BDAC1DAEA5C1006D683D /* LaunchScreen.storyboard */,
@@ -123,6 +143,26 @@
 				74C2BDC51DAEA5C1006D683D /* Info.plist */,
 			);
 			path = AndysToDoUITests;
+			sourceTree = "<group>";
+		};
+		74C500051DAFE23500CF7421 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				74C500061DAFE24D00CF7421 /* HTTPRequestHelper.swift */,
+				74C500081DAFE3AE00CF7421 /* Constants.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		74C5000A1DAFE85300CF7421 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */,
+				74C5000D1DAFE88400CF7421 /* FBSDKCoreKit.framework */,
+				74C5000E1DAFE88400CF7421 /* FBSDKLoginKit.framework */,
+				74C5000B1DAFE87500CF7421 /* Bolts.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,6 +235,11 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = XF9V3GKZ38;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					74C2BDB31DAEA5C1006D683D = {
 						CreatedOnToolsVersion = 8.0;
@@ -260,8 +305,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				74C2BDA61DAEA5C1006D683D /* ViewController.swift in Sources */,
+				74C500071DAFE24D00CF7421 /* HTTPRequestHelper.swift in Sources */,
+				74C500041DAFE0B300CF7421 /* MainLoginViewController.swift in Sources */,
 				74C2BDA41DAEA5C1006D683D /* AppDelegate.swift in Sources */,
+				74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,8 +460,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AndysToDo/AndysToDo.entitlements;
 				DEVELOPMENT_TEAM = XF9V3GKZ38;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "~/Documents/FacebookSDKs-iOS-4";
 				INFOPLIST_FILE = AndysToDo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = practice.AndysToDo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -426,8 +476,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AndysToDo/AndysToDo.entitlements;
 				DEVELOPMENT_TEAM = XF9V3GKZ38;
+				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "~/Documents/FacebookSDKs-iOS-4";
 				INFOPLIST_FILE = AndysToDo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = practice.AndysToDo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -508,6 +561,7 @@
 				74C2BDCA1DAEA5C1006D683D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		74C2BDCB1DAEA5C1006D683D /* Build configuration list for PBXNativeTarget "AndysToDoTests" */ = {
 			isa = XCConfigurationList;
@@ -516,6 +570,7 @@
 				74C2BDCD1DAEA5C1006D683D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		74C2BDCE1DAEA5C1006D683D /* Build configuration list for PBXNativeTarget "AndysToDoUITests" */ = {
 			isa = XCConfigurationList;
@@ -524,6 +579,7 @@
 				74C2BDD01DAEA5C1006D683D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
