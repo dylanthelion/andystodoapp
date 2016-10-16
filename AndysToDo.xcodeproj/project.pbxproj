@@ -14,6 +14,11 @@
 		741DEF721DB16DD600E9B785 /* GoogleNetworkingUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 741DEF711DB16DD500E9B785 /* GoogleNetworkingUtilities.framework */; };
 		741DEF741DB16DE300E9B785 /* GoogleAppUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 741DEF731DB16DE300E9B785 /* GoogleAppUtilities.framework */; };
 		741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF761DB1D7EB00E9B785 /* LoginHelper.swift */; };
+		741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF791DB346FC00E9B785 /* Task.swift */; };
+		741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF7B1DB34DA800E9B785 /* Category.swift */; };
+		741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF7D1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift */; };
+		741DEF801DB34E1F00E9B785 /* ModelEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF7F1DB34E1F00E9B785 /* ModelEnums.swift */; };
+		741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF811DB34E4D00E9B785 /* UserAccount.swift */; };
 		74260DFC1DB0654900DE5F57 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */; };
 		74260E0E1DB1631500DE5F57 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74260E0D1DB1631500DE5F57 /* GoogleSignIn.framework */; };
 		74260E101DB1631D00DE5F57 /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 74260E0F1DB1631D00DE5F57 /* GoogleSignIn.bundle */; };
@@ -60,6 +65,11 @@
 		741DEF731DB16DE300E9B785 /* GoogleAppUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleAppUtilities.framework; path = ../../../../../Downloads/google_signin_sdk_4_0_0/GoogleAppUtilities.framework; sourceTree = "<group>"; };
 		741DEF751DB18FEE00E9B785 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		741DEF761DB1D7EB00E9B785 /* LoginHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginHelper.swift; sourceTree = "<group>"; };
+		741DEF791DB346FC00E9B785 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		741DEF7B1DB34DA800E9B785 /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		741DEF7D1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatableTaskOccurrence.swift; sourceTree = "<group>"; };
+		741DEF7F1DB34E1F00E9B785 /* ModelEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelEnums.swift; sourceTree = "<group>"; };
+		741DEF811DB34E4D00E9B785 /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
 		74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = "../../../../../Documents/FacebookSDKs-iOS-4/FBSDKShareKit.framework"; sourceTree = "<group>"; };
 		74260DFD1DB0707300DE5F57 /* AndysToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndysToDo.entitlements; sourceTree = "<group>"; };
 		74260E0D1DB1631500DE5F57 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = ../../../../../Downloads/google_signin_sdk_4_0_0/GoogleSignIn.framework; sourceTree = "<group>"; };
@@ -126,6 +136,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		741DEF781DB346EE00E9B785 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				741DEF791DB346FC00E9B785 /* Task.swift */,
+				741DEF7B1DB34DA800E9B785 /* Category.swift */,
+				741DEF7D1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift */,
+				741DEF7F1DB34E1F00E9B785 /* ModelEnums.swift */,
+				741DEF811DB34E4D00E9B785 /* UserAccount.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		74C2BD971DAEA5C1006D683D = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +172,7 @@
 		74C2BDA21DAEA5C1006D683D /* AndysToDo */ = {
 			isa = PBXGroup;
 			children = (
+				741DEF781DB346EE00E9B785 /* Model */,
 				74260DFD1DB0707300DE5F57 /* AndysToDo.entitlements */,
 				74C500051DAFE23500CF7421 /* Helpers */,
 				74C2BDA31DAEA5C1006D683D /* AppDelegate.swift */,
@@ -356,9 +379,14 @@
 			files = (
 				74C500071DAFE24D00CF7421 /* HTTPRequestHelper.swift in Sources */,
 				74C500041DAFE0B300CF7421 /* MainLoginViewController.swift in Sources */,
+				741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */,
 				74C2BDA41DAEA5C1006D683D /* AppDelegate.swift in Sources */,
+				741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */,
+				741DEF801DB34E1F00E9B785 /* ModelEnums.swift in Sources */,
 				74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */,
+				741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */,
 				741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */,
+				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
