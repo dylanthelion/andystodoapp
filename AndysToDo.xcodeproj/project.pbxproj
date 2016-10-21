@@ -19,6 +19,10 @@
 		741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF7D1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift */; };
 		741DEF801DB34E1F00E9B785 /* ModelEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF7F1DB34E1F00E9B785 /* ModelEnums.swift */; };
 		741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DEF811DB34E4D00E9B785 /* UserAccount.swift */; };
+		741DF0371DB43EE400E9B785 /* MainTasksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF0361DB43EE400E9B785 /* MainTasksViewController.swift */; };
+		741DF03A1DB43F5000E9B785 /* TaskDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF0391DB43F5000E9B785 /* TaskDTO.swift */; };
+		741DF07A1DB47FA400E9B785 /* TaskTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF0791DB47FA400E9B785 /* TaskTableViewCell.swift */; };
+		741DF07C1DB492FE00E9B785 /* FloatToTimeConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF07B1DB492FE00E9B785 /* FloatToTimeConverter.swift */; };
 		74260DFC1DB0654900DE5F57 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */; };
 		74260E0E1DB1631500DE5F57 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74260E0D1DB1631500DE5F57 /* GoogleSignIn.framework */; };
 		74260E101DB1631D00DE5F57 /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 74260E0F1DB1631D00DE5F57 /* GoogleSignIn.bundle */; };
@@ -70,6 +74,10 @@
 		741DEF7D1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatableTaskOccurrence.swift; sourceTree = "<group>"; };
 		741DEF7F1DB34E1F00E9B785 /* ModelEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelEnums.swift; sourceTree = "<group>"; };
 		741DEF811DB34E4D00E9B785 /* UserAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
+		741DF0361DB43EE400E9B785 /* MainTasksViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTasksViewController.swift; sourceTree = "<group>"; };
+		741DF0391DB43F5000E9B785 /* TaskDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDTO.swift; sourceTree = "<group>"; };
+		741DF0791DB47FA400E9B785 /* TaskTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskTableViewCell.swift; sourceTree = "<group>"; };
+		741DF07B1DB492FE00E9B785 /* FloatToTimeConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatToTimeConverter.swift; sourceTree = "<group>"; };
 		74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = "../../../../../Documents/FacebookSDKs-iOS-4/FBSDKShareKit.framework"; sourceTree = "<group>"; };
 		74260DFD1DB0707300DE5F57 /* AndysToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndysToDo.entitlements; sourceTree = "<group>"; };
 		74260E0D1DB1631500DE5F57 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = ../../../../../Downloads/google_signin_sdk_4_0_0/GoogleSignIn.framework; sourceTree = "<group>"; };
@@ -148,6 +156,39 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		741DF0351DB43EC200E9B785 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				74C500031DAFE0B300CF7421 /* MainLoginViewController.swift */,
+				741DF0361DB43EE400E9B785 /* MainTasksViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		741DF0381DB43F3000E9B785 /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				741DF0391DB43F5000E9B785 /* TaskDTO.swift */,
+			);
+			name = DTO;
+			sourceTree = "<group>";
+		};
+		741DF0771DB47F8900E9B785 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				741DF0781DB47F8F00E9B785 /* TableViewCells */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		741DF0781DB47F8F00E9B785 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				741DF0791DB47FA400E9B785 /* TaskTableViewCell.swift */,
+			);
+			name = TableViewCells;
+			sourceTree = "<group>";
+		};
 		74C2BD971DAEA5C1006D683D = {
 			isa = PBXGroup;
 			children = (
@@ -172,12 +213,14 @@
 		74C2BDA21DAEA5C1006D683D /* AndysToDo */ = {
 			isa = PBXGroup;
 			children = (
+				741DF0771DB47F8900E9B785 /* Views */,
+				741DF0381DB43F3000E9B785 /* DTO */,
+				741DF0351DB43EC200E9B785 /* ViewControllers */,
 				741DEF781DB346EE00E9B785 /* Model */,
 				74260DFD1DB0707300DE5F57 /* AndysToDo.entitlements */,
 				74C500051DAFE23500CF7421 /* Helpers */,
 				74C2BDA31DAEA5C1006D683D /* AppDelegate.swift */,
 				741DEF751DB18FEE00E9B785 /* Header.h */,
-				74C500031DAFE0B300CF7421 /* MainLoginViewController.swift */,
 				74C2BDA71DAEA5C1006D683D /* Main.storyboard */,
 				74C2BDAA1DAEA5C1006D683D /* Assets.xcassets */,
 				74C2BDAC1DAEA5C1006D683D /* LaunchScreen.storyboard */,
@@ -210,6 +253,7 @@
 				74C500061DAFE24D00CF7421 /* HTTPRequestHelper.swift */,
 				74C500081DAFE3AE00CF7421 /* Constants.swift */,
 				741DEF761DB1D7EB00E9B785 /* LoginHelper.swift */,
+				741DF07B1DB492FE00E9B785 /* FloatToTimeConverter.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -378,15 +422,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				74C500071DAFE24D00CF7421 /* HTTPRequestHelper.swift in Sources */,
+				741DF07A1DB47FA400E9B785 /* TaskTableViewCell.swift in Sources */,
 				74C500041DAFE0B300CF7421 /* MainLoginViewController.swift in Sources */,
 				741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */,
 				74C2BDA41DAEA5C1006D683D /* AppDelegate.swift in Sources */,
+				741DF0371DB43EE400E9B785 /* MainTasksViewController.swift in Sources */,
 				741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */,
+				741DF03A1DB43F5000E9B785 /* TaskDTO.swift in Sources */,
 				741DEF801DB34E1F00E9B785 /* ModelEnums.swift in Sources */,
 				74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */,
 				741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */,
 				741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */,
 				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
+				741DF07C1DB492FE00E9B785 /* FloatToTimeConverter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

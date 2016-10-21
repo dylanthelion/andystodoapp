@@ -32,7 +32,7 @@ class RepeatableTaskOccurrence {
             case.Daily:
                 return UnitsPerTask != nil && TimeOfDay != nil && FirstOccurrence != nil
             case .Weekly:
-                return UnitsPerTask != nil && TimeOfDay != nil && FirstOccurrence != nil && DayOfWeek != nil
+                return UnitsPerTask != nil && TimeOfDay != nil  && DayOfWeek != nil
             }
         }
         

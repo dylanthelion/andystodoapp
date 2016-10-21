@@ -10,6 +10,7 @@ import Foundation
 
 class Task {
     
+    var ID : Int?
     var Name : String?
     var Description : String?
     var StartTime : NSDate?
@@ -30,10 +31,10 @@ class Task {
     }
     
     func isValid() -> Bool {
-        if let _ = RepeatableTask {
-            return Name != nil && Description != nil && StartTime != nil
+        if let _ = self.RepeatableTask {
+            return ID != nil && Name != nil && Description != nil && RepeatableTask!.isValid()
         } else {
-            return Name != nil && Description != nil && RepeatableTask!.isValid()
+            return ID != nil && Name != nil && Description != nil && StartTime != nil
         }
     }
     
