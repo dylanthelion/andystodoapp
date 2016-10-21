@@ -15,6 +15,7 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
     
     var loginButton: FBSDKLoginButton?
     var GoogleLoginButton: GIDSignInButton?
+    var loggedIn : Bool = false
     
     let btnWidth : CGFloat = 82.0
     let btnHeight : CGFloat = 30.0
@@ -30,7 +31,6 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
         addLoginButtons()
         loginButton?.delegate = self
         loginButton?.readPermissions = ["email"]
-        handleLogin()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +62,7 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
                     if(error == nil)
                     {
                         print("result \(result)")
+                        self?.goToMainView()
                     }
                     else
                     {
@@ -85,6 +86,7 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
         else{
             print(error.localizedDescription)
         }*/
+        self.goToMainView()
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
@@ -99,9 +101,17 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
             print("HERP nil")
         }*/
         print("User: \(user.userID) \n \(user.profile.email) \n \(user.profile.name)")
+        self.goToMainView()
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
         
+    }
+    
+    func goToMainView() {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "mainTabBarController") as! UITabBarController
+        self.present(nextViewController, animated:true, completion:nil)
     }
 }
