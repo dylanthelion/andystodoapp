@@ -12,11 +12,20 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     
     var AllTasks : [Task]?
     let taskDTO = TaskDTO.globalManager
+    var filterApplied = false
+    var categoryFilters : [Category]?
+    var timeCategoryFilters : [TimeCategory]?
     
     override func viewDidLoad() {
         self.title = "YOUR TASKS"
         taskDTO.delegate = self
         taskDTO.loadTasks()
+        // Load fake filter
+        categoryFilters = [taskDTO.AllCategories![0]]
+        timeCategoryFilters = [taskDTO.AllTimeCategories![3]]
+        if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
+            applyFilter()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,11 +79,27 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     // TaskDTODelegate
     
     func handleModelUpdate() {
-        AllTasks = taskDTO.AllTasks
+        AllTasks = taskDTO.filteredTasks
         self.tableView.reloadData()
     }
     
     func taskDidUpdate(_task: Task) {
         _ = taskDTO.updateTask(_task: _task)
+    }
+    
+    // Filtering
+    
+    func applyFilter() {
+        taskDTO.applyFilter(categories: categoryFilters, timeCategories: timeCategoryFilters)
+    }
+    
+    // Segues
+    
+    override func performSegue(withIdentifier identifier: String, sender: Any?) {
+        // Check to see whether segue goes to filtering view
+        if(identifier == "") {
+            self.categoryFilters = nil
+            self.timeCategoryFilters = nil
+        }
     }
 }

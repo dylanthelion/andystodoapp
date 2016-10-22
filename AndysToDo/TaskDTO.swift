@@ -14,6 +14,7 @@ class TaskDTO {
     
     var delegate : TaskDTODelegate?
     var AllTasks : [Task]?
+    var filteredTasks : [Task]?
     var AllCategories : [Category]?
     var AllTimeCategories : [TimeCategory]?
     var nextTaskID : Int?
@@ -51,6 +52,7 @@ class TaskDTO {
         task6.ID = nextTaskID!
         nextTaskID! += 1
         AllTasks = [task1, task2, task3, task4, task5, task6]
+        filteredTasks = AllTasks!
         
         // Inform delegate that tasks are loaded
         if let _ = delegate {
@@ -115,6 +117,46 @@ class TaskDTO {
         }
         
         return false
+    }
+    
+    func applyFilter(categories : [Category]?, timeCategories : [TimeCategory]?) {
+        if(CollectionHelper.IsNilOrEmpty(_coll: categories) && CollectionHelper.IsNilOrEmpty(_coll: timeCategories)) {
+            return
+        }
+        filteredTasks = []
+        var addToFilter : Bool = false
+        for _task in AllTasks! {
+            
+            var addToFilter : Bool = false
+            
+            if _task.Categories != nil && !CollectionHelper.IsNilOrEmpty(_coll: categories) {
+                for _category in _task.Categories! {
+                    for _checkCategory in categories! {
+                        if(_category.Name! == _checkCategory.Name!) {
+                            addToFilter = true
+                            break
+                        }
+                    }
+                }
+            }
+            
+            if _task.TimeCategory != nil && !CollectionHelper.IsNilOrEmpty(_coll: timeCategories) {
+                for _checkCategory in timeCategories! {
+                    if(_task.TimeCategory!.Name! == _checkCategory.Name!) {
+                        addToFilter = true
+                        break
+                    }
+                }
+            }
+        
+            if(addToFilter) {
+                filteredTasks!.append(_task)
+                addToFilter = false
+            }
+        }
+        if let _ = delegate {
+            delegate?.handleModelUpdate()
+        }
     }
 }
 
