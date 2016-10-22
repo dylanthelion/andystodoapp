@@ -8,7 +8,7 @@
 
 import Foundation
 
-class  Category {
+class  Category : Equatable {
     var Name : String?
     var Description : String?
     
@@ -19,6 +19,11 @@ class  Category {
     
     func isValid() -> Bool {
         return Name != nil && Description != nil
+    }
+    
+    static func == (lhs: Category, rhs: Category) -> Bool {
+        return
+            lhs.Name! == rhs.Name!
     }
 }
 

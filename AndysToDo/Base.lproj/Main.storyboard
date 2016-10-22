@@ -93,11 +93,53 @@
                             <outlet property="delegate" destination="ATH-vn-MH6" id="hgy-Gf-MAV"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="G4G-k4-gZo"/>
+                    <navigationItem key="navigationItem" id="G4G-k4-gZo">
+                        <barButtonItem key="rightBarButtonItem" title="Filter" id="ks1-It-xYt">
+                            <connections>
+                                <segue destination="tpU-ed-C5K" kind="show" id="JJZ-Dc-wW8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lOB-e9-cMl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1860" y="823.53823088455783"/>
+        </scene>
+        <!--Filter-->
+        <scene sceneID="vyX-ph-Mdq">
+            <objects>
+                <viewController storyboardIdentifier="filterVC" title="Filter" id="tpU-ed-C5K" customClass="FilterViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MNq-Yd-bF9"/>
+                        <viewControllerLayoutGuide type="bottom" id="46Y-wu-zIy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="JtU-aM-8qO">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Categories" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RWE-Tn-n3P">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="34" id="Iuh-Ca-tCq"/>
+                                    <constraint firstAttribute="width" constant="213" id="Lgk-5M-MCG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <color key="textColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="RWE-Tn-n3P" firstAttribute="top" secondItem="MNq-Yd-bF9" secondAttribute="bottom" constant="24" id="azy-Ah-hjW"/>
+                            <constraint firstItem="RWE-Tn-n3P" firstAttribute="centerX" secondItem="JtU-aM-8qO" secondAttribute="centerX" id="q42-7f-ZBY"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="categoriesLabel" destination="RWE-Tn-n3P" id="Eo9-zM-fhH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tv9-C6-baz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2709.5999999999999" y="823.53823088455783"/>
         </scene>
         <!--Item-->
         <scene sceneID="5O4-U7-tXF">

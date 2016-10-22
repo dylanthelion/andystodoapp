@@ -53,6 +53,7 @@ class TaskDTO {
         nextTaskID! += 1
         AllTasks = [task1, task2, task3, task4, task5, task6]
         filteredTasks = AllTasks!
+        //print("Total tasks: \(filteredTasks!.count)")
         
         // Inform delegate that tasks are loaded
         if let _ = delegate {
@@ -121,10 +122,11 @@ class TaskDTO {
     
     func applyFilter(categories : [Category]?, timeCategories : [TimeCategory]?) {
         if(CollectionHelper.IsNilOrEmpty(_coll: categories) && CollectionHelper.IsNilOrEmpty(_coll: timeCategories)) {
+            //print("No filter")
+            loadTasks()
             return
         }
         filteredTasks = []
-        var addToFilter : Bool = false
         for _task in AllTasks! {
             
             var addToFilter : Bool = false

@@ -20,9 +20,6 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         self.title = "YOUR TASKS"
         taskDTO.delegate = self
         taskDTO.loadTasks()
-        // Load fake filter
-        categoryFilters = [taskDTO.AllCategories![0]]
-        timeCategoryFilters = [taskDTO.AllTimeCategories![3]]
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
         }
@@ -30,6 +27,7 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        applyFilter()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -93,13 +91,46 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         taskDTO.applyFilter(categories: categoryFilters, timeCategories: timeCategoryFilters)
     }
     
+    func removeCategoryFilter(_category: Category) {
+        let indexOf = self.categoryFilters?.index(of: _category)
+        self.categoryFilters?.remove(at: indexOf!)
+    }
+    
+    func removeTimeCategoryFilter(_category: TimeCategory) {
+        let indexOf = self.timeCategoryFilters?.index(of: _category)
+        self.timeCategoryFilters?.remove(at: indexOf!)
+    }
+    
+    func addCategoryFilter(_category : Category) {
+        if let _ = self.categoryFilters {
+            self.categoryFilters?.append(_category)
+        } else {
+            self.categoryFilters = [_category]
+        }
+        
+    }
+    
+    func addTimeCategoryFilter(_category: TimeCategory) {
+        if let _ = self.timeCategoryFilters {
+            self.timeCategoryFilters?.append(_category)
+        } else {
+            self.timeCategoryFilters = [_category]
+        }
+        
+    }
+    
     // Segues
     
-    override func performSegue(withIdentifier identifier: String, sender: Any?) {
-        // Check to see whether segue goes to filtering view
-        if(identifier == "") {
-            self.categoryFilters = nil
-            self.timeCategoryFilters = nil
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if(true) {
+            if let _ = self.categoryFilters {
+                self.categoryFilters?.removeAll()
+            }
+            if let _ = self.timeCategoryFilters {
+                self.timeCategoryFilters?.removeAll()
+            }
         }
+        
+        return true
     }
 }
