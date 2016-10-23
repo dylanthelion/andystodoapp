@@ -26,6 +26,8 @@
 		741DF07F1DBAF18700E9B785 /* CollectionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF07E1DBAF18700E9B785 /* CollectionHelper.swift */; };
 		741DF0811DBB133200E9B785 /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF0801DBB133200E9B785 /* FilterViewController.swift */; };
 		741DF0841DBB239800E9B785 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF0831DBB239800E9B785 /* CheckboxButton.swift */; };
+		741DF0861DBC34F200E9B785 /* CreateCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF0851DBC34F200E9B785 /* CreateCategoryViewController.swift */; };
+		741DF0881DBC35D500E9B785 /* MainCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741DF0871DBC35D500E9B785 /* MainCreateViewController.swift */; };
 		74260DFC1DB0654900DE5F57 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */; };
 		74260E0E1DB1631500DE5F57 /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74260E0D1DB1631500DE5F57 /* GoogleSignIn.framework */; };
 		74260E101DB1631D00DE5F57 /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 74260E0F1DB1631D00DE5F57 /* GoogleSignIn.bundle */; };
@@ -84,6 +86,8 @@
 		741DF07E1DBAF18700E9B785 /* CollectionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionHelper.swift; sourceTree = "<group>"; };
 		741DF0801DBB133200E9B785 /* FilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		741DF0831DBB239800E9B785 /* CheckboxButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
+		741DF0851DBC34F200E9B785 /* CreateCategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateCategoryViewController.swift; sourceTree = "<group>"; };
+		741DF0871DBC35D500E9B785 /* MainCreateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCreateViewController.swift; sourceTree = "<group>"; };
 		74260DFB1DB0654900DE5F57 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = "../../../../../Documents/FacebookSDKs-iOS-4/FBSDKShareKit.framework"; sourceTree = "<group>"; };
 		74260DFD1DB0707300DE5F57 /* AndysToDo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndysToDo.entitlements; sourceTree = "<group>"; };
 		74260E0D1DB1631500DE5F57 /* GoogleSignIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSignIn.framework; path = ../../../../../Downloads/google_signin_sdk_4_0_0/GoogleSignIn.framework; sourceTree = "<group>"; };
@@ -168,6 +172,8 @@
 				74C500031DAFE0B300CF7421 /* MainLoginViewController.swift */,
 				741DF0361DB43EE400E9B785 /* MainTasksViewController.swift */,
 				741DF0801DBB133200E9B785 /* FilterViewController.swift */,
+				741DF0851DBC34F200E9B785 /* CreateCategoryViewController.swift */,
+				741DF0871DBC35D500E9B785 /* MainCreateViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -449,9 +455,11 @@
 				74C500071DAFE24D00CF7421 /* HTTPRequestHelper.swift in Sources */,
 				741DF07A1DB47FA400E9B785 /* TaskTableViewCell.swift in Sources */,
 				74C500041DAFE0B300CF7421 /* MainLoginViewController.swift in Sources */,
+				741DF0881DBC35D500E9B785 /* MainCreateViewController.swift in Sources */,
 				741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */,
 				74C2BDA41DAEA5C1006D683D /* AppDelegate.swift in Sources */,
 				741DF0371DB43EE400E9B785 /* MainTasksViewController.swift in Sources */,
+				741DF0861DBC34F200E9B785 /* CreateCategoryViewController.swift in Sources */,
 				741DF0841DBB239800E9B785 /* CheckboxButton.swift in Sources */,
 				741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */,
 				741DF03A1DB43F5000E9B785 /* TaskDTO.swift in Sources */,

@@ -84,6 +84,8 @@ class TaskDTO {
         AllTimeCategories = [category1, category2, category3, category4]
     }
     
+    // Task CRUD
+    
     func createNewTask(_task : Task) {
         if _task.isValid() {
             _task.ID = nextTaskID!
@@ -91,6 +93,8 @@ class TaskDTO {
             AllTasks!.append(_task)
         }
     }
+    
+    
     
     func getTaskByID(_id : Int) -> Task? {
         for task in AllTasks! {
@@ -117,6 +121,28 @@ class TaskDTO {
             }
         }
         
+        return false
+    }
+    
+    // Category CRUD
+    
+    func createNewCategory(_category : Category) -> Bool {
+        if _category.isValid() {
+            var isUnique = true
+            for _cat in AllCategories! {
+                if _cat == _category {
+                    isUnique = false
+                    break
+                }
+            }
+            if isUnique {
+                AllCategories!.append(_category)
+                return true
+            } else {
+                return false
+            }
+            
+        }
         return false
     }
     
