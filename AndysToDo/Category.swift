@@ -35,6 +35,10 @@ class TimeCategory : Category {
         EndOfTimeWindow = _end
     }
     
+    override func isValid() -> Bool {
+        return Name != nil && Description != nil && StartOfTimeWindow != nil && EndOfTimeWindow != nil
+    }
+    
     var StartOfTimeWindow : Float?
     var EndOfTimeWindow : Float?
 }

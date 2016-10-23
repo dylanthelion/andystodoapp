@@ -63,15 +63,12 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
             if taskDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
                 // Handle success. Unwind?
                 alertController = UIAlertController(title: "Success", message: "Category created", preferredStyle: .alert)
-                print("Success")
             } else {
                 // Handle uniquness failure
                 alertController = UIAlertController(title: "Failed", message: "That name is already taken", preferredStyle: .alert)
-                print("No unique name")
             }
         } else {
             alertController = UIAlertController(title: "Failed", message: "Please include a name and decsription", preferredStyle: .alert)
-            print("A field is null")
             // Handle null data failure
         }
         

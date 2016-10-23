@@ -146,6 +146,28 @@ class TaskDTO {
         return false
     }
     
+    // Time Category CRUD
+    
+    func createNewTimeCategory(_category : TimeCategory) -> Bool {
+        if _category.isValid() {
+            var isUnique = true
+            for _cat in AllTimeCategories! {
+                if _cat == _category {
+                    isUnique = false
+                    break
+                }
+            }
+            if isUnique {
+                AllCategories!.append(_category)
+                return true
+            } else {
+                return false
+            }
+            
+        }
+        return false
+    }
+    
     func applyFilter(categories : [Category]?, timeCategories : [TimeCategory]?) {
         if(CollectionHelper.IsNilOrEmpty(_coll: categories) && CollectionHelper.IsNilOrEmpty(_coll: timeCategories)) {
             //print("No filter")
