@@ -47,6 +47,9 @@
 		74C5000F1DAFE88400CF7421 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74C5000D1DAFE88400CF7421 /* FBSDKCoreKit.framework */; };
 		74C500101DAFE88400CF7421 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74C5000E1DAFE88400CF7421 /* FBSDKLoginKit.framework */; };
 		74D6C1091DBC57A400217DBD /* CreateTimeCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6C1081DBC57A400217DBD /* CreateTimeCategoryViewController.swift */; };
+		74D6C10D1DBC735C00217DBD /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6C10C1DBC735C00217DBD /* CreateTaskViewController.swift */; };
+		74D6C10F1DBC782D00217DBD /* AddCategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6C10E1DBC782D00217DBD /* AddCategoriesViewController.swift */; };
+		74D6C1111DBC998B00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6C1101DBC998A00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +118,9 @@
 		74C5000D1DAFE88400CF7421 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = "../../../../../Downloads/FacebookSDKs-iOS-4/FBSDKCoreKit.framework"; sourceTree = "<group>"; };
 		74C5000E1DAFE88400CF7421 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = "../../../../../Downloads/FacebookSDKs-iOS-4/FBSDKLoginKit.framework"; sourceTree = "<group>"; };
 		74D6C1081DBC57A400217DBD /* CreateTimeCategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTimeCategoryViewController.swift; sourceTree = "<group>"; };
+		74D6C10C1DBC735C00217DBD /* CreateTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
+		74D6C10E1DBC782D00217DBD /* AddCategoriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoriesViewController.swift; sourceTree = "<group>"; };
+		74D6C1101DBC998A00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateRepeatableTaskOccurrenceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +183,9 @@
 				741DF0851DBC34F200E9B785 /* CreateCategoryViewController.swift */,
 				741DF0871DBC35D500E9B785 /* MainCreateViewController.swift */,
 				74D6C1081DBC57A400217DBD /* CreateTimeCategoryViewController.swift */,
+				74D6C10C1DBC735C00217DBD /* CreateTaskViewController.swift */,
+				74D6C10E1DBC782D00217DBD /* AddCategoriesViewController.swift */,
+				74D6C1101DBC998A00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -465,6 +474,7 @@
 				741DF0371DB43EE400E9B785 /* MainTasksViewController.swift in Sources */,
 				741DF0861DBC34F200E9B785 /* CreateCategoryViewController.swift in Sources */,
 				741DF0841DBB239800E9B785 /* CheckboxButton.swift in Sources */,
+				74D6C1111DBC998B00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift in Sources */,
 				741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */,
 				741DF03A1DB43F5000E9B785 /* TaskDTO.swift in Sources */,
 				741DEF801DB34E1F00E9B785 /* ModelEnums.swift in Sources */,
@@ -473,8 +483,10 @@
 				74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */,
 				741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */,
 				741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */,
+				74D6C10F1DBC782D00217DBD /* AddCategoriesViewController.swift in Sources */,
 				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
 				741DF07C1DB492FE00E9B785 /* FloatToTimeConverter.swift in Sources */,
+				74D6C10D1DBC735C00217DBD /* CreateTaskViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

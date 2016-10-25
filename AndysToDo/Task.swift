@@ -34,7 +34,9 @@ class Task {
         if let _ = self.RepeatableTask {
             return ID != nil && Name != nil && Description != nil && RepeatableTask!.isValid()
         } else {
+            //print("ID: \(ID)\nName: \(Name)\nDescription: \(Description)\nStart Time: \(StartTime)")
             return ID != nil && Name != nil && Description != nil && StartTime != nil
+            
         }
     }
     

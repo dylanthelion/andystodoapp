@@ -24,6 +24,9 @@ class TaskDTO {
     }
     
     func loadTasks() {
+        if(AllTasks != nil) {
+            return
+        }
         loadCategories()
         loadTimeCategories()
         // logic to load tasks from file and/or server
@@ -86,12 +89,14 @@ class TaskDTO {
     
     // Task CRUD
     
-    func createNewTask(_task : Task) {
+    func createNewTask(_task : Task) -> Bool {
+        _task.ID = nextTaskID!
         if _task.isValid() {
-            _task.ID = nextTaskID!
             nextTaskID! += 1
             AllTasks!.append(_task)
+            return true
         }
+        return false
     }
     
     

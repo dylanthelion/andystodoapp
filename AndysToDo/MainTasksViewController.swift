@@ -19,7 +19,10 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     override func viewDidLoad() {
         self.title = "YOUR TASKS"
         taskDTO.delegate = self
-        taskDTO.loadTasks()
+        if taskDTO.AllTasks == nil {
+            taskDTO.loadTasks()
+        }
+        
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
         }
@@ -28,6 +31,7 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
         applyFilter()
+        tableView.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
