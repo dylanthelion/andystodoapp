@@ -180,7 +180,7 @@ class TaskDTO {
                 }
             }
             if isUnique {
-                AllCategories!.append(_category)
+                AllTimeCategories!.append(_category)
                 return true
             } else {
                 return false

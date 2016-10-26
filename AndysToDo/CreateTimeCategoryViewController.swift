@@ -8,34 +8,37 @@
 
 import UIKit
 
-class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate, TimePickerViewDelegateViewDelegate {
     
+    // UI
+    
+    var textFieldSelected : Int = 0
+    let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+    
+    // Model values
+    
+    var startTime : Float?
+    var endTime : Float?
     let taskDTO = TaskDTO.globalManager
-    let hours : [Int] = [1,2,3,4,5,6,7,8,9,10,11,12]
-    let minutes : [Int] = [00,05,10,15,20,25,30,35,40,45,50,55]
-    let meridians : [String] = ["AM", "PM"]
-    var startTxtFieldIsSelected = false
+    //var startTxtFieldIsSelected = false
+    
+    // Picker views
+    
     let pickerView = UIPickerView()
+    var timePickerDelegate : TimePickerViewDelegate?
+    let timePickerDataSource : TimePickerViewDataSource = TimePickerViewDataSource()
+    
     
     @IBOutlet weak var name_txtField: UITextField!
-    
     @IBOutlet weak var start_txtField: UITextField!
-    
     @IBOutlet weak var end_txtField: UITextField!
-    
     @IBOutlet weak var description_txtView: UITextView!
     
     override func viewDidLoad() {
-        name_txtField.delegate = self
-        start_txtField.delegate = self
-        end_txtField.delegate = self
-        description_txtView.delegate = self
-        description_txtView.layer.borderWidth = 2.0
-        description_txtView.layer.borderColor = UIColor.gray.cgColor
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        self.start_txtField.inputView = pickerView
-        self.end_txtField.inputView = pickerView
+        setupPickerDelegation()
+        setupTextFieldDelegation()
+        setupTextFieldInput()
+        addTextViewBorder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +47,31 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+    }
+    
+    // View setup
+    
+    func setupTextFieldDelegation(){
+        name_txtField.delegate = self
+        start_txtField.delegate = self
+        end_txtField.delegate = self
+        description_txtView.delegate = self
+    }
+    
+    func setupPickerDelegation() {
+        timePickerDelegate = TimePickerViewDelegate(_delegate: self)
+        pickerView.delegate = timePickerDelegate!
+        pickerView.dataSource = timePickerDataSource
+    }
+    
+    func setupTextFieldInput() {
+        self.start_txtField.inputView = pickerView
+        self.end_txtField.inputView = pickerView
+    }
+    
+    func addTextViewBorder() {
+        description_txtView.layer.borderWidth = 2.0
+        description_txtView.layer.borderColor = UIColor.gray.cgColor
     }
     
     // TaskDTODelegate
@@ -59,21 +87,25 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // Text Delegate
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        textFieldSelected = textField.tag
         switch textField.tag {
         case 0:
             return true
         case 1:
-            startTxtFieldIsSelected = true
             addPickerViewDoneButton()
             return true
         case 2:
-            startTxtFieldIsSelected = false
             addPickerViewDoneButton()
             return true
         default:
             print("Invalid text field tag")
             return false
         }
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        textFieldSelected = 0
+        return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -89,51 +121,21 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         return true
     }
     
-    // Picker view delegate/datasource
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 3
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch component {
-        case 0:
-            return 12
-        case 1:
-            return 12
-        case 2:
-            return 2
-        default:
-            print("Something went wrong picker view number of rows")
-            return 0
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if textFieldSelected == 0 {
+            self.navigationItem.rightBarButtonItem = nil
         }
+        return true
     }
     
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch component {
-        case 0:
-            return String(hours[row])
-        case 1:
-            return String(format: "%02d", minutes[row])
-        case 2:
-            return meridians[row]
-        default:
-            print("something went wrong title for row")
-            return ""
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        if textFieldSelected == 0 {
+            self.navigationItem.rightBarButtonItem = nil
         }
+        return true
     }
     
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let hours : String = String(self.hours[pickerView.selectedRow(inComponent: 0)])
-        let minutes : String = String(format: "%02d", self.minutes[pickerView.selectedRow(inComponent: 1)])
-        let meridian : String = meridians[pickerView.selectedRow(inComponent: 2)]
-        switch startTxtFieldIsSelected {
-        case true:
-            start_txtField.text = "\(hours):\(minutes) \(meridian)"
-        case false:
-            end_txtField.text = "\(hours):\(minutes) \(meridian)"
-        }
-    }
+    // Picker view UI updates
     
     func addPickerViewDoneButton() {
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(dismissPickerView))
@@ -141,35 +143,79 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     }
     
     func dismissPickerView() {
-        switch  startTxtFieldIsSelected {
-        case true:
+        switch  textFieldSelected {
+        case 1:
             start_txtField.resignFirstResponder()
-        case false:
+        case 2:
             end_txtField.resignFirstResponder()
+        default :
+            // Do nothing
+            print("No picker selected")
         }
         self.navigationItem.rightBarButtonItem = nil
     }
     
-    @IBAction func submit(_ sender: AnyObject) {
-        var alertController : UIAlertController
-        if name_txtField.text! != "" && description_txtView.text != "" && start_txtField.text != "" && end_txtField.text != "" {
-            if taskDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
-                // Handle success. Unwind?
-                alertController = UIAlertController(title: "Success", message: "Category created", preferredStyle: .alert)
-            } else {
-                // Handle uniquness failure
-                alertController = UIAlertController(title: "Failed", message: "That name is already taken", preferredStyle: .alert)
-            }
-        } else {
-            alertController = UIAlertController(title: "Failed", message: "Please include a name, decsription, and a full time window", preferredStyle: .alert)
-            // Handle null data failure
+    // TimePickerViewDelegateViewDelegate
+    
+    func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
+        var time : Float = Float(hours)! + (Float(minutes)! / 60.0)
+        if meridian == "PM" {
+            time += 12.0
         }
+        if textFieldSelected == 1 {
+            start_txtField.text = fullTime
+            startTime = time
+        } else {
+            end_txtField.text = fullTime
+            endTime = time
+        }
+    }
+    
+    // IBActions
+    
+    @IBAction func submit(_ sender: AnyObject) {
+        if !validateForSubmit() {
+            return
+        }
+        if !validateAndSubmitTimecat() {
+            return
+        } else {
+            return
+        }
+    }
+    
+    // Validation
+    
+    func validateForSubmit() -> Bool {
         
-        let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        
-        alertController.addAction(OKAction)
-        
-        self.present(alertController, animated: true, completion: nil)
+        if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text == "" || end_txtField.text == "" {
+            let alertController = UIAlertController(title: "Failed", message: "Please include a name, description, and a full time window", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
+        return true
+    }
+    
+    func validateAndSubmitTimecat() -> Bool {
+        if taskDTO.createNewTimeCategory(_category: TimeCategory(_name: name_txtField.text!, _description: description_txtView.text, _start: startTime!, _end: endTime!)) {
+            let alertController = UIAlertController(title: "Success", message: "Category created", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                self.start_txtField.text = ""
+                self.end_txtField.text = ""
+                self.name_txtField.text = ""
+                self.description_txtView.text = ""
+            }
+            return true
+        } else {
+            let alertController = UIAlertController(title: "Failed", message: "That name is already taken", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
+
     }
     
 }

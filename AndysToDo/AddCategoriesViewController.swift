@@ -10,9 +10,22 @@ import UIKit
 
 class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     
+    // Model
+    
     var allCategories : [Category]?
     var selectedCategories : [Category]?
     let taskDTO = TaskDTO.globalManager
+    
+    // UI values
+    
+    var top_y_coord : CGFloat = 80.0
+    let label_x_coord : CGFloat = 70.0
+    let button_x_coord : CGFloat = 30.0
+    let label_width : CGFloat = 200.0
+    let button_width : CGFloat = 30.0
+    let item_height : CGFloat = 30.0
+    var currentTag : Int = 0
+    let row_diff : CGFloat = 40.0
     
     
     
@@ -44,13 +57,7 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
         if self.allCategories == nil {
             return
         }
-        var top_y_coord : CGFloat = 80.0
-        let label_x_coord : CGFloat = 70.0
-        let button_x_coord : CGFloat = 30.0
-        let label_width : CGFloat = 200.0
-        let button_width : CGFloat = 30.0
-        let item_height : CGFloat = 30.0
-        var currentTag : Int = 0
+        
         
         for _category in self.allCategories! {
             let checkbox = CheckboxButton(frame: CGRect(x: button_x_coord, y: top_y_coord, width: button_width, height: item_height))
@@ -67,7 +74,7 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
             }
             let name_label = UILabel(frame: CGRect(x: label_x_coord, y: top_y_coord, width: label_width, height: item_height))
             name_label.text = _category.Name!
-            top_y_coord += 40.0
+            top_y_coord += row_diff
             currentTag += 1
             DispatchQueue.main.async {
                 self.view.addSubview(checkbox)

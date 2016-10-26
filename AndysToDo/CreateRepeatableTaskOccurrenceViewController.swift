@@ -8,27 +8,38 @@
 
 import UIKit
 
-class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DayOfWeekPickerDelegateViewDelegate, UnitOfTimePickerDelegateViewDelegate {
+    
+    // UI
     
     var textFieldSelected : Int = 0
-    let unitsOfTime = ["Hourly", "Daily", "Weekly"]
-    let days  = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        
+    // Model values
+    
     var _timeOfDay : Float?
     var _dayOfWeek : DayOfWeek?
     var startMonth : String?
     var startDay : String?
     var startHours : String?
+    var date : NSDate?
+    
+    // Pickerviews
     
     var unitOfTimePickerView = UIPickerView()
     var timeOfDayPickerView = UIPickerView()
     var datePickerView = UIPickerView()
     var dayOfWeekPicker = UIPickerView()
-    var timeOfDayDelegate : TimeOfDayPickerDelegate?
-    let timeOfDayDataSource : TimeOfDayPickerDataSource = TimeOfDayPickerDataSource()
+    let timeOfDayDataSource : TimePickerViewDataSource = TimePickerViewDataSource()
     var datePickerDelegate : DatePickerViewDelegate?
-    var datePickerDataSource = DatePickerViewDataSource()
-    var dayOfWeekDelegate : DayOfWeekPickerViewDelegate?
-    var dayOfWeekDataSource = DayOfWeekPickerViewDataSource()
+    var datePickerDataSource = DatePickerDataSource()
+    var timePickerDelegate : TimePickerViewDelegate?
+    var dayOfWeekDelegate : DayOfWeekPickerDelegate?
+    var dayOfWeekDataSource = DayOfWeekPickerDataSource()
+    var unitOfTimePickerDelegate : UnitOfTimePickerDelegate?
+    var unitOfTimePickerDataSource : UnitOfTimePickerDataSource = UnitOfTimePickerDataSource()
+    
+    // Outlets
     
     @IBOutlet weak var unitOfTime_txtField: UITextField!
     @IBOutlet weak var unitsPerTask_txtField: UITextField!
@@ -38,27 +49,9 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     @IBOutlet weak var dayOfWeek_txtField: UITextField!
     
     override func viewDidLoad() {
-        unitOfTimePickerView.delegate = self
-        unitOfTimePickerView.dataSource = self
-        unitOfTime_txtField.delegate = self
-        unitOfTime_txtField.inputView = unitOfTimePickerView
-        unitsPerTask_txtField.delegate = self
-        firstTimeOfDay_txtField.delegate = self
-        timeOfDayDelegate = TimeOfDayPickerDelegate(_delegate: self
-        )
-        timeOfDayPickerView.delegate = timeOfDayDelegate!
-        timeOfDayPickerView.dataSource = timeOfDayDataSource
-        firstTimeOfDay_txtField.inputView = timeOfDayPickerView
-        firstDate_txtField.delegate = self
-        datePickerDelegate = DatePickerViewDelegate(_delegate: self)
-        datePickerView.delegate = datePickerDelegate
-        datePickerView.dataSource = datePickerDataSource
-        firstDate_txtField.inputView = datePickerView
-        dayOfWeek_txtField.delegate = self
-        dayOfWeekDelegate = DayOfWeekPickerViewDelegate(_delegate: self)
-        dayOfWeekPicker.delegate = dayOfWeekDelegate
-        dayOfWeekPicker.dataSource = dayOfWeekDataSource
-        dayOfWeek_txtField.inputView = dayOfWeekPicker
+        setupPickerDelegation()
+        setupTextFieldDelegation()
+        setupTextFieldInput()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,6 +60,38 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     
     override func viewWillDisappear(_ animated: Bool) {
         
+    }
+    
+    // View setup
+    
+    func setupTextFieldDelegation() {
+        unitOfTime_txtField.delegate = self
+        unitsPerTask_txtField.delegate = self
+        firstTimeOfDay_txtField.delegate = self
+        firstDate_txtField.delegate = self
+        dayOfWeek_txtField.delegate = self
+    }
+    
+    func setupPickerDelegation() {
+        timePickerDelegate = TimePickerViewDelegate(_delegate: self)
+        unitOfTimePickerView.dataSource = unitOfTimePickerDataSource
+        timeOfDayPickerView.delegate = timePickerDelegate!
+        timeOfDayPickerView.dataSource = timeOfDayDataSource
+        datePickerDelegate = DatePickerViewDelegate(_delegate: self)
+        datePickerView.delegate = datePickerDelegate
+        datePickerView.dataSource = datePickerDataSource
+        dayOfWeekDelegate = DayOfWeekPickerDelegate(_delegate: self)
+        dayOfWeekPicker.delegate = dayOfWeekDelegate
+        dayOfWeekPicker.dataSource = dayOfWeekDataSource
+        unitOfTimePickerDelegate = UnitOfTimePickerDelegate(_delegate: self)
+        unitOfTimePickerView.delegate = unitOfTimePickerDelegate
+    }
+    
+    func setupTextFieldInput() {
+        dayOfWeek_txtField.inputView = dayOfWeekPicker
+        unitOfTime_txtField.inputView = unitOfTimePickerView
+        firstTimeOfDay_txtField.inputView = timeOfDayPickerView
+        firstDate_txtField.inputView = datePickerView
     }
     
     // TaskDTODelegate
@@ -82,6 +107,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     // Text Delegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
         textField.resignFirstResponder()
         return true
     }
@@ -117,32 +143,14 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         }
     }
     
-    // Picker view delegate/data source
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 3
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return unitsOfTime[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        unitOfTime_txtField.text = unitsOfTime[row]
-        if row == 2 {
-            dayOfWeek_txtField.isHidden = false
-            dayOfWeek_txtField.isUserInteractionEnabled = true
-            dayOfWeek_label.isHidden = false
-        } else {
-            dayOfWeek_txtField.isHidden = true
-            dayOfWeek_txtField.isUserInteractionEnabled = false
-            dayOfWeek_label.isHidden = true
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        if textFieldSelected == 1 {
+            self.navigationItem.rightBarButtonItem = nil
         }
+        return true
     }
+    
+    // Picker view UI updates
     
     func addPickerViewDoneButton() {
         let doneButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.done, target: self, action: #selector(dismissPickerView))
@@ -165,9 +173,93 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         self.navigationItem.rightBarButtonItem = nil
     }
     
+    // DatePickerViewDelegateViewDelegate
+    
+    func handleDidSelect(months: String, days: String, fulldate: String) {
+        startMonth = months
+        startDay = days
+        firstDate_txtField.text = fulldate
+    }
+    
+    // TimePickerViewDelegateViewDelegate
+    
+    func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
+        var floatToPass : Float = 0.0
+        floatToPass += Float(hours)!
+        floatToPass += (Float(minutes))! / 60.0
+        if meridian == "PM" {
+            floatToPass += 12.0
+        }
+        firstTimeOfDay_txtField.text = fullTime
+        startHours = fullTime
+        _timeOfDay = floatToPass
+    }
+    
+    // DayOfWeekPickerDelegateViewDelegate
+    
+    func handleDidSelect(day : String, enumValue : DayOfWeek) {
+        self.dayOfWeek_txtField.text = day
+        self._dayOfWeek = enumValue
+    }
+    
+    // UnitOfTimePickerDelegateViewDelegate
+    
+    func handleDidSelect(unit : String) {
+        unitOfTime_txtField.text = unit
+        if unit == "Weekly" {
+            dayOfWeek_txtField.isHidden = false
+            dayOfWeek_txtField.isUserInteractionEnabled = true
+            dayOfWeek_label.isHidden = false
+        } else {
+            dayOfWeek_txtField.isHidden = true
+            dayOfWeek_txtField.isUserInteractionEnabled = false
+            dayOfWeek_label.isHidden = true
+        }
+    }
+    
     @IBAction func submit(_ sender: AnyObject) {
+        if !validateForSubmit() {
+            return
+        }
+        let repeatable = createRepeatable()
+        if(!repeatable.isValid()) {
+            
+            let alertController = UIAlertController(title: "Error", message: "Your ", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        unwindToTaskCreate(date: date!, repeatable: repeatable)
+    }
+    
+    func validateForSubmit() -> Bool {
+        if unitOfTime_txtField.text == "" {
+            let alertController = UIAlertController(title: "Error", message: "Choose a unit of time.", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
+        
+        if unitsPerTask_txtField.text! == "" {
+            let alertController = UIAlertController(title: "Error", message: "Please enter a number in units per task. This is the number of hours, days, or weeks, between scheduled tasks", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
+        
+        if(firstDate_txtField.text! == "" || firstTimeOfDay_txtField.text! == "" || (unitOfTime_txtField.text == "Weekly" && dayOfWeek_txtField.text! == "")) {
+            let alertController = UIAlertController(title: "Error", message: "Please fill out all visible fields", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
+        
+        return true
+    }
+    
+    func createRepeatable() -> RepeatableTaskOccurrence {
         var _unitOfTime : RepetitionTimeCategory?
-        let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        
         switch unitOfTime_txtField.text! {
         case "Hourly":
             _unitOfTime = .Hourly
@@ -178,74 +270,16 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         default:
             _unitOfTime = nil
         }
-        if _unitOfTime == nil {
-            let alertController = UIAlertController(title: "Error", message: "Choose a unit of time.", preferredStyle: .alert)
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true, completion: nil)
-            return
-        }
-        var _numberOfUnits : Int? = Int(unitsPerTask_txtField.text!)
-        if _numberOfUnits == nil {
-            let alertController = UIAlertController(title: "Error", message: "Please enter a number in units per task. This is the number of hours, days, or weeks, between scheduled tasks", preferredStyle: .alert)
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true, completion: nil)
-            return
-        }
-        if(firstDate_txtField.text! == "" || firstTimeOfDay_txtField.text! == "" || (_unitOfTime! == .Weekly && dayOfWeek_txtField.text! == "")) {
-            let alertController = UIAlertController(title: "Error", message: "Please fill out all visible fields", preferredStyle: .alert)
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true, completion: nil)
-            return
-        }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM DD HH:mm a YYYY"
-        let df = DateFormatter()
-        df.dateFormat = "MMM"
-        let year : String
-        let currentMonth = Calendar.current.component(.month, from: Date())
-        let scheduledMonth = Calendar.current.component(.month, from: df.date(from: startMonth!)!)
-        if currentMonth < scheduledMonth {
-            year = String(Calendar.current.component(.year, from: Date()))
-        } else if currentMonth == scheduledMonth {
-            let currentDay = Calendar.current.component(.day, from: Date())
-            let scheduledDay = Int(startDay!)
-            if currentDay <= scheduledDay! {
-                year = String(Calendar.current.component(.year, from: Date()))
-            } else {
-                year = String(Calendar.current.component(.year, from: Date()) + 1)
-            }
-        } else {
-            year = String(Calendar.current.component(.year, from: Date()) + 1)
-        }
+        let _numberOfUnits : Int? = Int(unitsPerTask_txtField.text!)
+        let formatter = StandardDateFormatter()
+        let year = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
         //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
-        let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        /*let hour = Calendar.current.component(.hour, from: Date())
-        var firstOccurrenceTimeOfDay : Float
-        if _timeOfDay! >= Float(hour) {
-            firstOccurrenceTimeOfDay = 24.0 - (Float(hour) - _timeOfDay!)
-        } else {
-            firstOccurrenceTimeOfDay = _timeOfDay! - Float(hour)
-        }
-        var _firstOccurrence = (Calendar.current.date(byAdding: .second, value: Int(firstOccurrenceTimeOfDay * 3600.0), to: NSDate() as Date))
-        let myCalendar = NSCalendar(calendarIdentifier: .gregorian)
-        //let myComponents =
-        if _unitOfTime == .Weekly {
-            if dayOfWeek_txtField.text! == "" || self._dayOfWeek == nil {
-                // Handle error
-                return
-            }
-            while myCalendar!.components(.weekday, from: _firstOccurrence!).weekday! != (days.index(of: dayOfWeek_txtField.text!)! + 1) {
-                _firstOccurrence = Calendar.current.date(byAdding: .second, value: 86400, to: _firstOccurrence!)
-                print("Adding a day")
-            }
-        }*/
+        date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
         let repeatable = RepeatableTaskOccurrence(_unit: _unitOfTime!, _unitCount: _numberOfUnits!, _time: _timeOfDay, _firstOccurrence: date, _dayOfWeek: self._dayOfWeek)
-        if(!repeatable.isValid()) {
-            let alertController = UIAlertController(title: "Error", message: "Your ", preferredStyle: .alert)
-            alertController.addAction(OKAction)
-            self.present(alertController, animated: true, completion: nil)
-            return
-        }
+        return repeatable
+    }
+    
+    func unwindToTaskCreate(date : NSDate, repeatable : RepeatableTaskOccurrence) {
         let rootVC = self.navigationController?.viewControllers[1] as! CreateTaskViewController
         rootVC.repeatableDetails = repeatable
         rootVC.startTime = date
@@ -254,154 +288,4 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         self.navigationController?.popToViewController(rootVC, animated: true)
     }
     
-}
-
-class DayOfWeekPickerViewDelegate : NSObject, UIPickerViewDelegate {
-    
-    let days  = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-    let daysOfWeek : [DayOfWeek] = [.Sunday, .Monday, .Tuesday, .Wednesday, .Thursday, .Friday, .Saturday]
-    
-    var delegate : CreateRepeatableTaskOccurrenceViewController?
-    
-    convenience init(_delegate : CreateRepeatableTaskOccurrenceViewController) {
-        self.init()
-        delegate = _delegate
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return days[row]
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        delegate?.dayOfWeek_txtField.text = days[row]
-        delegate?._dayOfWeek = daysOfWeek[row]
-    }
-}
-
-class DayOfWeekPickerViewDataSource : NSObject, UIPickerViewDataSource {
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 7
-    }
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-}
-
-class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
-    
-    var delegate : CreateRepeatableTaskOccurrenceViewController?
-    
-    let months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
-    let days = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
-    
-    convenience init(_delegate : CreateRepeatableTaskOccurrenceViewController) {
-        self.init()
-        delegate = _delegate
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        
-        switch component {
-        case 0:
-            return months[row]
-        case 1:
-            return days[row]
-        default:
-            print("Something went wrong with date title for row")
-            return ""
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        delegate?.firstDate_txtField.text = "\(months[pickerView.selectedRow(inComponent: 0)]) \(days[pickerView.selectedRow(inComponent: 1)])"
-        delegate?.startDay = days[pickerView.selectedRow(inComponent: 1)]
-        
-        delegate?.startMonth = months[pickerView.selectedRow(inComponent: 0)].substring(to: months[pickerView.selectedRow(inComponent: 0)].index(months[pickerView.selectedRow(inComponent: 0)].startIndex, offsetBy: 3))
-    }
-}
-
-class DatePickerViewDataSource : NSObject, UIPickerViewDataSource {
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 2
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch component {
-        case 0:
-            return 12
-        case 1:
-            return 31
-        default:
-            print("Something went wrong with date picker view data source")
-            return 0
-        }
-    }
-}
-
-class TimeOfDayPickerDelegate : NSObject, UIPickerViewDelegate {
-    
-    var delegate : CreateRepeatableTaskOccurrenceViewController?
-    let hours : [Int] = [1,2,3,4,5,6,7,8,9,10,11,12]
-    let minutes : [Int] = [00,05,10,15,20,25,30,35,40,45,50,55]
-    let meridians : [String] = ["AM", "PM"]
-    
-    convenience init(_delegate : CreateRepeatableTaskOccurrenceViewController) {
-        self.init()
-        delegate = _delegate
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch component {
-        case 0:
-            return String(hours[row])
-        case 1:
-            return String(format: "%02d", minutes[row])
-        case 2:
-            return meridians[row]
-        default:
-            print("something went wrong title for row")
-            return ""
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let hours : String = String(self.hours[pickerView.selectedRow(inComponent: 0)])
-        let minutes : String = String(format: "%02d", self.minutes[pickerView.selectedRow(inComponent: 1)])
-        let meridian : String = meridians[pickerView.selectedRow(inComponent: 2)]
-        var floatToPass : Float = 0.0
-        floatToPass += Float(self.hours[pickerView.selectedRow(inComponent: 0)])
-        floatToPass += (Float(self.minutes[pickerView.selectedRow(inComponent: 1)])) / 60.0
-        if pickerView.selectedRow(inComponent: 2) == 1 {
-            floatToPass += 12.0
-        }
-        delegate?.firstTimeOfDay_txtField.text = "\(hours):\(minutes) \(meridian)"
-        delegate?.startHours = "\(hours):\(minutes) \(meridian)"
-        delegate?._timeOfDay = floatToPass
-    }
-}
-
-class TimeOfDayPickerDataSource : NSObject, UIPickerViewDataSource {
-    
-    
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 3
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch component {
-        case 0:
-            return 12
-        case 1:
-            return 12
-        case 2:
-            return 2
-        default:
-            print("Something went wrong picker view number of rows")
-            return 0
-        }
-    }
 }
