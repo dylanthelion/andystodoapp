@@ -27,6 +27,7 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
             applyFilter()
         }
         taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
+        //taskDTO.deleteTask(_task: taskDTO.AllTasks![6])
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -83,7 +84,6 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     // TaskDTODelegate
     
     func handleModelUpdate() {
-        print("Handle")
         AllTasks = taskDTO.tasksToPopulate!
         DispatchQueue.main.async {
             self.tableView.reloadData()

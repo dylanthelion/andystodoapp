@@ -55,7 +55,10 @@ class TaskDTO {
         let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: NSDate().addingTimeInterval(400000), _finish: nil, _category: [AllCategories![2], AllCategories![0]], _timeCategory: AllTimeCategories![1], _repeatable: repeatble2)
         task6.ID = nextTaskID!
         nextTaskID! += 1
-        AllTasks = [task1, task2, task3, task4, task5, task6]
+        let taskToDelete = Task(_name: "Task to delete", _description: "Shouldn't show", _start: NSDate().addingTimeInterval(4000), _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
+        taskToDelete.ID = nextTaskID!
+        nextTaskID! += 1
+        AllTasks = [task1, task2, task3, task4, task5, task6, taskToDelete]
         filteredTasks = AllTasks!
         tasksToPopulate = AllTasks!
         //print("Total tasks: \(filteredTasks!.count)")
@@ -130,6 +133,17 @@ class TaskDTO {
         }
         
         return false
+    }
+    
+    func deleteTask(_task : Task) {
+        if let checkIndex = AllTasks?.index(of: _task) {
+            AllTasks!.remove(at: checkIndex)
+        }
+        if let checkIndex = tasksToPopulate?.index(of: _task) {
+            filteredTasks?.remove(at: checkIndex)
+            tasksToPopulate?.remove(at: checkIndex)
+            delegate?.handleModelUpdate()
+        }
     }
     
     // Category CRUD
