@@ -34,13 +34,13 @@ class TaskDTO {
         
         // Until persistence is finished, load fake tasks
         nextTaskID = 0
-        let task1 = Task(_name: "Task 1", _description: "Fake task", _start: NSDate().addingTimeInterval(3600), _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
+        let task1 = Task(_name: "Task 1", _description: "Fake task", _start: NSDate().addingTimeInterval(5400), _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
         task1.ID = nextTaskID!
         nextTaskID! += 1
-        let task2 = Task(_name: "Task 2", _description: "Fake task with a fake category", _start: NSDate().addingTimeInterval(7200), _finish: nil, _category: [AllCategories![0]], _timeCategory: nil, _repeatable: nil)
+        let task2 = Task(_name: "Task 2", _description: "Fake task with a fake category", _start: NSDate().addingTimeInterval(720000), _finish: nil, _category: [AllCategories![0]], _timeCategory: nil, _repeatable: nil)
         task2.ID = nextTaskID!
         nextTaskID! += 1
-        let task3 = Task(_name: "Task 3", _description: "Fake task with multiple fake categories", _start: NSDate().addingTimeInterval(5400), _finish: nil, _category: AllCategories!, _timeCategory: nil, _repeatable: nil)
+        let task3 = Task(_name: "Task 3", _description: "Fake task with multiple fake categories", _start: NSDate().addingTimeInterval(3600), _finish: nil, _category: AllCategories!, _timeCategory: nil, _repeatable: nil)
         task3.ID = nextTaskID!
         nextTaskID! += 1
         let task4 = Task(_name: "Task 4", _description: "Fake task with a fake time category", _start: NSDate().addingTimeInterval(14400), _finish: nil, _category: [AllCategories![1]], _timeCategory: AllTimeCategories![3], _repeatable: nil)
@@ -176,6 +176,8 @@ class TaskDTO {
         return false
     }
     
+    // Filter displayed tasks
+    
     func applyFilter(categories : [Category]?, timeCategories : [TimeCategory]?) {
         if(CollectionHelper.IsNilOrEmpty(_coll: categories) && CollectionHelper.IsNilOrEmpty(_coll: timeCategories)) {
             //print("No filter")
@@ -216,6 +218,52 @@ class TaskDTO {
         if let _ = delegate {
             delegate?.handleModelUpdate()
         }
+    }
+    
+    func populateRepeatables() {
+        if AllTasks == nil {
+            return
+        }
+        let tempTasks = tasksToPopulate!
+        for _task in tempTasks {
+            if _task.isRepeatable() {
+                let indexOf = tasksToPopulate!.index(of: _task)
+                tasksToPopulate!.remove(at: indexOf!)
+                for i in 0...3 {
+                    var units = i
+                    let component : Calendar.Component
+                    if _task.RepeatableTask!.UnitOfTime! == .Daily {
+                        component = .day
+                    } else if _task.RepeatableTask!.UnitOfTime! == .Hourly {
+                        component = .hour
+                    } else {
+                        component = .day
+                        units *= 7
+                    }
+                    let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: (NSCalendar.current.date(byAdding: component, value: units, to: _task.StartTime! as Date)! as NSDate), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
+                    taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(_task.StartTime!.timeIntervalSince1970)
+                    tasksToPopulate!.append(taskToAdd)
+                }
+            }
+        }
+        
+        delegate?.handleModelUpdate()
+    }
+    
+    func sortDisplayedTasks(forWindow : Calendar.Component, units: Int) {
+        populateRepeatables()
+        let upperLimit = Calendar.current.date(byAdding: forWindow, value: units, to: Date())
+        let tempTasks = tasksToPopulate!
+        for _task in tempTasks {
+            if (_task.StartTime! as Date) > upperLimit! {
+                let indexOf = tasksToPopulate!.index(of: _task)
+                tasksToPopulate!.remove(at: indexOf!)
+            }
+        }
+        tasksToPopulate!.sort(by: {
+            return ($0.StartTime! as Date) < ($1.StartTime! as Date)
+        })
+        delegate?.handleModelUpdate()
     }
 }
 

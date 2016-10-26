@@ -26,19 +26,13 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
         }
-        populateRepeatables()
-        self.AllTasks = taskDTO.tasksToPopulate!
+        taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
         applyFilter()
-        populateRepeatables()
-        self.AllTasks = taskDTO.tasksToPopulate!
-        DispatchQueue.main.async {
-            //print("Reloading table")
-            self.tableView.reloadData()
-        }
+        taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -89,8 +83,11 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     // TaskDTODelegate
     
     func handleModelUpdate() {
-        AllTasks = taskDTO.filteredTasks
-        self.tableView.reloadData()
+        print("Handle")
+        AllTasks = taskDTO.tasksToPopulate!
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     func taskDidUpdate(_task: Task) {
