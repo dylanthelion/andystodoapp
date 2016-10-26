@@ -26,12 +26,19 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
         }
+        populateRepeatables()
+        self.AllTasks = taskDTO.tasksToPopulate!
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
         applyFilter()
-        tableView.reloadData()
+        populateRepeatables()
+        self.AllTasks = taskDTO.tasksToPopulate!
+        DispatchQueue.main.async {
+            //print("Reloading table")
+            self.tableView.reloadData()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -46,6 +53,7 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let _ = AllTasks {
+            //print("Tasks: \(AllTasks!.count)")
             return AllTasks!.count
         }
         return 0
@@ -121,6 +129,37 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
             self.timeCategoryFilters = [_category]
         }
         
+    }
+    
+    // Generate repeatable tasks
+    
+    func populateRepeatables() {
+        if AllTasks == nil {
+            return
+        }
+        let tempTasks = taskDTO.tasksToPopulate!
+        for _task in tempTasks {
+            if _task.isRepeatable() {
+                let indexOf = taskDTO.tasksToPopulate!.index(of: _task)
+                
+                taskDTO.tasksToPopulate!.remove(at: indexOf!)
+                for i in 0...3 {
+                    var units = i
+                    let component : Calendar.Component
+                    if _task.RepeatableTask!.UnitOfTime! == .Daily {
+                        component = .day
+                    } else if _task.RepeatableTask!.UnitOfTime! == .Hourly {
+                        component = .hour
+                    } else {
+                        component = .day
+                        units *= 7
+                    }
+                    let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: (NSCalendar.current.date(byAdding: component, value: units, to: _task.StartTime! as Date)! as NSDate), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
+                    taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(_task.StartTime!.timeIntervalSince1970)
+                    taskDTO.tasksToPopulate!.append(taskToAdd)
+                }
+            }
+        }
     }
     
     // Segues

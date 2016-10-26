@@ -259,6 +259,13 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
                 let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: date, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: nil)
                 if taskDTO.createNewTask(_task: task) {
                     alertController = UIAlertController(title: "Success", message: "Task created!", preferredStyle: .alert)
+                    DispatchQueue.main.async {
+                        self.name_txtField.text = ""
+                        self.start_txtField.text = ""
+                        self.description_txtView.text = ""
+                        self.timeCat_txtField.text = ""
+                        self.startDateTextView.text = ""
+                    }
                 } else {
                     alertController = UIAlertController(title: "Failed", message: "Your normal information is invalid. Something went wrong.", preferredStyle: .alert)
                 }

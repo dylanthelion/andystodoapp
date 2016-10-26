@@ -15,6 +15,7 @@ class TaskDTO {
     var delegate : TaskDTODelegate?
     var AllTasks : [Task]?
     var filteredTasks : [Task]?
+    var tasksToPopulate : [Task]?
     var AllCategories : [Category]?
     var AllTimeCategories : [TimeCategory]?
     var nextTaskID : Int?
@@ -46,16 +47,17 @@ class TaskDTO {
         task4.ID = nextTaskID!
         nextTaskID! += 1
         let repeatable1 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Daily, _unitCount: 2, _time: 13.5, _firstOccurrence: NSDate(), _dayOfWeek: nil)
-        let task5 = Task(_name: "Task 5", _description: "Fake task with daily repetition", _start: nil, _finish: nil, _category: [AllCategories![2]], _timeCategory: AllTimeCategories![2], _repeatable: repeatable1)
+        let task5 = Task(_name: "Task 5", _description: "Fake task with daily repetition", _start: NSDate().addingTimeInterval(40000), _finish: nil, _category: [AllCategories![2]], _timeCategory: AllTimeCategories![2], _repeatable: repeatable1)
         task5.ID = nextTaskID!
         task5.inProgress = true
         nextTaskID! += 1
         let repeatble2 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Weekly, _unitCount: 1, _time: 12.0, _firstOccurrence: nil, _dayOfWeek: DayOfWeek.Monday)
-        let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: nil, _finish: nil, _category: [AllCategories![2], AllCategories![0]], _timeCategory: AllTimeCategories![1], _repeatable: repeatble2)
+        let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: NSDate().addingTimeInterval(400000), _finish: nil, _category: [AllCategories![2], AllCategories![0]], _timeCategory: AllTimeCategories![1], _repeatable: repeatble2)
         task6.ID = nextTaskID!
         nextTaskID! += 1
         AllTasks = [task1, task2, task3, task4, task5, task6]
         filteredTasks = AllTasks!
+        tasksToPopulate = AllTasks!
         //print("Total tasks: \(filteredTasks!.count)")
         
         // Inform delegate that tasks are loaded
@@ -94,6 +96,7 @@ class TaskDTO {
         if _task.isValid() {
             nextTaskID! += 1
             AllTasks!.append(_task)
+            tasksToPopulate!.append(_task)
             return true
         }
         return false
@@ -209,6 +212,7 @@ class TaskDTO {
                 addToFilter = false
             }
         }
+        tasksToPopulate = filteredTasks
         if let _ = delegate {
             delegate?.handleModelUpdate()
         }

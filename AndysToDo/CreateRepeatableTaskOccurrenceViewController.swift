@@ -217,7 +217,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         } else {
             year = String(Calendar.current.component(.year, from: Date()) + 1)
         }
-        print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
+        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
         let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
         /*let hour = Calendar.current.component(.hour, from: Date())
         var firstOccurrenceTimeOfDay : Float

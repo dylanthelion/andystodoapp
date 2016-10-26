@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Task {
+class Task : Equatable {
     
     var ID : Int?
     var Name : String?
@@ -42,5 +42,10 @@ class Task {
     
     func isRepeatable() -> Bool {
         return isValid() && RepeatableTask != nil
+    }
+    
+    static func == (lhs: Task, rhs: Task) -> Bool {
+        return
+            lhs.ID! == rhs.ID!
     }
 }
