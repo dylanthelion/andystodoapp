@@ -227,8 +227,7 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
         if name_txtField.text! != "" && description_txtView.text != "" && start_txtField.text! != "" && startDateTextView.text! != ""  {
             if repeatable {
                 let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: self.startTime, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: self.repeatableDetails)
-                if task.isValid() {
-                    taskDTO.AllTasks?.append(task)
+                if taskDTO.createNewTask(_task: task) {
                     alertController = UIAlertController(title: "Success", message: "Task created!", preferredStyle: .alert)
                 } else {
                     alertController = UIAlertController(title: "Failed", message: "Your repeatable information is invalid. Something went wrong.", preferredStyle: .alert)

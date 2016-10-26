@@ -15,6 +15,9 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     let days  = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     var _timeOfDay : Float?
     var _dayOfWeek : DayOfWeek?
+    var startMonth : String?
+    var startDay : String?
+    var startHours : String?
     
     var unitOfTimePickerView = UIPickerView()
     var timeOfDayPickerView = UIPickerView()
@@ -194,7 +197,29 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
             self.present(alertController, animated: true, completion: nil)
             return
         }
-        let hour = Calendar.current.component(.hour, from: Date())
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM DD HH:mm a YYYY"
+        let df = DateFormatter()
+        df.dateFormat = "MMM"
+        let year : String
+        let currentMonth = Calendar.current.component(.month, from: Date())
+        let scheduledMonth = Calendar.current.component(.month, from: df.date(from: startMonth!)!)
+        if currentMonth < scheduledMonth {
+            year = String(Calendar.current.component(.year, from: Date()))
+        } else if currentMonth == scheduledMonth {
+            let currentDay = Calendar.current.component(.day, from: Date())
+            let scheduledDay = Int(startDay!)
+            if currentDay <= scheduledDay! {
+                year = String(Calendar.current.component(.year, from: Date()))
+            } else {
+                year = String(Calendar.current.component(.year, from: Date()) + 1)
+            }
+        } else {
+            year = String(Calendar.current.component(.year, from: Date()) + 1)
+        }
+        print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
+        let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
+        /*let hour = Calendar.current.component(.hour, from: Date())
         var firstOccurrenceTimeOfDay : Float
         if _timeOfDay! >= Float(hour) {
             firstOccurrenceTimeOfDay = 24.0 - (Float(hour) - _timeOfDay!)
@@ -213,8 +238,8 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
                 _firstOccurrence = Calendar.current.date(byAdding: .second, value: 86400, to: _firstOccurrence!)
                 print("Adding a day")
             }
-        }
-        let repeatable = RepeatableTaskOccurrence(_unit: _unitOfTime!, _unitCount: _numberOfUnits!, _time: _timeOfDay, _firstOccurrence: _firstOccurrence as NSDate?, _dayOfWeek: self._dayOfWeek)
+        }*/
+        let repeatable = RepeatableTaskOccurrence(_unit: _unitOfTime!, _unitCount: _numberOfUnits!, _time: _timeOfDay, _firstOccurrence: date, _dayOfWeek: self._dayOfWeek)
         if(!repeatable.isValid()) {
             let alertController = UIAlertController(title: "Error", message: "Your ", preferredStyle: .alert)
             alertController.addAction(OKAction)
@@ -223,7 +248,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         }
         let rootVC = self.navigationController?.viewControllers[1] as! CreateTaskViewController
         rootVC.repeatableDetails = repeatable
-        rootVC.startTime = _firstOccurrence as NSDate?
+        rootVC.startTime = date
         rootVC.startDateTextView.text = "Repeatable"
         rootVC.start_txtField.text = "Repeatable"
         self.navigationController?.popToViewController(rootVC, animated: true)
@@ -268,7 +293,7 @@ class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
     
     var delegate : CreateRepeatableTaskOccurrenceViewController?
     
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    let months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
     let days = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     
     convenience init(_delegate : CreateRepeatableTaskOccurrenceViewController) {
@@ -291,6 +316,9 @@ class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         delegate?.firstDate_txtField.text = "\(months[pickerView.selectedRow(inComponent: 0)]) \(days[pickerView.selectedRow(inComponent: 1)])"
+        delegate?.startDay = days[pickerView.selectedRow(inComponent: 1)]
+        
+        delegate?.startMonth = months[pickerView.selectedRow(inComponent: 0)].substring(to: months[pickerView.selectedRow(inComponent: 0)].index(months[pickerView.selectedRow(inComponent: 0)].startIndex, offsetBy: 3))
     }
 }
 
@@ -350,6 +378,7 @@ class TimeOfDayPickerDelegate : NSObject, UIPickerViewDelegate {
             floatToPass += 12.0
         }
         delegate?.firstTimeOfDay_txtField.text = "\(hours):\(minutes) \(meridian)"
+        delegate?.startHours = "\(hours):\(minutes) \(meridian)"
         delegate?._timeOfDay = floatToPass
     }
 }
