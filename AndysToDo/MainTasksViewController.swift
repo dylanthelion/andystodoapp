@@ -10,11 +10,17 @@ import UIKit
 
 class MainTasksViewController : UITableViewController, TaskDTODelegate {
     
+    // UI
+    
+    var filterApplied = false
+    
+    // Model values
+    
     var AllTasks : [Task]?
     let taskDTO = TaskDTO.globalManager
-    var filterApplied = false
     var categoryFilters : [Category]?
     var timeCategoryFilters : [TimeCategory]?
+    var isSorted = false
     
     override func viewDidLoad() {
         self.title = "YOUR TASKS"
@@ -22,22 +28,33 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         if taskDTO.AllTasks == nil {
             taskDTO.loadTasks()
         }
-        
+        taskDTO.populateRepeatables()
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
+            print("Filter")
             applyFilter()
         }
         taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
-        //taskDTO.deleteTask(_task: taskDTO.AllTasks![6])
+        isSorted = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
-        applyFilter()
-        taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
+        if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
+            print("Filter")
+            applyFilter()
+        }
+        if !isSorted {
+            print("Sort again")
+            taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
+        }
+        //taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+        categoryFilters = nil
+        timeCategoryFilters = nil
+        isSorted = false
     }
     
     // Table View datasource
@@ -126,37 +143,6 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
             self.timeCategoryFilters = [_category]
         }
         
-    }
-    
-    // Generate repeatable tasks
-    
-    func populateRepeatables() {
-        if AllTasks == nil {
-            return
-        }
-        let tempTasks = taskDTO.tasksToPopulate!
-        for _task in tempTasks {
-            if _task.isRepeatable() {
-                let indexOf = taskDTO.tasksToPopulate!.index(of: _task)
-                
-                taskDTO.tasksToPopulate!.remove(at: indexOf!)
-                for i in 0...3 {
-                    var units = i
-                    let component : Calendar.Component
-                    if _task.RepeatableTask!.UnitOfTime! == .Daily {
-                        component = .day
-                    } else if _task.RepeatableTask!.UnitOfTime! == .Hourly {
-                        component = .hour
-                    } else {
-                        component = .day
-                        units *= 7
-                    }
-                    let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: (NSCalendar.current.date(byAdding: component, value: units, to: _task.StartTime! as Date)! as NSDate), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
-                    taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(_task.StartTime!.timeIntervalSince1970)
-                    taskDTO.tasksToPopulate!.append(taskToAdd)
-                }
-            }
-        }
     }
     
     // Segues

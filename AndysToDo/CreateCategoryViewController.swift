@@ -10,16 +10,22 @@ import UIKit
 
 class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate {
     
+    // UI
+    
+    let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+    
+    // Model values
+    
     let taskDTO = TaskDTO.globalManager
+    
+    // Outlets
     
     @IBOutlet weak var name_txtField: UITextField!
     @IBOutlet weak var description_txtView: UITextView!
     
     override func viewDidLoad() {
-        name_txtField.delegate = self
-        description_txtView.delegate = self
-        description_txtView.layer.borderWidth = 2.0
-        description_txtView.layer.borderColor = UIColor.gray.cgColor
+        setupTextFieldDelegation()
+        addTextViewBorder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -28,6 +34,18 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+    }
+    
+    // View setup
+    
+    func setupTextFieldDelegation(){
+        name_txtField.delegate = self
+        description_txtView.delegate = self
+    }
+    
+    func addTextViewBorder() {
+        description_txtView.layer.borderWidth = 2.0
+        description_txtView.layer.borderColor = UIColor.gray.cgColor
     }
     
     // TaskDTODelegate
@@ -55,27 +73,43 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
         return true
     }
     
-    // Submit button
+    // IBActions
     
     @IBAction func submit(_ sender: AnyObject) {
-        var alertController : UIAlertController
-        if name_txtField.text! != "" && description_txtView.text != "" {
-            if taskDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
-                // Handle success. Unwind?
-                alertController = UIAlertController(title: "Success", message: "Category created", preferredStyle: .alert)
-            } else {
-                // Handle uniquness failure
-                alertController = UIAlertController(title: "Failed", message: "That name is already taken", preferredStyle: .alert)
-            }
-        } else {
-            alertController = UIAlertController(title: "Failed", message: "Please include a name and decsription", preferredStyle: .alert)
-            // Handle null data failure
+        if !validateForSubmit() {
+            return
         }
         
-        let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-        
-        alertController.addAction(OKAction)
-        
-        self.present(alertController, animated: true, completion: nil)
+        if !validateAndSubmitCategory() {
+            return
+        } else {
+            return
+        }
+    }
+    
+    // Validations
+    
+    func validateForSubmit() -> Bool {
+        if name_txtField.text! == "" || description_txtView.text == "" {
+            let alertController = UIAlertController(title: "Failed", message: "Please include a name and decsription", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
+        return true
+    }
+    
+    func validateAndSubmitCategory() -> Bool {
+        if taskDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
+            let alertController = UIAlertController(title: "Success", message: "Category created", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return true
+        } else {
+            let alertController = UIAlertController(title: "Failed", message: "That name is already taken", preferredStyle: .alert)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
     }
 }

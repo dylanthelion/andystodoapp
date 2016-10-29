@@ -28,11 +28,12 @@ class Task : Equatable {
         Categories = _category
         TimeCategory = _timeCategory
         RepeatableTask = _repeatable
+        ID = TaskDTO.globalManager.getNextID()
     }
     
     func isValid() -> Bool {
         if let _ = self.RepeatableTask {
-            return ID != nil && Name != nil && Description != nil && RepeatableTask!.isValid()
+            return ID != nil && Name != nil && Description != nil && RepeatableTask!.isValid() && StartTime != nil
         } else {
             //print("ID: \(ID)\nName: \(Name)\nDescription: \(Description)\nStart Time: \(StartTime)")
             return ID != nil && Name != nil && Description != nil && StartTime != nil

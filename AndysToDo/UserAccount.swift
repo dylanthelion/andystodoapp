@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 class UserAccount {
     
     var Name : String?

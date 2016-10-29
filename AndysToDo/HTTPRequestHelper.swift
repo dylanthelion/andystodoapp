@@ -20,6 +20,6 @@ class HTTPRequestHelper {
     
 }
 
-class HTTPHelperDelegate {
+protocol HTTPHelperDelegate {
     
 }

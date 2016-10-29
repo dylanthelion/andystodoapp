@@ -61,7 +61,7 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
                 req?.start(completionHandler: { [weak self] connection, result, error in
                     if(error == nil)
                     {
-                        print("result \(result)")
+                        //print("result \(result)")
                         self?.goToMainView()
                     }
                     else
@@ -100,7 +100,7 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
         /*if user == nil {
             print("HERP nil")
         }*/
-        print("User: \(user.userID) \n \(user.profile.email) \n \(user.profile.name)")
+        //print("User: \(user.userID) \n \(user.profile.email) \n \(user.profile.name)")
         self.goToMainView()
     }
     
