@@ -13,7 +13,6 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // UI
     
     var textFieldSelected : Int = 0
-    let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
     
     // Model values
     
@@ -70,8 +69,8 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     }
     
     func addTextViewBorder() {
-        description_txtView.layer.borderWidth = 2.0
-        description_txtView.layer.borderColor = UIColor.gray.cgColor
+        description_txtView.layer.borderWidth = Constants.text_view_border_width
+        description_txtView.layer.borderColor = Constants.text_view_border_color
     }
     
     // TaskDTODelegate
@@ -158,9 +157,9 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // TimePickerViewDelegateViewDelegate
     
     func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
-        var time : Float = Float(hours)! + (Float(minutes)! / 60.0)
-        if meridian == "PM" {
-            time += 12.0
+        var time : Float = Float(hours)! + (Float(minutes)! / Constants.seconds_per_minute)
+        if meridian == Constants.meridian_pm {
+            time += Constants.hours_per_meridian
         }
         if textFieldSelected == 1 {
             start_txtField.text = fullTime
@@ -189,8 +188,8 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     func validateForSubmit() -> Bool {
         
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text == "" || end_txtField.text == "" {
-            let alertController = UIAlertController(title: "Failed", message: "Please include a name, description, and a full time window", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.timecatVC_alert_no_name_description_or_window_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
@@ -199,8 +198,8 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     
     func validateAndSubmitTimecat() -> Bool {
         if taskDTO.createNewTimeCategory(_category: TimeCategory(_name: name_txtField.text!, _description: description_txtView.text, _start: startTime!, _end: endTime!)) {
-            let alertController = UIAlertController(title: "Success", message: "Category created", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.timecatVC_alert_success_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             DispatchQueue.main.async {
                 self.start_txtField.text = ""
@@ -210,8 +209,8 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
             }
             return true
         } else {
-            let alertController = UIAlertController(title: "Failed", message: "That name is already taken", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.timecatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }

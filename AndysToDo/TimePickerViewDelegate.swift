@@ -11,9 +11,9 @@ import UIKit
 class TimePickerViewDelegate : NSObject, UIPickerViewDelegate {
     
     var viewDelegate : TimePickerViewDelegateViewDelegate?
-    let hours : [Int] = [1,2,3,4,5,6,7,8,9,10,11,12]
-    let minutes : [Int] = [00,05,10,15,20,25,30,35,40,45,50,55]
-    let meridians : [String] = ["AM", "PM"]
+    let hours : [Int] = Constants.all_hours_as_ints
+    let minutes : [Int] = Constants.picker_all_minutes_as_ints
+    let meridians : [String] = [Constants.meridian_am, Constants.meridian_pm]
     
     convenience init(_delegate : TimePickerViewDelegateViewDelegate) {
         self.init()

@@ -23,14 +23,14 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     var isSorted = false
     
     override func viewDidLoad() {
-        self.title = "YOUR TASKS"
+        self.title = Constants.mainTasksVCTitle
         taskDTO.delegate = self
         if taskDTO.AllTasks == nil {
             taskDTO.loadTasks()
         }
         taskDTO.populateRepeatables()
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
-            print("Filter")
+            //print("Filter")
             applyFilter()
         }
         taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
@@ -40,11 +40,11 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
-            print("Filter")
+            //print("Filter")
             applyFilter()
         }
         if !isSorted {
-            print("Sort again")
+            //print("Sort again")
             taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
         }
         //taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
@@ -72,21 +72,19 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : TaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: "taskTableViewCell") as! TaskTableViewCell
+        let cell : TaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.task_table_view_cell_id) as! TaskTableViewCell
         let cellTask : Task = AllTasks![indexPath.row]
         cell.setTask(_task: cellTask)
         switch cellTask.inProgress {
         case true :
             cell.onItState = OnItButtonState.Active
-            cell.onItButton.alpha = 1.0
+            cell.onItButton.alpha = Constants.alpha_solid
         case false :
             cell.onItState = OnItButtonState.Inactive
         }
         cell.taskTitleLabel.text = cellTask.Name!
         if let _ = cellTask.StartTime {
             cell.timeLabel.text = TimeConverter.dateToTimeConverter(_time: cellTask.StartTime!)
-        } else {
-            cell.timeLabel.text = "No time"
         }
         
         return cell

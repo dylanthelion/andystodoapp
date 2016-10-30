@@ -17,11 +17,11 @@ class TimePickerViewDataSource : NSObject, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch component {
         case 0:
-            return 12
+            return Int(Constants.hours_per_meridian)
         case 1:
-            return 12
+            return Constants.picker_minutes_per_hour
         case 2:
-            return 2
+            return Constants.total_meridians
         default:
             print("Something went wrong picker view number of rows")
             return 0

@@ -12,7 +12,7 @@ class StandardDateFormatter : DateFormatter {
     
     override init() {
         super.init()
-        self.dateFormat = "MMM DD HH:mm a YYYY"
+        self.dateFormat = Constants.standard_full_date_format
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -22,7 +22,7 @@ class StandardDateFormatter : DateFormatter {
     func getNextMonthOccurrence(startMonth : String, startDay: String
         ) -> String {
         let df = DateFormatter()
-        df.dateFormat = "MMM"
+        df.dateFormat = Constants.standard_month_format
         let year : String
         let currentMonth = Calendar.current.component(.month, from: Date())
         let scheduledMonth = Calendar.current.component(.month, from: df.date(from: startMonth)!)

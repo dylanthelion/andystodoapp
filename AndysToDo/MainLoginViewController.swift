@@ -13,12 +13,11 @@ import GoogleSignIn
 
 class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDSignInUIDelegate, GIDSignInDelegate {
     
+    // UI
+    
     var loginButton: FBSDKLoginButton?
     var GoogleLoginButton: GIDSignInButton?
     var loggedIn : Bool = false
-    
-    let btnWidth : CGFloat = 82.0
-    let btnHeight : CGFloat = 30.0
     var viewWidth : CGFloat?
     var viewHeight : CGFloat?
     
@@ -42,14 +41,13 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
     }
     
     func addLoginButtons() {
-        let x_coord : CGFloat = (viewWidth! / 2.0) - (btnWidth / 2.0)
-        let fb_y_coord : CGFloat = (viewHeight! / 2.0) - (btnHeight + 10.0)
-        let google_y_coord : CGFloat = (viewHeight! / 2.0) + 10.0
-        loginButton = FBSDKLoginButton(frame: CGRect(x: x_coord, y: fb_y_coord, width: btnWidth, height: btnHeight))
-        GoogleLoginButton = GIDSignInButton(frame: CGRect(x: x_coord, y: google_y_coord, width: btnWidth, height: btnHeight))
+        let x_coord : CGFloat = (viewWidth! / 2.0) - (Constants.login_button_width / 2.0)
+        let fb_y_coord : CGFloat = (viewHeight! / 2.0) - (Constants.login_button_height + Constants.button_y_position_offset)
+        let google_y_coord : CGFloat = (viewHeight! / 2.0) + Constants.button_y_position_offset
+        loginButton = FBSDKLoginButton(frame: CGRect(x: x_coord, y: fb_y_coord, width: Constants.login_button_width, height: Constants.login_button_height))
+        GoogleLoginButton = GIDSignInButton(frame: CGRect(x: x_coord, y: google_y_coord, width: Constants.login_button_width, height: Constants.login_button_height))
         self.view.addSubview(loginButton!)
         self.view.addSubview(GoogleLoginButton!)
-        
     }
     
     func handleLogin() {
@@ -109,9 +107,9 @@ class MainLoginViewController : UIViewController, FBSDKLoginButtonDelegate, GIDS
     }
     
     func goToMainView() {
-        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
         
-        let nextViewController = storyBoard.instantiateViewController(withIdentifier: "mainTabBarController") as! UITabBarController
+        let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.main_tab_storyboard_id) as! UITabBarController
         self.present(nextViewController, animated:true, completion:nil)
     }
 }

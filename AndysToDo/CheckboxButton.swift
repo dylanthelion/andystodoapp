@@ -17,12 +17,12 @@ class CheckboxButton : UIButton {
         case false :
             checked = true
             DispatchQueue.main.async {
-                self.setImage(UIImage(named: "checkbox_checked"), for: .normal)
+                self.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
             }
         case true :
             checked = false
             DispatchQueue.main.async {
-                self.setImage(UIImage(named: "checkbox_unchecked"), for: .normal)
+                self.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
             }
         }
     }

@@ -17,9 +17,9 @@ class DatePickerDataSource : NSObject, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch component {
         case 0:
-            return 12
+            return Constants.months_per_year
         case 1:
-            return 31
+            return Constants.days_per_month
         default:
             print("Something went wrong with date picker view data source")
             return 0

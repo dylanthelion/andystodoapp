@@ -10,8 +10,8 @@ import UIKit
 
 class DayOfWeekPickerDelegate : NSObject, UIPickerViewDelegate {
     
-    let days  = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-    let daysOfWeek : [DayOfWeek] = [.Sunday, .Monday, .Tuesday, .Wednesday, .Thursday, .Friday, .Saturday]
+    let days  = Constants.days_of_week_as_strings
+    let daysOfWeek : [DayOfWeek] = Constants.dayOfWeek_all
     
     var viewDelegate : DayOfWeekPickerDelegateViewDelegate?
     

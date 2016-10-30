@@ -18,18 +18,11 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     
     // UI values
     
-    var top_y_coord : CGFloat = 80.0
-    let label_x_coord : CGFloat = 70.0
-    let button_x_coord : CGFloat = 30.0
-    let label_width : CGFloat = 200.0
-    let button_width : CGFloat = 30.0
-    let item_height : CGFloat = 30.0
+    var top_y_coord : CGFloat?
     var currentTag : Int = 0
-    let row_diff : CGFloat = 40.0
-    
-    
     
     override func viewDidLoad() {
+        top_y_coord = Constants.addCatVC_starting_y_coord
         self.view.backgroundColor = UIColor.white
         self.allCategories = taskDTO.AllCategories
         addCategoryButtons()
@@ -60,7 +53,7 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
         
         
         for _category in self.allCategories! {
-            let checkbox = CheckboxButton(frame: CGRect(x: button_x_coord, y: top_y_coord, width: button_width, height: item_height))
+            let checkbox = CheckboxButton(frame: CGRect(x: Constants.addCatVC_button_x_coord, y: top_y_coord!, width: Constants.addCatVC_button_width, height: Constants.addCatVC_item_height))
             checkbox.tag = currentTag
             checkbox.addTarget(self, action: #selector(toggle_category(sender:)), for: .touchUpInside)
             checkbox.setImage(UIImage(named: "checkbox_unchecked"), for: .normal)
@@ -72,9 +65,9 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
                     }
                 }
             }
-            let name_label = UILabel(frame: CGRect(x: label_x_coord, y: top_y_coord, width: label_width, height: item_height))
+            let name_label = UILabel(frame: CGRect(x: Constants.addCatVC_label_x_coord, y: top_y_coord!, width: Constants.addCatVC_label_width, height: Constants.addCatVC_item_height))
             name_label.text = _category.Name!
-            top_y_coord += row_diff
+            top_y_coord! += Constants.addCatVC_row_diff
             currentTag += 1
             DispatchQueue.main.async {
                 self.view.addSubview(checkbox)
@@ -84,7 +77,7 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     }
     
     func toggle_category(sender : CheckboxButton) {
-        let rootVC = self.navigationController?.viewControllers[1] as! CreateTaskViewController
+        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_create_tasks_VC_index] as! CreateTaskViewController
         if sender.checked {
             rootVC.removeCategory(_category: self.allCategories![sender.tag])
         } else {

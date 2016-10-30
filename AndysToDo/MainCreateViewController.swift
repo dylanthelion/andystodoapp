@@ -11,7 +11,7 @@ import UIKit
 class MainCreateViewController : UIViewController {
     
     override func viewDidLoad() {
-        self.title = "Create Tasks"
+        self.title = Constants.mainCreateVC_title
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -13,7 +13,6 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     // UI
     
     var textFieldSelected : Int = 0
-    let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         
     // Model values
     
@@ -186,9 +185,9 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
         var floatToPass : Float = 0.0
         floatToPass += Float(hours)!
-        floatToPass += (Float(minutes))! / 60.0
-        if meridian == "PM" {
-            floatToPass += 12.0
+        floatToPass += (Float(minutes))! / Constants.seconds_per_minute
+        if meridian == Constants.meridian_pm {
+            floatToPass += Constants.hours_per_meridian
         }
         firstTimeOfDay_txtField.text = fullTime
         startHours = fullTime
@@ -206,7 +205,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     
     func handleDidSelect(unit : String) {
         unitOfTime_txtField.text = unit
-        if unit == "Weekly" {
+        if unit == Constants.timeOfDay_weekly_value {
             dayOfWeek_txtField.isHidden = false
             dayOfWeek_txtField.isUserInteractionEnabled = true
             dayOfWeek_label.isHidden = false
@@ -222,34 +221,37 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
             return
         }
         let repeatable = createRepeatable()
-        if(!repeatable.isValid()) {
+        if repeatable == nil {
+            return
+        }
+        if(!repeatable!.isValid()) {
             
-            let alertController = UIAlertController(title: "Error", message: "Your ", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_invalid_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return
         }
-        unwindToTaskCreate(date: date!, repeatable: repeatable)
+        unwindToTaskCreate(date: date!, repeatable: repeatable!)
     }
     
     func validateForSubmit() -> Bool {
         if unitOfTime_txtField.text == "" {
-            let alertController = UIAlertController(title: "Error", message: "Choose a unit of time.", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_no_unitOfTime_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
         
         if unitsPerTask_txtField.text! == "" {
-            let alertController = UIAlertController(title: "Error", message: "Please enter a number in units per task. This is the number of hours, days, or weeks, between scheduled tasks", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_nonnumeric_numberOfUnits_value_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
         
-        if(firstDate_txtField.text! == "" || firstTimeOfDay_txtField.text! == "" || (unitOfTime_txtField.text == "Weekly" && dayOfWeek_txtField.text! == "")) {
-            let alertController = UIAlertController(title: "Error", message: "Please fill out all visible fields", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+        if(firstDate_txtField.text! == "" || firstTimeOfDay_txtField.text! == "" || (unitOfTime_txtField.text == Constants.timeOfDay_weekly_value && dayOfWeek_txtField.text! == "")) {
+            let alertController = UIAlertController(title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_missing_data_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
@@ -257,20 +259,27 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         return true
     }
     
-    func createRepeatable() -> RepeatableTaskOccurrence {
+    func createRepeatable() -> RepeatableTaskOccurrence? {
         var _unitOfTime : RepetitionTimeCategory?
         
         switch unitOfTime_txtField.text! {
-        case "Hourly":
+        case Constants.timeOfDay_hourly_value:
             _unitOfTime = .Hourly
-        case "Daily":
+        case Constants.timeOfDay_daily_value:
             _unitOfTime = .Daily
-        case "Weekly":
+        case Constants.timeOfDay_weekly_value:
             _unitOfTime = .Weekly
         default:
             _unitOfTime = nil
         }
         let _numberOfUnits : Int? = Int(unitsPerTask_txtField.text!)
+        if _numberOfUnits == nil {
+            let alertController = UIAlertController(title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_nonnumeric_numberOfUnits_value_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
+            self.present(alertController, animated: true, completion: nil)
+            return nil
+        }
+        
         let formatter = StandardDateFormatter()
         let year = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
         //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
@@ -280,11 +289,11 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     }
     
     func unwindToTaskCreate(date : NSDate, repeatable : RepeatableTaskOccurrence) {
-        let rootVC = self.navigationController?.viewControllers[1] as! CreateTaskViewController
+        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_create_tasks_VC_index] as! CreateTaskViewController
         rootVC.repeatableDetails = repeatable
         rootVC.startTime = date
-        rootVC.startDateTextView.text = "Repeatable"
-        rootVC.start_txtField.text = "Repeatable"
+        rootVC.startDateTextView.text = Constants.createRepeatableVC_repeatable
+        rootVC.start_txtField.text = Constants.createRepeatableVC_repeatable
         self.navigationController?.popToViewController(rootVC, animated: true)
     }
     

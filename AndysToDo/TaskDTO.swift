@@ -261,7 +261,7 @@ class TaskDTO {
             if _task.isRepeatable() {
                 let indexOf = AllTasks!.index(of: _task)
                 AllTasks!.remove(at: indexOf!)
-                for i in 0...3 {
+                for i in 0...Constants.repeatablesToGenerate {
                     var units = i
                     let component : Calendar.Component
                     if _task.RepeatableTask!.UnitOfTime! == .Daily {

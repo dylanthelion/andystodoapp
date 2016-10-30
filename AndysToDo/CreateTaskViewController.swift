@@ -13,7 +13,6 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
     // UI
     
     var textFieldSelected = 0
-    let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
     
     // Model values
     
@@ -61,7 +60,7 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
         if repeatableDetails == nil {
-            repeatable_btn.setImage(UIImage(named: "checkbox_unchecked"), for: .normal)
+            repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
             repeatable_btn.checked = false
             repeatable = false
         }
@@ -101,8 +100,8 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
     }
     
     func addTextViewBorder() {
-        description_txtView.layer.borderWidth = 2.0
-        description_txtView.layer.borderColor = UIColor.gray.cgColor
+        description_txtView.layer.borderWidth = Constants.text_view_border_width
+        description_txtView.layer.borderColor = Constants.text_view_border_color
     }
     
     // Text Delegate
@@ -243,9 +242,9 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
                 self.startDateTextView.text = ""
             }
         case false:
-            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
             
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "createRepeatableTaskVC") as! CreateRepeatableTaskOccurrenceViewController
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.create_repeatable_task_VC_id) as! CreateRepeatableTaskOccurrenceViewController
             self.navigationController?.pushViewController(nextViewController, animated: true)
             repeatable = true
         }
@@ -279,15 +278,15 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
     func validateForSubmit() -> Bool {
         
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" && startDateTextView.text! == "" {
-            let alertController = UIAlertController(title: "Failed", message: "Please include a name, decsription, and all time information", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
         
-        if !repeatable && (startDateTextView.text! == "Repeatable" || start_txtField.text! == "Repeatable") {
-            let alertController = UIAlertController(title: "Failed", message: "Your information is invalid. Something went wrong with repeatables.", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+        if !repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
@@ -297,8 +296,8 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
     func validateRepeatable() -> Bool {
         let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: self.startTime, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: self.repeatableDetails)
         if taskDTO.createNewTask(_task: task) {
-            let alertController = UIAlertController(title: "Success", message: "Task created!", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             DispatchQueue.main.async {
                 self.name_txtField.text = ""
@@ -312,8 +311,8 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
             }
             return true
         } else {
-            let alertController = UIAlertController(title: "Failed", message: "Your repeatable information is invalid. Something went wrong.", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatable_information_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
@@ -322,14 +321,14 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
     func validateNonRepeatableTask() -> Bool {
         let formatter = StandardDateFormatter()
         let df = DateFormatter()
-        df.dateFormat = "MMM"
+        df.dateFormat = Constants.standard_month_format
         let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
+        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
         let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
         let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: date, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: nil)
         if taskDTO.createNewTask(_task: task) {
-            let alertController = UIAlertController(title: "Success", message: "Task created!", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             DispatchQueue.main.async {
                 self.name_txtField.text = ""
@@ -343,8 +342,8 @@ class CreateTaskViewController: UIViewController, TaskDTODelegate, UITextFieldDe
             }
             return true
         } else {
-            let alertController = UIAlertController(title: "Failed", message: "Your normal information is invalid. Something went wrong.", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }

@@ -12,8 +12,6 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     // UI
     
-    let OKAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-    
     // Model values
     
     let taskDTO = TaskDTO.globalManager
@@ -44,8 +42,8 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     }
     
     func addTextViewBorder() {
-        description_txtView.layer.borderWidth = 2.0
-        description_txtView.layer.borderColor = UIColor.gray.cgColor
+        description_txtView.layer.borderWidth = Constants.text_view_border_width
+        description_txtView.layer.borderColor = Constants.text_view_border_color
     }
     
     // TaskDTODelegate
@@ -83,6 +81,10 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
         if !validateAndSubmitCategory() {
             return
         } else {
+            DispatchQueue.main.async {
+                self.name_txtField.text = ""
+                self.description_txtView.text = ""
+            }
             return
         }
     }
@@ -91,8 +93,8 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" {
-            let alertController = UIAlertController(title: "Failed", message: "Please include a name and decsription", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_no_name_or_description_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
@@ -101,13 +103,13 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     func validateAndSubmitCategory() -> Bool {
         if taskDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
-            let alertController = UIAlertController(title: "Success", message: "Category created", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return true
         } else {
-            let alertController = UIAlertController(title: "Failed", message: "That name is already taken", preferredStyle: .alert)
-            alertController.addAction(OKAction)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }

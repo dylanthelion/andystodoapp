@@ -12,8 +12,8 @@ class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
     
     var viewDelegate : DatePickerViewDelegateViewDelegate?
     
-    let months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
-    let days = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
+    let months = Constants.all_months_as_strings
+    let days = Constants.all_days_as_strings
     
     convenience init(_delegate : DatePickerViewDelegateViewDelegate) {
         self.init()

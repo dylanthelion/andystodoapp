@@ -15,6 +15,6 @@ class UnitOfTimePickerDataSource : NSObject, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 3
+        return Constants.total_unitsOfTime
     }
 }

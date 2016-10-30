@@ -46,16 +46,16 @@ class TaskTableViewCell : UITableViewCell {
                 self.task?.FinishTime = NSDate()
                 //print("Finishing task at \(self.task!.FinishTime!.description)")
                 DispatchQueue.main.async {
-                    self.onItButton.alpha = 1.0
-                    self.onItButton.titleLabel?.text = "DONE"
+                    self.onItButton.alpha = Constants.alpha_solid
+                    self.onItButton.titleLabel?.text = Constants.taskTableViewCell_done
                     
                 }
             } else if onItState == OnItButtonState.Finished {
                 
                 onItState = OnItButtonState.Inactive
                 DispatchQueue.main.async {
-                    self.onItButton.alpha = 0.3
-                    self.onItButton.titleLabel?.text = "ON IT!"
+                    self.onItButton.alpha = Constants.alpha_faded
+                    self.onItButton.titleLabel?.text = Constants.taskTableViewCell_onIt
                 }
             }
             if let _ = delegate {

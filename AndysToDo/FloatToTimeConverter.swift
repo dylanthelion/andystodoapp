@@ -13,8 +13,8 @@ class TimeConverter {
     class func convertFloatToTimeString(_time : Float) -> String {
         let minutes : String = String((_time - floor(_time)) * 0.6)
         var hours : String
-        if(_time >= 13) {
-            hours = String(Int(floor(_time - 12.0)))
+        if(_time > Constants.hours_per_meridian) {
+            hours = String(Int(floor(_time - Constants.hours_per_meridian)))
         } else {
             hours = String(Int(floor(_time)))
         }
@@ -23,7 +23,7 @@ class TimeConverter {
     
     class func dateToTimeConverter(_time : NSDate) -> String {
         let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "HH:MM"
+        dateformatter.dateFormat = Constants.standard_hours_and_minutes_format
         return dateformatter.string(from: _time as Date)
     }
 }
