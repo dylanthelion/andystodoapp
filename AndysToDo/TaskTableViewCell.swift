@@ -37,25 +37,23 @@ class TaskTableViewCell : UITableViewCell {
                 if (self.task!.StartTime == nil) {
                     self.task?.StartTime = NSDate()
                 }
-                //print("Starting task at \(self.task!.StartTime!.description)")
                 DispatchQueue.main.async {
-                    self.onItButton.alpha = 1.0
+                    self.onItButton.alpha = Constants.alpha_solid
                 }
             } else if onItState == OnItButtonState.Active {
                 onItState = OnItButtonState.Finished
                 self.task?.FinishTime = NSDate()
-                //print("Finishing task at \(self.task!.FinishTime!.description)")
                 DispatchQueue.main.async {
                     self.onItButton.alpha = Constants.alpha_solid
-                    self.onItButton.titleLabel?.text = Constants.taskTableViewCell_done
+                    self.onItButton.setTitle(Constants.taskTableViewCell_done, for: .normal)
                     
                 }
             } else if onItState == OnItButtonState.Finished {
                 
                 onItState = OnItButtonState.Inactive
-                DispatchQueue.main.async {
+                DispatchQueue.main.async  {
                     self.onItButton.alpha = Constants.alpha_faded
-                    self.onItButton.titleLabel?.text = Constants.taskTableViewCell_onIt
+                    self.onItButton.setTitle(Constants.taskTableViewCell_onIt, for: .normal)
                 }
             }
             if let _ = delegate {

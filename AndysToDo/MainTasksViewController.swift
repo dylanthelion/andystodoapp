@@ -65,7 +65,6 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let _ = AllTasks {
-            //print("Tasks: \(AllTasks!.count)")
             return AllTasks!.count
         }
         return 0
@@ -99,11 +98,7 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     // TaskDTODelegate
     
     func handleModelUpdate() {
-        //print("Handle")
         AllTasks = taskDTO.tasksToPopulate!
-        for _task in AllTasks! {
-            //print("Date: \(_task.StartTime!)")
-        }
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
