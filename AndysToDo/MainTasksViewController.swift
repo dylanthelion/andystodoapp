@@ -99,7 +99,11 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     // TaskDTODelegate
     
     func handleModelUpdate() {
+        //print("Handle")
         AllTasks = taskDTO.tasksToPopulate!
+        for _task in AllTasks! {
+            //print("Date: \(_task.StartTime!)")
+        }
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

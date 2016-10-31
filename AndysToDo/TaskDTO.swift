@@ -273,7 +273,7 @@ class TaskDTO {
                         units *= 7
                     }
                     let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: (NSCalendar.current.date(byAdding: component, value: units, to: _task.StartTime! as Date)! as NSDate), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
-                    taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(_task.StartTime!.timeIntervalSince1970)
+                    taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(taskToAdd.StartTime!.timeIntervalSince1970)
                     AllTasks!.append(taskToAdd)
                 }
             }
@@ -285,11 +285,8 @@ class TaskDTO {
         let tempTasks = tasksToPopulate!
         for _task in tempTasks {
             if (_task.StartTime! as Date) > upperLimit! {
-                //print("Remove: \(_task.StartTime!)")
                 let indexOf = tasksToPopulate!.index(of: _task)
                 tasksToPopulate!.remove(at: indexOf!)
-            } else {
-                //print("Keep: \(_task.StartTime!)")
             }
         }
         tasksToPopulate!.sort(by: {
