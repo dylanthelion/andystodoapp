@@ -13,11 +13,14 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // UI
     
     var textFieldSelected : Int = 0
+    let distanceToBottomOfColorLabel : CGFloat = 402.0
+    var lastColorSelected : ColorPickerButton?
     
     // Model values
     
     var startTime : Float?
     var endTime : Float?
+    var color : CGColor?
     let taskDTO = TaskDTO.globalManager
     //var startTxtFieldIsSelected = false
     
@@ -38,6 +41,7 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         setupTextFieldDelegation()
         setupTextFieldInput()
         addTextViewBorder()
+        addColorPicker()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -71,6 +75,55 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     func addTextViewBorder() {
         description_txtView.layer.borderWidth = Constants.text_view_border_width
         description_txtView.layer.borderColor = Constants.text_view_border_color
+    }
+    
+    func addColorPicker() {
+        let width = self.view.frame.width
+        var buttonWidth : CGFloat = 0.0
+        var marginWidth : CGFloat = 0.0
+        var xCoord : CGFloat = 0.0
+        var numberOfElementsPerRow : Int = 0
+        let numberOfElementsPerColumn = 10
+        var yCoord : CGFloat = 0.0
+        for i in 10...20 {
+            if (Int(Float(width)) % i) == 0 {
+                buttonWidth = CGFloat(i)
+                marginWidth = CGFloat(i) * 3.0
+                xCoord = marginWidth
+                numberOfElementsPerRow = Int(Float(width / buttonWidth)) - 6
+                yCoord = distanceToBottomOfColorLabel + 10.0
+                break
+            }
+        }
+        
+        if numberOfElementsPerRow == 0 {
+            print("No effective modulus")
+            return
+        }
+        
+        var buttonsToAdd : [ColorPickerButton] = [ColorPickerButton]()
+        let maxButtons = numberOfElementsPerRow * numberOfElementsPerColumn
+        
+        let currentDenominator = Int(floor(pow(Double(maxButtons), 1/3)))
+        var totalButtons = 0
+        for outerIndex in 1...currentDenominator {
+            for innerIndex in 1...currentDenominator {
+                for cubicIndex in 1...currentDenominator {
+                    let totalIndex = (outerIndex - 1) * Int(pow(Double(currentDenominator), 2.0)) + (innerIndex - 1) * currentDenominator + cubicIndex - 1
+                    let button = ColorPickerButton(frame: CGRect(x: xCoord + (buttonWidth * CGFloat(totalIndex % numberOfElementsPerRow)), y: yCoord + (buttonWidth * CGFloat(totalIndex / numberOfElementsPerRow)), width: buttonWidth, height: buttonWidth), _r: 1.0 / Float(outerIndex), _g: 1.0 / Float(innerIndex), _b: 1.0 / Float(cubicIndex))
+                    button.addTarget(self, action: #selector(selectColor(sender:)), for: .touchUpInside)
+                    buttonsToAdd.append(button)
+                    totalButtons += 1
+                }
+            }
+        }
+        print("Buttons: \(buttonsToAdd.count)")
+        
+        DispatchQueue.main.async {
+            for button in buttonsToAdd {
+                self.view.addSubview(button)
+            }
+        }
     }
     
     // TaskDTODelegate
@@ -152,6 +205,22 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
             print("No picker selected")
         }
         self.navigationItem.rightBarButtonItem = nil
+    }
+    
+    // Color picker
+    
+    func selectColor(sender : ColorPickerButton) {
+        color = sender.backgroundColor!.cgColor
+        DispatchQueue.main.async {
+            if let _ = self.lastColorSelected {
+                self.lastColorSelected?.layer.borderWidth = 0.0
+                self.lastColorSelected?.layer.borderColor = UIColor.clear.cgColor
+            }
+            sender.layer.borderWidth = Constants.text_view_border_width
+            sender.layer.borderColor = UIColor.black.cgColor
+            self.lastColorSelected = sender
+        }
+        print(color!.components!)
     }
     
     // TimePickerViewDelegateViewDelegate

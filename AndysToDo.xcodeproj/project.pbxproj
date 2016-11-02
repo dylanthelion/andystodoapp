@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		740CB4651DC987D100ABF0BD /* ColorPickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740CB4641DC987D100ABF0BD /* ColorPickerButton.swift */; };
 		741C72CC1DC4325600331E07 /* StandardDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741C72CB1DC4325600331E07 /* StandardDateFormatter.swift */; };
 		741C72CE1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741C72CD1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift */; };
 		741C72D01DC446AD00331E07 /* UnitOfTimePickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741C72CF1DC446AD00331E07 /* UnitOfTimePickerDataSource.swift */; };
@@ -81,6 +82,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		740CB4641DC987D100ABF0BD /* ColorPickerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPickerButton.swift; sourceTree = "<group>"; };
 		741C72CB1DC4325600331E07 /* StandardDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandardDateFormatter.swift; sourceTree = "<group>"; };
 		741C72CD1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitOfTimePickerDelegate.swift; sourceTree = "<group>"; };
 		741C72CF1DC446AD00331E07 /* UnitOfTimePickerDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitOfTimePickerDataSource.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				741DF0831DBB239800E9B785 /* CheckboxButton.swift */,
+				740CB4641DC987D100ABF0BD /* ColorPickerButton.swift */,
 			);
 			name = Buttons;
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 				74B3536A1DC43079004A66DF /* DayOfWeekPickerDataSource.swift in Sources */,
 				74B353661DC41FDE004A66DF /* TimecatPickerDataSource.swift in Sources */,
 				741DF0861DBC34F200E9B785 /* CreateCategoryViewController.swift in Sources */,
+				740CB4651DC987D100ABF0BD /* ColorPickerButton.swift in Sources */,
 				741DF0841DBB239800E9B785 /* CheckboxButton.swift in Sources */,
 				74D6C1111DBC998B00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift in Sources */,
 				741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */,
