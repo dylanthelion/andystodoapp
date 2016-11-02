@@ -6,7 +6,7 @@
 //  Copyright © 2016 Dylan. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 private let allTasks = TaskDTO()
 
@@ -97,10 +97,10 @@ class TaskDTO {
     }
     
     func loadFakeTimeCategories() -> [TimeCategory] {
-        let category1 = TimeCategory(_name: "Time Cat 1", _description: "Fake Morning", _start: 8.5, _end: 11.0)
-        let category2 = TimeCategory(_name: "Time Cat 2", _description: "Fake Lunch Hours", _start: 12.25, _end: 13.25)
-        let category3 = TimeCategory(_name: "Time Cat 3", _description: "Fake Afternoon", _start: 14.0, _end: 17.0)
-        let category4 = TimeCategory(_name: "Time Cat 4", _description: "Fake evening", _start: 18.5, _end: 21.75)
+        let category1 = TimeCategory(_name: "Time Cat 1", _description: "Fake Morning", _start: 8.5, _end: 11.0, _color: UIColor.red.cgColor)
+        let category2 = TimeCategory(_name: "Time Cat 2", _description: "Fake Lunch Hours", _start: 12.25, _end: 13.25, _color: UIColor.green.cgColor)
+        let category3 = TimeCategory(_name: "Time Cat 3", _description: "Fake Afternoon", _start: 14.0, _end: 17.0, _color: UIColor.green.cgColor)
+        let category4 = TimeCategory(_name: "Time Cat 4", _description: "Fake evening", _start: 18.5, _end: 21.75, _color: nil)
         return [category1, category2, category3, category4]
     }
     

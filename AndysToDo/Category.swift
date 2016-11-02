@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class  Category : Equatable {
     var Name : String?
@@ -29,10 +30,13 @@ class  Category : Equatable {
 
 class TimeCategory : Category {
     
-    init(_name : String, _description : String, _start : Float, _end: Float) {
+    var color : CGColor?
+    
+    init(_name : String, _description : String, _start : Float, _end: Float, _color: CGColor?) {
         super.init(_name: _name, _description: _description)
         StartOfTimeWindow = _start
         EndOfTimeWindow = _end
+        color = _color
     }
     
     override func isValid() -> Bool {
