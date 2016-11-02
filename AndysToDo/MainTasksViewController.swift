@@ -85,6 +85,11 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         if let _ = cellTask.StartTime {
             cell.timeLabel.text = TimeConverter.dateToTimeConverter(_time: cellTask.StartTime!)
         }
+        if let _ = cellTask.TimeCategory?.color {
+            cell.backgroundColor = UIColor.init(cgColor: (cellTask.TimeCategory?.color!)!)
+        } else {
+            cell.backgroundColor = UIColor.clear
+        }
         
         return cell
     }
@@ -130,7 +135,6 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         } else {
             self.categoryFilters = [_category]
         }
-        
     }
     
     func addTimeCategoryFilter(_category: TimeCategory) {
