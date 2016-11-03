@@ -100,6 +100,16 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
         self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            if AllTasks!.count == taskDTO.tasksToPopulate!.count {
+                taskDTO.tasksToPopulate!.remove(at: indexPath.row)
+            }
+            AllTasks!.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
     // TaskDTODelegate
     
     func handleModelUpdate() {
