@@ -40,14 +40,11 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
-            //print("Filter")
             applyFilter()
         }
         if !isSorted {
-            //print("Sort again")
             taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
         }
-        //taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -97,7 +94,10 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     // Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
+        let displayActiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayActiveTaskVC") as! DisplayActiveTaskViewController
+        displayActiveTaskVC.task = AllTasks![indexPath.row]
+        self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
     }
     
     // TaskDTODelegate
