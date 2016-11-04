@@ -128,7 +128,7 @@ class TaskDTO {
     }
     
     func updateTask(_task : Task) -> Bool {
-        for task in AllTasks! {
+        for task in tasksToPopulate! {
             if task.ID! == _task.ID && _task.isValid() {
                 task.Categories = _task.Categories
                 task.Description = _task.Description

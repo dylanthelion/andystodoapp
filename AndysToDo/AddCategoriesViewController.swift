@@ -21,6 +21,10 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     var top_y_coord : CGFloat?
     var currentTag : Int = 0
     
+    // Task VC
+    
+    var taskDelegate : UIViewController?
+    
     override func viewDidLoad() {
         top_y_coord = Constants.addCatVC_starting_y_coord
         self.view.backgroundColor = UIColor.white
@@ -77,12 +81,23 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     }
     
     func toggle_category(sender : CheckboxButton) {
-        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_create_tasks_VC_index] as! CreateTaskViewController
-        if sender.checked {
-            rootVC.removeCategory(_category: self.allCategories![sender.tag])
+        if let rootVC = taskDelegate! as? CreateTaskViewController {
+            if sender.checked {
+                rootVC.removeCategory(_category: self.allCategories![sender.tag])
+            } else {
+                rootVC.addCategory(_category: self.allCategories![sender.tag])
+            }
+            sender.toggleChecked()
+        } else if let rootVC = taskDelegate! as? DisplayInactiveTaskViewController {
+            if sender.checked {
+                rootVC.removeCategory(_category: self.allCategories![sender.tag])
+            } else {
+                rootVC.addCategory(_category: self.allCategories![sender.tag])
+            }
+            sender.toggleChecked()
         } else {
-            rootVC.addCategory(_category: self.allCategories![sender.tag])
+            print("Problem casting parent view controller")
         }
-        sender.toggleChecked()
+        
     }
 }

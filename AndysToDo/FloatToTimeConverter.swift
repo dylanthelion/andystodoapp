@@ -26,4 +26,28 @@ class TimeConverter {
         dateformatter.dateFormat = Constants.standard_hours_and_minutes_format
         return dateformatter.string(from: _time as Date)
     }
+    
+    class func dateToTimeWithMeridianConverter(_time : NSDate) -> String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "HH:mm a"
+        return dateformatter.string(from: _time as Date)
+    }
+    
+    class func dateToShortDateConverter(_time: NSDate) -> String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "MMM dd"
+        return dateformatter.string(from: _time as Date)
+    }
+    
+    class func dateToMonthConverter(_time: NSDate) -> String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "MMM"
+        return dateformatter.string(from: _time as Date)
+    }
+    
+    class func dateToDateOfMonthConverter(_time: NSDate) -> String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "dd"
+        return dateformatter.string(from: _time as Date)
+    }
 }

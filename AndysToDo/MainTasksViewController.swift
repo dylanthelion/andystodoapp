@@ -95,9 +95,16 @@ class MainTasksViewController : UITableViewController, TaskDTODelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
-        let displayActiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayActiveTaskVC") as! DisplayActiveTaskViewController
-        displayActiveTaskVC.task = AllTasks![indexPath.row]
-        self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
+        if AllTasks![indexPath.row].inProgress {
+            let displayActiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayActiveTaskVC") as! DisplayActiveTaskViewController
+            displayActiveTaskVC.task = AllTasks![indexPath.row]
+            self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
+        } else {
+            let displayInactiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayInactiveTaskVC") as! DisplayInactiveTaskViewController
+            displayInactiveTaskVC.task = AllTasks![indexPath.row]
+            self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
+        }
+        
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
