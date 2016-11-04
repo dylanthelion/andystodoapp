@@ -1,23 +1,23 @@
 //
-//  MainTasksViewController.swift
+//  AllTasksViewController.swift
 //  AndysToDo
 //
-//  Created by dillion on 10/16/16.
+//  Created by dillion on 11/3/16.
 //  Copyright © 2016 Dylan. All rights reserved.
 //
 
 import UIKit
 
-class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
+class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     // UI
     
     var filterApplied = false
+    var tasksLoaded = false
     
     // Model values
     
     let taskDTO = TaskDTO.globalManager
-    var isSorted = false
     
     override func viewDidLoad() {
         self.title = Constants.mainTasksVCTitle
@@ -25,18 +25,18 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
         if taskDTO.AllTasks == nil {
             taskDTO.loadTasks()
         }
-        taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
-        isSorted = true
+        AllTasks = taskDTO.AllTasks
+        tasksLoaded = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        if !tasksLoaded {
+            AllTasks = taskDTO.AllTasks
+            tasksLoaded = true
+        }
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
-        }
-        if !isSorted {
-            taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
-            isSorted = true
         }
     }
     
@@ -44,7 +44,7 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
         taskDTO.delegate = nil
         categoryFilters = nil
         timeCategoryFilters = nil
-        isSorted = false
+        tasksLoaded = false
     }
     
     // Table View datasource
@@ -61,19 +61,17 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : TaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.task_table_view_cell_id) as! TaskTableViewCell
+        //let testCell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "allTasksTableViewCell")!
+        let cell : AllTasksTableViewCell = tableView.dequeueReusableCell(withIdentifier: "allTasksTableViewCell") as! AllTasksTableViewCell
         let cellTask : Task = AllTasks![indexPath.row]
         cell.setTask(_task: cellTask)
-        switch cellTask.inProgress {
-        case true :
-            cell.onItState = OnItButtonState.Active
-            cell.onItButton.alpha = Constants.alpha_solid
-        case false :
-            cell.onItState = OnItButtonState.Inactive
-        }
-        cell.taskTitleLabel.text = cellTask.Name!
-        if let _ = cellTask.StartTime {
-            cell.timeLabel.text = TimeConverter.dateToTimeConverter(_time: cellTask.StartTime!)
+        cell.name_lbl.text = cellTask.Name!
+        if cellTask.isRepeatable() {
+            cell.time_lbl.text = "Repeatable"
+        } else if let _ = cellTask.StartTime {
+            cell.time_lbl.text = TimeConverter.dateToShortDateConverter(_time: cellTask.StartTime!)
+        } else {
+            cell.time_lbl.text = "No time"
         }
         if let _ = cellTask.TimeCategory?.color {
             cell.backgroundColor = UIColor.init(cgColor: (cellTask.TimeCategory?.color!)!)
@@ -88,22 +86,13 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
-        if AllTasks![indexPath.row].inProgress {
-            let displayActiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayActiveTaskVC") as! DisplayActiveTaskViewController
-            displayActiveTaskVC.task = AllTasks![indexPath.row]
-            self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
-        } else {
-            let displayInactiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayInactiveTaskVC") as! DisplayInactiveTaskViewController
-            displayInactiveTaskVC.task = AllTasks![indexPath.row]
-            self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
-        }
         
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            if AllTasks!.count == taskDTO.tasksToPopulate!.count {
-                taskDTO.tasksToPopulate!.remove(at: indexPath.row)
+            if AllTasks!.count == taskDTO.AllTasks!.count {
+                taskDTO.AllTasks!.remove(at: indexPath.row)
             }
             AllTasks!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -113,7 +102,7 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     // TaskDTODelegate
     
     func handleModelUpdate() {
-        AllTasks = taskDTO.tasksToPopulate!
+        AllTasks = taskDTO.AllTasks!
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -126,7 +115,10 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     // Filtering
     
     func applyFilter() {
-        taskDTO.applyFilter(categories: categoryFilters, timeCategories: timeCategoryFilters)
+        self.AllTasks = taskDTO.applyFilterToAllTasks(categories: categoryFilters, timeCategories: timeCategoryFilters)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     override func removeCategoryFilter(_category: Category) {
@@ -153,7 +145,6 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
         } else {
             self.timeCategoryFilters = [_category]
         }
-        
     }
     
     // Segues

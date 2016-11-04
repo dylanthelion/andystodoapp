@@ -35,8 +35,9 @@ class TaskDTO {
         // Until persistence is finished, load fake tasks
         nextTaskID = 0
         AllTasks = loadFakeTasks()
+        populateNonRepeatables()
         populateRepeatables()
-        tasksToPopulate = AllTasks!
+        //tasksToPopulate = AllTasks!
         // Inform delegate that tasks are loaded
         if let _ = delegate {
             delegate!.handleModelUpdate()
@@ -215,12 +216,15 @@ class TaskDTO {
             loadTasks()
             return
         }
+        if !CollectionHelper.IsNilOrEmpty(_coll: tasksToPopulate!) {
+            tasksToPopulate!.removeAll()
+        }
+        populateNonRepeatables()
         populateRepeatables()
         filteredTasks = []
-        for _task in AllTasks! {
+        for _task in tasksToPopulate! {
             
             var addToFilter : Bool = false
-            
             if _task.Categories != nil && !CollectionHelper.IsNilOrEmpty(_coll: categories) {
                 for _category in _task.Categories! {
                     for _checkCategory in categories! {
@@ -246,9 +250,67 @@ class TaskDTO {
                 addToFilter = false
             }
         }
+        
         tasksToPopulate = filteredTasks
+        
         if let _ = delegate {
             delegate?.handleModelUpdate()
+        }
+    }
+    
+    func applyFilterToAllTasks(categories : [Category]?, timeCategories : [TimeCategory]?) -> [Task]? {
+        if AllTasks == nil {
+            loadTasks()
+        }
+        if(CollectionHelper.IsNilOrEmpty(_coll: categories) && CollectionHelper.IsNilOrEmpty(_coll: timeCategories)) {
+            //print("No filter")
+            return AllTasks
+        }
+        filteredTasks = []
+        for _task in AllTasks! {
+            
+            var addToFilter : Bool = false
+            if _task.Categories != nil && !CollectionHelper.IsNilOrEmpty(_coll: categories) {
+                for _category in _task.Categories! {
+                    for _checkCategory in categories! {
+                        if(_category.Name! == _checkCategory.Name!) {
+                            addToFilter = true
+                            break
+                        }
+                    }
+                }
+            }
+            
+            if _task.TimeCategory != nil && !CollectionHelper.IsNilOrEmpty(_coll: timeCategories) {
+                for _checkCategory in timeCategories! {
+                    if(_task.TimeCategory!.Name! == _checkCategory.Name!) {
+                        addToFilter = true
+                        break
+                    }
+                }
+            }
+            
+            if(addToFilter) {
+                filteredTasks!.append(_task)
+                addToFilter = false
+            }
+        }
+        
+        return filteredTasks
+    }
+    
+    func populateNonRepeatables() {
+        if AllTasks == nil {
+            return
+        }
+        if tasksToPopulate == nil {
+            tasksToPopulate = [Task]()
+        }
+        
+        for _task in AllTasks! {
+            if !_task.isRepeatable() {
+                tasksToPopulate!.append(_task)
+            }
         }
     }
     
@@ -256,12 +318,20 @@ class TaskDTO {
         if AllTasks == nil {
             return
         }
+        if tasksToPopulate == nil {
+            tasksToPopulate = [Task]()
+        }
         let tempTasks = AllTasks!
         for _task in tempTasks {
             if _task.isRepeatable() {
-                let indexOf = AllTasks!.index(of: _task)
-                AllTasks!.remove(at: indexOf!)
-                for i in 0...Constants.repeatablesToGenerate {
+                if !CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
+                    if _task.unwrappedRepeatables!.count < Constants.repeatablesToGenerate {
+                        clearOldRepeatablesFrom(_task: _task)
+                    }
+                } else {
+                    _task.unwrappedRepeatables = [Task]()
+                }
+                for i in 0..<Constants.repeatablesToGenerate {
                     var units = i
                     let component : Calendar.Component
                     if _task.RepeatableTask!.UnitOfTime! == .Daily {
@@ -273,11 +343,21 @@ class TaskDTO {
                         units *= 7
                     }
                     let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: (NSCalendar.current.date(byAdding: component, value: units, to: _task.StartTime! as Date)! as NSDate), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
+                    taskToAdd.parentID = _task.ID!
                     taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(taskToAdd.StartTime!.timeIntervalSince1970)
-                    AllTasks!.append(taskToAdd)
+                    tasksToPopulate!.append(taskToAdd)
+                    _task.unwrappedRepeatables!.append(taskToAdd)
                 }
             }
         }
+    }
+    
+    func clearOldRepeatablesFrom(_task : Task) {
+        for repeatable in _task.unwrappedRepeatables! {
+            let index = tasksToPopulate!.index(of: repeatable)
+            tasksToPopulate!.remove(at: index!)
+        }
+        _task.unwrappedRepeatables!.removeAll()
     }
     
     func sortDisplayedTasks(forWindow : Calendar.Component, units: Int) {

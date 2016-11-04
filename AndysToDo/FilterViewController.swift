@@ -125,7 +125,7 @@ class FilterViewController : UIViewController, TaskDTODelegate {
     
     func toggleFilter(sender : CheckboxButton) {
         
-        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as! MainTasksViewController
+        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as! TaskDisplayViewController
         if !CollectionHelper.IsNilOrEmpty(_coll: self.categories) {
             if sender.tag > (self.categories!.count - 1) {
                 if sender.checked {

@@ -19,6 +19,8 @@ class Task : Equatable {
     var Categories : [Category]?
     var TimeCategory : TimeCategory?
     var RepeatableTask : RepeatableTaskOccurrence?
+    var unwrappedRepeatables : [Task]?
+    var parentID : Int?
     
     init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?) {
         Name = _name
