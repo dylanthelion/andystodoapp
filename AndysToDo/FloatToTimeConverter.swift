@@ -29,7 +29,7 @@ class TimeConverter {
     
     class func dateToTimeWithMeridianConverter(_time : NSDate) -> String {
         let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "HH:mm a"
+        dateformatter.dateFormat = "hh:mm a"
         return dateformatter.string(from: _time as Date)
     }
     

@@ -81,7 +81,7 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     }
     
     func toggle_category(sender : CheckboxButton) {
-        if let rootVC = taskDelegate! as? CreateTaskViewController {
+        if let rootVC = taskDelegate! as? CreateTaskParentViewController {
             if sender.checked {
                 rootVC.removeCategory(_category: self.allCategories![sender.tag])
             } else {

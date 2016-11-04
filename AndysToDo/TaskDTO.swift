@@ -26,6 +26,13 @@ class TaskDTO {
     
     func loadTasks() {
         if(AllTasks != nil) {
+            populateNonRepeatables()
+            populateRepeatables()
+            //tasksToPopulate = AllTasks!
+            // Inform delegate that tasks are loaded
+            if let _ = delegate {
+                delegate!.handleModelUpdate()
+            }
             return
         }
         loadCategories()
@@ -110,7 +117,14 @@ class TaskDTO {
     func createNewTask(_task : Task) -> Bool {
         if _task.isValid() {
             AllTasks!.append(_task)
-            tasksToPopulate!.append(_task)
+            return true
+        }
+        return false
+    }
+    
+    func createNewTempRepeatableTask(_task : Task) -> Bool {
+        if _task.isValid() {
+            AllTasks!.append(_task)
             return true
         }
         return false
@@ -139,6 +153,7 @@ class TaskDTO {
                 task.RepeatableTask = _task.RepeatableTask
                 task.StartTime = _task.StartTime
                 task.TimeCategory = _task.TimeCategory
+                task.unwrappedRepeatables = _task.unwrappedRepeatables
                 return true
             }
         }
@@ -150,11 +165,13 @@ class TaskDTO {
         if let checkIndex = AllTasks?.index(of: _task) {
             AllTasks!.remove(at: checkIndex)
         }
-        if let checkIndex = tasksToPopulate?.index(of: _task) {
+        if let checkIndex = filteredTasks?.index(of: _task) {
             filteredTasks?.remove(at: checkIndex)
-            tasksToPopulate?.remove(at: checkIndex)
-            delegate?.handleModelUpdate()
         }
+        if let checkIndex = tasksToPopulate?.index(of: _task) {
+            tasksToPopulate?.remove(at: checkIndex)
+        }
+        delegate?.handleModelUpdate()
     }
     
     // Category CRUD
@@ -306,9 +323,8 @@ class TaskDTO {
         if tasksToPopulate == nil {
             tasksToPopulate = [Task]()
         }
-        
         for _task in AllTasks! {
-            if !_task.isRepeatable() {
+            if !_task.isRepeatable() && tasksToPopulate!.index(of: _task) == nil {
                 tasksToPopulate!.append(_task)
             }
         }
@@ -322,12 +338,12 @@ class TaskDTO {
             tasksToPopulate = [Task]()
         }
         let tempTasks = AllTasks!
-        for _task in tempTasks {
+        for (index, _task) in tempTasks.enumerated() {
             if _task.isRepeatable() {
+                print("Unwrap: \(_task.Name!)")
                 if !CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
-                    if _task.unwrappedRepeatables!.count < Constants.repeatablesToGenerate {
-                        clearOldRepeatablesFrom(_task: _task)
-                    }
+                    clearOldRepeatablesFrom(_task: _task)
+                    //clearOldRepeatablesFrom(_task: AllTasks![index])
                 } else {
                     _task.unwrappedRepeatables = [Task]()
                 }
@@ -354,8 +370,9 @@ class TaskDTO {
     
     func clearOldRepeatablesFrom(_task : Task) {
         for repeatable in _task.unwrappedRepeatables! {
-            let index = tasksToPopulate!.index(of: repeatable)
-            tasksToPopulate!.remove(at: index!)
+            if let index = tasksToPopulate!.index(of: repeatable) {
+                tasksToPopulate!.remove(at: index)
+            }
         }
         _task.unwrappedRepeatables!.removeAll()
     }
@@ -367,6 +384,7 @@ class TaskDTO {
             if (_task.StartTime! as Date) > upperLimit! {
                 let indexOf = tasksToPopulate!.index(of: _task)
                 tasksToPopulate!.remove(at: indexOf!)
+                
             }
         }
         tasksToPopulate!.sort(by: {

@@ -18,6 +18,7 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     let taskDTO = TaskDTO.globalManager
     var isSorted = false
+    var totalTasks = 0
     
     override func viewDidLoad() {
         self.title = Constants.mainTasksVCTitle
@@ -31,6 +32,11 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        if totalTasks != taskDTO.AllTasks!.count {
+            print("New task")
+            taskDTO.loadTasks()
+            taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
+        }
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
         }
@@ -114,6 +120,7 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     func handleModelUpdate() {
         AllTasks = taskDTO.tasksToPopulate!
+        totalTasks = taskDTO.AllTasks!.count
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

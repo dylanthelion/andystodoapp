@@ -13,6 +13,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     // UI
     
     var textFieldSelected : Int = 0
+    var validRepeatableSubmitted = false
         
     // Model values
     
@@ -58,7 +59,10 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        
+        if !validRepeatableSubmitted {
+            let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_create_tasks_VC_index] as! CreateTaskParentViewController
+            rootVC.repeatableDetails = nil
+        }
     }
     
     // View setup
@@ -289,11 +293,10 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     }
     
     func unwindToTaskCreate(date : NSDate, repeatable : RepeatableTaskOccurrence) {
-        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_create_tasks_VC_index] as! CreateTaskViewController
+        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_create_tasks_VC_index] as! CreateTaskParentViewController
         rootVC.repeatableDetails = repeatable
         rootVC.startTime = date
-        rootVC.startDateTextView.text = Constants.createRepeatableVC_repeatable
-        rootVC.start_txtField.text = Constants.createRepeatableVC_repeatable
+        
         self.navigationController?.popToViewController(rootVC, animated: true)
     }
     

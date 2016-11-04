@@ -47,7 +47,7 @@ struct Constants {
     static let hours_per_meridian : Float = 12.0
     static let standard_month_format = "MMM"
     static let standard_hours_and_minutes_format = "HH:MM"
-    static let standard_full_date_format = "MMM DD HH:mm a YYYY"
+    static let standard_full_date_format = "MMM d H:mm aa yyyy"
     static let months_per_year = 12
     static let days_per_month = 31
     static let total_meridians = 2

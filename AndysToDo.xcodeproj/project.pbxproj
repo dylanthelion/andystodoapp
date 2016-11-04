@@ -14,6 +14,8 @@
 		740CB46D1DCC45B100ABF0BD /* AllTasksTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740CB46C1DCC45B100ABF0BD /* AllTasksTableViewCell.swift */; };
 		740CB4701DCC46FD00ABF0BD /* TaskDisplayProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740CB46F1DCC46FD00ABF0BD /* TaskDisplayProtocol.swift */; };
 		740CB4721DCC483F00ABF0BD /* TaskDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740CB4711DCC483F00ABF0BD /* TaskDisplayViewController.swift */; };
+		740CB4741DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740CB4731DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift */; };
+		740CB4761DCC951B00ABF0BD /* CreateTaskParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740CB4751DCC951B00ABF0BD /* CreateTaskParentViewController.swift */; };
 		741C72CC1DC4325600331E07 /* StandardDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741C72CB1DC4325600331E07 /* StandardDateFormatter.swift */; };
 		741C72CE1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741C72CD1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift */; };
 		741C72D01DC446AD00331E07 /* UnitOfTimePickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741C72CF1DC446AD00331E07 /* UnitOfTimePickerDataSource.swift */; };
@@ -95,6 +97,8 @@
 		740CB46C1DCC45B100ABF0BD /* AllTasksTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllTasksTableViewCell.swift; sourceTree = "<group>"; };
 		740CB46F1DCC46FD00ABF0BD /* TaskDisplayProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDisplayProtocol.swift; sourceTree = "<group>"; };
 		740CB4711DCC483F00ABF0BD /* TaskDisplayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskDisplayViewController.swift; sourceTree = "<group>"; };
+		740CB4731DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllTasksIndividualTaskViewController.swift; sourceTree = "<group>"; };
+		740CB4751DCC951B00ABF0BD /* CreateTaskParentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTaskParentViewController.swift; sourceTree = "<group>"; };
 		741C72CB1DC4325600331E07 /* StandardDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandardDateFormatter.swift; sourceTree = "<group>"; };
 		741C72CD1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitOfTimePickerDelegate.swift; sourceTree = "<group>"; };
 		741C72CF1DC446AD00331E07 /* UnitOfTimePickerDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitOfTimePickerDataSource.swift; sourceTree = "<group>"; };
@@ -234,6 +238,8 @@
 				740CB4681DCAC95100ABF0BD /* DisplayInactiveTask.swift */,
 				740CB46A1DCC43E000ABF0BD /* AllTasksViewController.swift */,
 				740CB4711DCC483F00ABF0BD /* TaskDisplayViewController.swift */,
+				740CB4731DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift */,
+				740CB4751DCC951B00ABF0BD /* CreateTaskParentViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -552,6 +558,7 @@
 				740CB4721DCC483F00ABF0BD /* TaskDisplayViewController.swift in Sources */,
 				741DF0881DBC35D500E9B785 /* MainCreateViewController.swift in Sources */,
 				741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */,
+				740CB4761DCC951B00ABF0BD /* CreateTaskParentViewController.swift in Sources */,
 				74C2BDA41DAEA5C1006D683D /* AppDelegate.swift in Sources */,
 				741DF0371DB43EE400E9B785 /* MainTasksViewController.swift in Sources */,
 				74B3536A1DC43079004A66DF /* DayOfWeekPickerDataSource.swift in Sources */,
@@ -571,6 +578,7 @@
 				74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */,
 				740CB4691DCAC95100ABF0BD /* DisplayInactiveTask.swift in Sources */,
 				741C72CE1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift in Sources */,
+				740CB4741DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift in Sources */,
 				74DFB0A71DC16E300069AAC2 /* DatePickerViewDelegate.swift in Sources */,
 				74B353681DC42458004A66DF /* DayOfWeekPickerDelegate.swift in Sources */,
 				741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */,

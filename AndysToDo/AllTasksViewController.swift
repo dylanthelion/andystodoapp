@@ -61,7 +61,6 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //let testCell : UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "allTasksTableViewCell")!
         let cell : AllTasksTableViewCell = tableView.dequeueReusableCell(withIdentifier: "allTasksTableViewCell") as! AllTasksTableViewCell
         let cellTask : Task = AllTasks![indexPath.row]
         cell.setTask(_task: cellTask)
@@ -86,7 +85,9 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
-        
+        let displayTaskVC = storyBoard.instantiateViewController(withIdentifier: "allTasksIndividualVC") as! AllTasksIndividualTaskViewController
+        displayTaskVC.task = AllTasks![indexPath.row]
+        self.navigationController?.pushViewController(displayTaskVC, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
