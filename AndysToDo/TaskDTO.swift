@@ -46,6 +46,7 @@ class TaskDTO {
         populateRepeatables()
         //tasksToPopulate = AllTasks!
         // Inform delegate that tasks are loaded
+        sortAllTasks()
         if let _ = delegate {
             delegate!.handleModelUpdate()
         }
@@ -117,6 +118,7 @@ class TaskDTO {
     func createNewTask(_task : Task) -> Bool {
         if _task.isValid() {
             AllTasks!.append(_task)
+            sortAllTasks()
             return true
         }
         return false
@@ -125,6 +127,7 @@ class TaskDTO {
     func createNewTempRepeatableTask(_task : Task) -> Bool {
         if _task.isValid() {
             AllTasks!.append(_task)
+            sortAllTasks()
             return true
         }
         return false
@@ -154,6 +157,7 @@ class TaskDTO {
                 task.StartTime = _task.StartTime
                 task.TimeCategory = _task.TimeCategory
                 task.unwrappedRepeatables = _task.unwrappedRepeatables
+                sortAllTasks()
                 return true
             }
         }
@@ -171,6 +175,7 @@ class TaskDTO {
         if let checkIndex = tasksToPopulate?.index(of: _task) {
             tasksToPopulate?.remove(at: checkIndex)
         }
+        sortAllTasks()
         delegate?.handleModelUpdate()
     }
     
@@ -366,6 +371,7 @@ class TaskDTO {
                 }
             }
         }
+        sortAllTasks()
     }
     
     func clearOldRepeatablesFrom(_task : Task) {
@@ -391,6 +397,25 @@ class TaskDTO {
             return ($0.StartTime! as Date) < ($1.StartTime! as Date)
         })
         delegate?.handleModelUpdate()
+    }
+    
+    func sortAllTasks() {
+        for _task in AllTasks! {
+            if _task.isRepeatable() {
+                if !CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
+                    _task.unwrappedRepeatables!.sort(by: {
+                        return ($0.StartTime! as Date) < ($1.StartTime! as Date)
+                    })
+                    _task.StartTime = _task.unwrappedRepeatables![0].StartTime
+                } else {
+                    _task.StartTime = Date().addingTimeInterval(500000) as NSDate?
+                }
+            }
+        }
+        
+        AllTasks!.sort(by: {
+            return ($0.StartTime! as Date) < ($1.StartTime! as Date)
+        })
     }
 }
 

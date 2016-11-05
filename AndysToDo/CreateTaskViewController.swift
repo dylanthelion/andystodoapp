@@ -313,7 +313,7 @@ class CreateTaskViewController: CreateTaskParentViewController, TaskDTODelegate,
         let df = DateFormatter()
         df.dateFormat = Constants.standard_month_format
         let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
+        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
         let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
         let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: date, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: nil)
         if taskDTO.createNewTask(_task: task) {

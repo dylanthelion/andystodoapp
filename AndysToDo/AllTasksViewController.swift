@@ -34,6 +34,9 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
         if !tasksLoaded {
             AllTasks = taskDTO.AllTasks
             tasksLoaded = true
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
