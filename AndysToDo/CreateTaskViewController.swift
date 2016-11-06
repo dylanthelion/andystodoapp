@@ -56,7 +56,7 @@ class CreateTaskViewController: CreateTaskParentViewController, TaskDTODelegate,
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
-        if repeatableDetails == nil {
+        if repeatableDetails == nil && CollectionHelper.IsNilOrEmpty(_coll: multipleRepeatables) {
             repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
             repeatable_btn.checked = false
             repeatable = false
@@ -253,9 +253,16 @@ class CreateTaskViewController: CreateTaskParentViewController, TaskDTODelegate,
         }
         
         if repeatable {
-            if !validateRepeatable() {
-                return
+            if CollectionHelper.IsNilOrEmpty(_coll: self.multipleRepeatables) {
+                if !validateRepeatable(_repeatable: self.repeatableDetails!) {
+                    return
+                }
+            } else {
+                if !validateMultipleRepeatables(_repeatables: self.multipleRepeatables!) {
+                    return
+                }
             }
+            
         } else {
             if !validateNonRepeatableTask() {
                 return
@@ -283,9 +290,51 @@ class CreateTaskViewController: CreateTaskParentViewController, TaskDTODelegate,
         return true
     }
     
-    func validateRepeatable() -> Bool {
-        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: self.startTime, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: self.repeatableDetails)
+    func validateRepeatable(_repeatable : RepeatableTaskOccurrence) -> Bool {
+        
+        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence! as NSDate? , _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable)
         if taskDTO.createNewTask(_task: task) {
+            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
+            self.present(alertController, animated: true, completion: nil)
+            DispatchQueue.main.async {
+                self.name_txtField.text = ""
+                self.start_txtField.text = ""
+                self.description_txtView.text = ""
+                self.timeCat_txtField.text = ""
+                self.startDateTextView.text = ""
+                if self.repeatable_btn.checked {
+                    self.repeatable_btn.toggleChecked()
+                }
+            }
+            return true
+        } else {
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatable_information_failure_message, preferredStyle: .alert)
+            alertController.addAction(Constants.standard_ok_alert_action)
+            self.present(alertController, animated: true, completion: nil)
+            return false
+        }
+    }
+    
+    func validateMultipleRepeatables(_repeatables : [RepeatableTaskOccurrence]) -> Bool {
+        var newTasks = [Task]()
+        var areValid = true
+        for (index, _repeatable) in _repeatables.enumerated() {
+            let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence!, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable)
+            if !task.isValidWithoutId() {
+                areValid = false
+                break
+            }
+            newTasks.append(task)
+            if index != 0 {
+                newTasks[0].siblingRepeatables!.append(task)
+            }
+        }
+        
+        if areValid {
+            for _task in newTasks {
+                let _ = taskDTO.createNewTask(_task: _task)
+            }
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)

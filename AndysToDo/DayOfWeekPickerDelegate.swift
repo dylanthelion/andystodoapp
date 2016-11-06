@@ -25,10 +25,14 @@ class DayOfWeekPickerDelegate : NSObject, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        viewDelegate?.handleDidSelect(day: days[row], enumValue: daysOfWeek[row])
+        if row == 7 {
+            viewDelegate?.handleDidSelect(day: days[row], enumValue: nil)
+        } else {
+            viewDelegate?.handleDidSelect(day: days[row], enumValue: daysOfWeek[row])
+        }
     }
 }
 
 protocol DayOfWeekPickerDelegateViewDelegate {
-    func handleDidSelect(day : String, enumValue : DayOfWeek)
+    func handleDidSelect(day : String, enumValue : DayOfWeek?)
 }

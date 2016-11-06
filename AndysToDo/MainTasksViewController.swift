@@ -33,7 +33,6 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
         if totalTasks != taskDTO.AllTasks!.count {
-            print("New task")
             taskDTO.loadTasks()
             taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
         }

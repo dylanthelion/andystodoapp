@@ -53,28 +53,29 @@ class TaskDTO {
     }
     
     func loadFakeTasks() -> [Task] {
-        let task1 = Task(_name: "Task 1", _description: "Fake task", _start: NSDate().addingTimeInterval(5400), _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
+        let task1 = Task(_name: "Task 1", _description: "Fake task", _start: Date().addingTimeInterval(5400) as NSDate?, _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
         task1.ID = nextTaskID!
         nextTaskID! += 1
-        let task2 = Task(_name: "Task 2", _description: "Fake task with a fake category", _start: NSDate().addingTimeInterval(720000), _finish: nil, _category: [AllCategories![0]], _timeCategory: nil, _repeatable: nil)
+        let task2 = Task(_name: "Task 2", _description: "Fake task with a fake category", _start: Date().addingTimeInterval(720000) as NSDate?, _finish: nil, _category: [AllCategories![0]], _timeCategory: nil, _repeatable: nil)
         task2.ID = nextTaskID!
         nextTaskID! += 1
-        let task3 = Task(_name: "Task 3", _description: "Fake task with multiple fake categories", _start: NSDate().addingTimeInterval(3600), _finish: nil, _category: AllCategories!, _timeCategory: nil, _repeatable: nil)
+        let task3 = Task(_name: "Task 3", _description: "Fake task with multiple fake categories", _start: Date().addingTimeInterval(3600) as NSDate?, _finish: nil, _category: AllCategories!, _timeCategory: nil, _repeatable: nil)
         task3.ID = nextTaskID!
         nextTaskID! += 1
-        let task4 = Task(_name: "Task 4", _description: "Fake task with a fake time category", _start: NSDate().addingTimeInterval(14400), _finish: nil, _category: [AllCategories![1]], _timeCategory: AllTimeCategories![3], _repeatable: nil)
+        let task4 = Task(_name: "Task 4", _description: "Fake task with a fake time category", _start: Date().addingTimeInterval(14400) as NSDate?, _finish: nil, _category: [AllCategories![1]], _timeCategory: AllTimeCategories![3], _repeatable: nil)
         task4.ID = nextTaskID!
         nextTaskID! += 1
-        let repeatable1 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Daily, _unitCount: 2, _time: 13.5, _firstOccurrence: NSDate(), _dayOfWeek: nil)
-        let task5 = Task(_name: "Task 5", _description: "Fake task with daily repetition", _start: NSDate().addingTimeInterval(4000), _finish: nil, _category: [AllCategories![2]], _timeCategory: AllTimeCategories![2], _repeatable: repeatable1)
+        let repeatable1 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Daily, _unitCount: 2, _time: 13.5, _firstOccurrence: Date().addingTimeInterval(4000) as NSDate?, _dayOfWeek: nil)
+        let task5 = Task(_name: "Task 5", _description: "Fake task with daily repetition", _start: Date().addingTimeInterval(4000) as NSDate?, _finish: nil, _category: [AllCategories![2]], _timeCategory: AllTimeCategories![2], _repeatable: repeatable1)
         task5.ID = nextTaskID!
         task5.inProgress = true
         nextTaskID! += 1
-        let repeatble2 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Weekly, _unitCount: 1, _time: 12.0, _firstOccurrence: nil, _dayOfWeek: DayOfWeek.Monday)
-        let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: NSDate().addingTimeInterval(400000), _finish: nil, _category: [AllCategories![2], AllCategories![0]], _timeCategory: AllTimeCategories![1], _repeatable: repeatble2)
+        let repeatble2 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Weekly, _unitCount: 1, _time: 12.0, _firstOccurrence: Date().addingTimeInterval(400000) as NSDate?, _dayOfWeek: DayOfWeek.Monday)
+        let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: Date().addingTimeInterval(400000) as NSDate?, _finish: nil, _category: [AllCategories![2], AllCategories![0]], _timeCategory: AllTimeCategories![1], _repeatable: repeatble2)
         task6.ID = nextTaskID!
         nextTaskID! += 1
-        let taskToDelete = Task(_name: "Task to delete", _description: "Shouldn't show", _start: NSDate().addingTimeInterval(4000), _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
+        let taskToDelete = Task(_name: "Task to delete", _description: "Shouldn't show", _start: Date()
+            .addingTimeInterval(4000) as NSDate?, _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
         taskToDelete.ID = nextTaskID!
         nextTaskID! += 1
         return [task1, task2, task3, task4, task5, task6, taskToDelete]
@@ -343,27 +344,25 @@ class TaskDTO {
             tasksToPopulate = [Task]()
         }
         let tempTasks = AllTasks!
-        for (index, _task) in tempTasks.enumerated() {
+        for _task in tempTasks {
             if _task.isRepeatable() {
-                print("Unwrap: \(_task.Name!)")
                 if !CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
                     clearOldRepeatablesFrom(_task: _task)
-                    //clearOldRepeatablesFrom(_task: AllTasks![index])
                 } else {
                     _task.unwrappedRepeatables = [Task]()
                 }
                 for i in 0..<Constants.repeatablesToGenerate {
                     var units = i
-                    let component : Calendar.Component
+                    let component : TimeInterval
                     if _task.RepeatableTask!.UnitOfTime! == .Daily {
-                        component = .day
+                        component = TimeInterval(86400)
                     } else if _task.RepeatableTask!.UnitOfTime! == .Hourly {
-                        component = .hour
+                        component = TimeInterval(3600)
                     } else {
-                        component = .day
+                        component = TimeInterval(86400)
                         units *= 7
                     }
-                    let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: (NSCalendar.current.date(byAdding: component, value: units, to: _task.StartTime! as Date)! as NSDate), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
+                    let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: _task.RepeatableTask?.FirstOccurrence!.addingTimeInterval(component * TimeInterval(units)), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
                     taskToAdd.parentID = _task.ID!
                     taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(taskToAdd.StartTime!.timeIntervalSince1970)
                     tasksToPopulate!.append(taskToAdd)
@@ -384,13 +383,20 @@ class TaskDTO {
     }
     
     func sortDisplayedTasks(forWindow : Calendar.Component, units: Int) {
-        let upperLimit = Calendar.current.date(byAdding: forWindow, value: units, to: Date())
+        var timeInterval : TimeInterval? = TimeInterval(0)
+        if forWindow == .day {
+            timeInterval = TimeInterval (86400)
+        } else if forWindow == .hour {
+            timeInterval = TimeInterval(3600)
+        }
+        timeInterval! *= Double(units)
+        let df = StandardDateFormatter()
+        let upperLimit = df.date(from: df.string(from: Date().addingTimeInterval(timeInterval!)))
         let tempTasks = tasksToPopulate!
         for _task in tempTasks {
             if (_task.StartTime! as Date) > upperLimit! {
                 let indexOf = tasksToPopulate!.index(of: _task)
                 tasksToPopulate!.remove(at: indexOf!)
-                
             }
         }
         tasksToPopulate!.sort(by: {

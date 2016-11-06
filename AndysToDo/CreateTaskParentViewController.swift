@@ -11,6 +11,7 @@ import UIKit
 class CreateTaskParentViewController : UIViewController {
     
     var repeatableDetails : RepeatableTaskOccurrence?
+    var multipleRepeatables : [RepeatableTaskOccurrence]?
     var startTime : NSDate?
     var allCategories : [Category]?
     

@@ -273,13 +273,6 @@
 			name = TableViewCells;
 			sourceTree = "<group>";
 		};
-		741DF07D1DBAF13A00E9B785 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
 		741DF0821DBB238700E9B785 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,7 +306,6 @@
 		74C2BDA21DAEA5C1006D683D /* AndysToDo */ = {
 			isa = PBXGroup;
 			children = (
-				741DF07D1DBAF13A00E9B785 /* Extensions */,
 				741DF0771DB47F8900E9B785 /* Views */,
 				741DF0381DB43F3000E9B785 /* DTO */,
 				741DF0351DB43EC200E9B785 /* ViewControllers */,

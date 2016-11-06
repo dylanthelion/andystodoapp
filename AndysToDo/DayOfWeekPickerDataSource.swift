@@ -11,7 +11,7 @@ import UIKit
 class DayOfWeekPickerDataSource : NSObject, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return Constants.days_per_week
+        return Constants.days_of_week_as_strings.count
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {

@@ -13,6 +13,7 @@ class StandardDateFormatter : DateFormatter {
     override init() {
         super.init()
         self.dateFormat = Constants.standard_full_date_format
+        self.timeZone = NSTimeZone.local
     }
     
     required init?(coder aDecoder: NSCoder) {

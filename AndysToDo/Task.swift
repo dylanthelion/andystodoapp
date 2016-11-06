@@ -20,6 +20,7 @@ class Task : Equatable {
     var TimeCategory : TimeCategory?
     var RepeatableTask : RepeatableTaskOccurrence?
     var unwrappedRepeatables : [Task]?
+    var siblingRepeatables : [Task]?
     var parentID : Int?
     
     init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?) {
@@ -31,15 +32,19 @@ class Task : Equatable {
         TimeCategory = _timeCategory
         RepeatableTask = _repeatable
         ID = TaskDTO.globalManager.getNextID()
+        siblingRepeatables = [Task]()
     }
     
     func isValid() -> Bool {
+        //print("ID: \(ID)\nName: \(Name)\nDescription: \(Description)\nStart Time: \(StartTime)")
+        return ID != nil && isValidWithoutId()
+    }
+    
+    func isValidWithoutId() -> Bool {
         if let _ = self.RepeatableTask {
-            return ID != nil && Name != nil && Description != nil && RepeatableTask!.isValid() && StartTime != nil
+            return Name != nil && Description != nil && RepeatableTask!.isValid() && StartTime != nil
         } else {
-            //print("ID: \(ID)\nName: \(Name)\nDescription: \(Description)\nStart Time: \(StartTime)")
-            return ID != nil && Name != nil && Description != nil && StartTime != nil
-            
+            return Name != nil && Description != nil && StartTime != nil
         }
     }
     

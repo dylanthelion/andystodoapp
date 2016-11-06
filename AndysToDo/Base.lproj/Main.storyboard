@@ -23,7 +23,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="140" y="137.18140929535232"/>
+            <point key="canvasLocation" x="-1015" y="824"/>
         </scene>
         <!--Display Inactive Task View Controller-->
         <scene sceneID="BkR-bL-sPu">
@@ -210,7 +210,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EHA-4I-jqv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1061.5999999999999" y="162.3688155922039"/>
+            <point key="canvasLocation" x="3567" y="161"/>
         </scene>
         <!--Display Active Task View Controller-->
         <scene sceneID="r4d-MX-5XI">
@@ -307,7 +307,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ouS-sY-e4B" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1856.8" y="165.06746626686657"/>
+            <point key="canvasLocation" x="4458" y="161"/>
         </scene>
         <!--Your tasks-->
         <scene sceneID="9YD-Xa-wQE">
@@ -431,7 +431,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YuX-tw-Wpr" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Planner" id="TR7-zf-KKL"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gOj-jh-ufj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="gOj-jh-ufj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -462,9 +462,6 @@
                                     <constraint firstAttribute="width" constant="138" id="CGy-eb-Fup"/>
                                 </constraints>
                                 <state key="normal" title="Task"/>
-                                <connections>
-                                    <segue destination="I5p-bI-srP" kind="show" id="yJl-Kp-pDG"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0oy-lZ-yTK">
                                 <constraints>
@@ -497,12 +494,12 @@
                             <constraint firstItem="p7G-Xn-fsE" firstAttribute="centerX" secondItem="sdu-CQ-ghm" secondAttribute="centerX" id="yz0-CL-aNa"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Create Tasks" id="S8F-tm-Xq8"/>
+                    <tabBarItem key="tabBarItem" title="Categories" id="S8F-tm-Xq8"/>
                     <navigationItem key="navigationItem" id="Zdq-y7-TzZ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ow9-oa-sl5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2788" y="1569.265367316342"/>
+            <point key="canvasLocation" x="2788" y="1602"/>
         </scene>
         <!--Create Category View Controller-->
         <scene sceneID="8k3-gc-ZFT">
@@ -583,7 +580,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Zp-lr-vwg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3772" y="1568.3658170914543"/>
+            <point key="canvasLocation" x="3769" y="1239"/>
         </scene>
         <!--All Tasks Individual Task View Controller-->
         <scene sceneID="hx5-EZ-Xoy">
@@ -800,7 +797,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SsP-NT-Dr8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="760.79999999999995" y="2321.2893553223389"/>
+            <point key="canvasLocation" x="-18" y="2286"/>
         </scene>
         <!--Create Repeatable Task Occurrence View Controller-->
         <scene sceneID="2oQ-aJ-uCb">
@@ -952,7 +949,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RUc-CT-ljd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3454" y="2901"/>
+            <point key="canvasLocation" x="921" y="-546"/>
         </scene>
         <!--Create Task View Controller-->
         <scene sceneID="ksX-AC-LrS">
@@ -1080,6 +1077,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="svY-Ec-58Y"/>
                     <connections>
                         <outlet property="description_txtView" destination="T5f-Yy-7Cz" id="OtX-7h-ZOE"/>
                         <outlet property="name_txtField" destination="LVX-5I-DLr" id="vJf-hC-73Y"/>
@@ -1091,7 +1089,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UKZ-0J-ldz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2756" y="2581"/>
+            <point key="canvasLocation" x="-18" y="-546"/>
         </scene>
         <!--Create Time Category View Controller-->
         <scene sceneID="DMJ-70-hgv">
@@ -1230,7 +1228,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fOg-bd-ko1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3768.8000000000002" y="2220.5397301349326"/>
+            <point key="canvasLocation" x="3769" y="2133"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="qhn-HW-Raj">
@@ -1246,6 +1244,7 @@
                         <segue destination="YuX-tw-Wpr" kind="relationship" relationship="viewControllers" id="ukK-zl-9z4"/>
                         <segue destination="niK-qQ-QJy" kind="relationship" relationship="viewControllers" id="wSq-Ao-m38"/>
                         <segue destination="Fpv-rT-N1y" kind="relationship" relationship="viewControllers" id="Pji-Wk-xv9"/>
+                        <segue destination="jla-4h-ETG" kind="relationship" relationship="viewControllers" id="wvM-mR-PiH"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q3Z-jP-tJO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1318,15 +1317,15 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yD0-jI-7eD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="760.79999999999995" y="1601.649175412294"/>
+            <point key="canvasLocation" x="921" y="1602"/>
         </scene>
         <!--Create Tasks-->
         <scene sceneID="9Z4-EI-dV0">
             <objects>
                 <navigationController title="Create Tasks" automaticallyAdjustsScrollViewInsets="NO" id="niK-qQ-QJy" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Create Tasks" id="4LW-eC-qrC"/>
+                    <tabBarItem key="tabBarItem" title="Categories" id="4LW-eC-qrC"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="XXB-L1-lYN">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="XXB-L1-lYN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1337,7 +1336,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0jC-aT-eiS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1985" y="1691"/>
+            <point key="canvasLocation" x="1860" y="1602"/>
         </scene>
         <!--All Tasks-->
         <scene sceneID="odz-Rp-b0Z">
@@ -1345,7 +1344,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Fpv-rT-N1y" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="All Tasks" id="gIx-0t-jOg"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HPf-oT-PwC">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="HPf-oT-PwC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1356,7 +1355,26 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0jE-AT-fCn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-338" y="1602"/>
+            <point key="canvasLocation" x="-18" y="1602"/>
+        </scene>
+        <!--Create Task-->
+        <scene sceneID="0gV-9S-dAy">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jla-4h-ETG" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Create Task" id="tJI-O7-T2s"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="f1x-hI-KFx">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="I5p-bI-srP" kind="relationship" relationship="rootViewController" id="dwA-Vg-10G"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ino-Os-kDe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-18" y="162"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

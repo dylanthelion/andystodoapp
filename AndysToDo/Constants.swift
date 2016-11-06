@@ -46,8 +46,8 @@ struct Constants {
     static let seconds_per_minute : Float = 60.0
     static let hours_per_meridian : Float = 12.0
     static let standard_month_format = "MMM"
-    static let standard_hours_and_minutes_format = "HH:MM"
-    static let standard_full_date_format = "MMM d H:mm aa yyyy"
+    static let standard_hours_and_minutes_format = "hh:mm"
+    static let standard_full_date_format = "MMM dd hh:mm a yyyy"
     static let months_per_year = 12
     static let days_per_month = 31
     static let total_meridians = 2
@@ -55,7 +55,7 @@ struct Constants {
     static let all_months_as_strings = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
     static let all_days_as_strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     static let all_hours_as_ints = [1,2,3,4,5,6,7,8,9,10,11,12]
-    static let days_of_week_as_strings = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    static let days_of_week_as_strings = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Multiple"]
     
     // Login provider IDs
     
