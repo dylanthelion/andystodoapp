@@ -67,6 +67,9 @@
 		74D6C10D1DBC735C00217DBD /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6C10C1DBC735C00217DBD /* CreateTaskViewController.swift */; };
 		74D6C10F1DBC782D00217DBD /* AddCategoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6C10E1DBC782D00217DBD /* AddCategoriesViewController.swift */; };
 		74D6C1111DBC998B00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D6C1101DBC998A00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift */; };
+		74DA85351DCF027200BBC933 /* AllCategoriesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DA85341DCF027200BBC933 /* AllCategoriesTableViewController.swift */; };
+		74DA85371DCF04CB00BBC933 /* CategoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DA85361DCF04CB00BBC933 /* CategoryTableViewCell.swift */; };
+		74DA85391DCF04FF00BBC933 /* TimecatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DA85381DCF04FF00BBC933 /* TimecatTableViewCell.swift */; };
 		74DFB0A71DC16E300069AAC2 /* DatePickerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DFB0A61DC16E300069AAC2 /* DatePickerViewDelegate.swift */; };
 		74DFB0A91DC1731F0069AAC2 /* DatePickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DFB0A81DC1731F0069AAC2 /* DatePickerDataSource.swift */; };
 		74DFB0AB1DC176070069AAC2 /* TimePickerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DFB0AA1DC176070069AAC2 /* TimePickerViewDelegate.swift */; };
@@ -158,6 +161,9 @@
 		74D6C10C1DBC735C00217DBD /* CreateTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		74D6C10E1DBC782D00217DBD /* AddCategoriesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddCategoriesViewController.swift; sourceTree = "<group>"; };
 		74D6C1101DBC998A00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateRepeatableTaskOccurrenceViewController.swift; sourceTree = "<group>"; };
+		74DA85341DCF027200BBC933 /* AllCategoriesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllCategoriesTableViewController.swift; sourceTree = "<group>"; };
+		74DA85361DCF04CB00BBC933 /* CategoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryTableViewCell.swift; sourceTree = "<group>"; };
+		74DA85381DCF04FF00BBC933 /* TimecatTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimecatTableViewCell.swift; sourceTree = "<group>"; };
 		74DFB0A61DC16E300069AAC2 /* DatePickerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerViewDelegate.swift; sourceTree = "<group>"; };
 		74DFB0A81DC1731F0069AAC2 /* DatePickerDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerDataSource.swift; sourceTree = "<group>"; };
 		74DFB0AA1DC176070069AAC2 /* TimePickerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePickerViewDelegate.swift; sourceTree = "<group>"; };
@@ -240,6 +246,7 @@
 				740CB4711DCC483F00ABF0BD /* TaskDisplayViewController.swift */,
 				740CB4731DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift */,
 				740CB4751DCC951B00ABF0BD /* CreateTaskParentViewController.swift */,
+				74DA85341DCF027200BBC933 /* AllCategoriesTableViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -269,6 +276,8 @@
 			children = (
 				741DF0791DB47FA400E9B785 /* TaskTableViewCell.swift */,
 				740CB46C1DCC45B100ABF0BD /* AllTasksTableViewCell.swift */,
+				74DA85361DCF04CB00BBC933 /* CategoryTableViewCell.swift */,
+				74DA85381DCF04FF00BBC933 /* TimecatTableViewCell.swift */,
 			);
 			name = TableViewCells;
 			sourceTree = "<group>";
@@ -575,6 +584,8 @@
 				74B353681DC42458004A66DF /* DayOfWeekPickerDelegate.swift in Sources */,
 				741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */,
 				740CB46D1DCC45B100ABF0BD /* AllTasksTableViewCell.swift in Sources */,
+				74DA85391DCF04FF00BBC933 /* TimecatTableViewCell.swift in Sources */,
+				74DA85371DCF04CB00BBC933 /* CategoryTableViewCell.swift in Sources */,
 				740CB4671DCAB12200ABF0BD /* DisplayActiveTaskViewController.swift in Sources */,
 				741C72CC1DC4325600331E07 /* StandardDateFormatter.swift in Sources */,
 				741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */,
@@ -583,6 +594,7 @@
 				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
 				741DF07C1DB492FE00E9B785 /* FloatToTimeConverter.swift in Sources */,
 				74D6C10D1DBC735C00217DBD /* CreateTaskViewController.swift in Sources */,
+				74DA85351DCF027200BBC933 /* AllCategoriesTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

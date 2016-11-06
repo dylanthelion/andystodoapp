@@ -15,6 +15,7 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     // Model values
     
     let taskDTO = TaskDTO.globalManager
+    var category: Category?
     
     // Outlets
     
@@ -24,6 +25,7 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     override func viewDidLoad() {
         setupTextFieldDelegation()
         addTextViewBorder()
+        populateViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +46,13 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     func addTextViewBorder() {
         description_txtView.layer.borderWidth = Constants.text_view_border_width
         description_txtView.layer.borderColor = Constants.text_view_border_color
+    }
+    
+    func populateViews() {
+        if let _ = category {
+            name_txtField.text = category!.Name!
+            description_txtView.text = category!.Description!
+        }
     }
     
     // TaskDTODelegate
@@ -74,6 +83,10 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     // IBActions
     
     @IBAction func submit(_ sender: AnyObject) {
+        if let _ = category {
+            // update category info
+            return
+        }
         if !validateForSubmit() {
             return
         }

@@ -72,10 +72,6 @@ struct Constants {
     static let login_button_height : CGFloat = 30.0
     static let button_y_position_offset : CGFloat = 10.0
     
-    // MainTasksVC
-    
-    static let mainTasksVCTitle = "YOUR TASKS"
-    
     // FilterVC
     
     static let filterVC_checkbox_x_coord : CGFloat = 10.0

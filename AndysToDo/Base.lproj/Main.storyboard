@@ -309,10 +309,10 @@
             </objects>
             <point key="canvasLocation" x="4458" y="161"/>
         </scene>
-        <!--Your tasks-->
+        <!--Planner-->
         <scene sceneID="9YD-Xa-wQE">
             <objects>
-                <tableViewController title="Your tasks" id="ATH-vn-MH6" customClass="MainTasksViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Planner" id="ATH-vn-MH6" customClass="MainTasksViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="57r-tA-fE5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -322,7 +322,7 @@
                                 <rect key="frame" x="0.0" y="92" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MaT-jX-I1r" id="k7D-Hi-a69">
-                                    <frame key="frameInset" width="375" height="43"/>
+                                    <frame key="frameInset" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uXr-Tb-vJk">
@@ -425,10 +425,77 @@
             </objects>
             <point key="canvasLocation" x="2709.5999999999999" y="823.53823088455783"/>
         </scene>
+        <!--Categories-->
+        <scene sceneID="sRl-yD-Qm4">
+            <objects>
+                <tableViewController title="Categories" id="vpo-4I-uGa" customClass="AllCategoriesTableViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="dWc-fQ-pUb">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="categoryTableViewCell" id="QgG-pf-mXm" customClass="CategoryTableViewCell" customModule="AndysToDo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="92" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QgG-pf-mXm" id="tNp-FE-5CD">
+                                    <frame key="frameInset" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="timecatTableViewCell" id="AWP-Xo-aSF" customClass="TimecatTableViewCell" customModule="AndysToDo" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="136" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="AWP-Xo-aSF" id="C3C-5C-Jyq">
+                                    <frame key="frameInset" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vTE-yh-PFa">
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="160" id="LQ8-QN-MlU"/>
+                                                <constraint firstAttribute="height" constant="36" id="QTg-HA-CXy"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qd0-BL-ohI">
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="36" id="fcd-mX-JGV"/>
+                                                <constraint firstAttribute="width" constant="150" id="ypk-Nv-pMt"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="qd0-BL-ohI" secondAttribute="trailing" constant="25" id="1xc-Re-Tuh"/>
+                                        <constraint firstItem="vTE-yh-PFa" firstAttribute="centerY" secondItem="C3C-5C-Jyq" secondAttribute="centerY" id="S8s-KM-06b"/>
+                                        <constraint firstItem="vTE-yh-PFa" firstAttribute="leading" secondItem="C3C-5C-Jyq" secondAttribute="leading" constant="8" id="VqQ-tD-UXU"/>
+                                        <constraint firstItem="qd0-BL-ohI" firstAttribute="centerY" secondItem="C3C-5C-Jyq" secondAttribute="centerY" id="wnv-88-Mfk"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="name_lbl" destination="vTE-yh-PFa" id="dCo-c7-vbI"/>
+                                    <outlet property="time_lbl" destination="qd0-BL-ohI" id="jjU-Ge-tiV"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="vpo-4I-uGa" id="UJT-ol-gqB"/>
+                            <outlet property="delegate" destination="vpo-4I-uGa" id="48Y-ms-Xqy"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="Wug-Td-v6m"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MPE-0m-fXX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3260" y="1557.5712143928038"/>
+        </scene>
         <!--Planner-->
         <scene sceneID="5O4-U7-tXF">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="YuX-tw-Wpr" sceneMemberID="viewController">
+                <navigationController title="Planner" automaticallyAdjustsScrollViewInsets="NO" id="YuX-tw-Wpr" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Planner" id="TR7-zf-KKL"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="gOj-jh-ufj">
@@ -444,67 +511,10 @@
             </objects>
             <point key="canvasLocation" x="920.79999999999995" y="823.53823088455783"/>
         </scene>
-        <!--Create Tasks-->
-        <scene sceneID="69o-EH-kPM">
-            <objects>
-                <viewController title="Create Tasks" id="WHD-lS-ijt" customClass="MainCreateViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="0VH-CX-TKN"/>
-                        <viewControllerLayoutGuide type="bottom" id="pgl-Ry-lcO"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="sdu-CQ-ghm">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bqW-6H-bXS">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="2D5-88-vfy"/>
-                                    <constraint firstAttribute="width" constant="138" id="CGy-eb-Fup"/>
-                                </constraints>
-                                <state key="normal" title="Task"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0oy-lZ-yTK">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="3iK-aI-Ckf"/>
-                                    <constraint firstAttribute="width" constant="138" id="5Fd-6f-XuV"/>
-                                </constraints>
-                                <state key="normal" title="Category"/>
-                                <connections>
-                                    <segue destination="jpP-l3-Acu" kind="show" id="KxN-Uj-BxI"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p7G-Xn-fsE">
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="138" id="3Wr-oQ-IAK"/>
-                                    <constraint firstAttribute="height" constant="30" id="79H-FF-mYC"/>
-                                </constraints>
-                                <state key="normal" title="Time Category"/>
-                                <connections>
-                                    <segue destination="Bna-Lc-SLc" kind="show" id="F9l-qb-oMr"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="bqW-6H-bXS" firstAttribute="centerY" secondItem="sdu-CQ-ghm" secondAttribute="centerY" constant="-70.5" id="Dlo-1j-VGf"/>
-                            <constraint firstItem="p7G-Xn-fsE" firstAttribute="centerY" secondItem="sdu-CQ-ghm" secondAttribute="centerY" constant="69.5" id="KVD-dv-L7V"/>
-                            <constraint firstItem="0oy-lZ-yTK" firstAttribute="centerY" secondItem="sdu-CQ-ghm" secondAttribute="centerY" id="WsH-kb-8n9"/>
-                            <constraint firstItem="bqW-6H-bXS" firstAttribute="centerX" secondItem="sdu-CQ-ghm" secondAttribute="centerX" id="jae-cx-mPs"/>
-                            <constraint firstItem="0oy-lZ-yTK" firstAttribute="centerX" secondItem="sdu-CQ-ghm" secondAttribute="centerX" id="n7M-ew-dx6"/>
-                            <constraint firstItem="p7G-Xn-fsE" firstAttribute="centerX" secondItem="sdu-CQ-ghm" secondAttribute="centerX" id="yz0-CL-aNa"/>
-                        </constraints>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Categories" id="S8F-tm-Xq8"/>
-                    <navigationItem key="navigationItem" id="Zdq-y7-TzZ"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ow9-oa-sl5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2788" y="1602"/>
-        </scene>
         <!--Create Category View Controller-->
         <scene sceneID="8k3-gc-ZFT">
             <objects>
-                <viewController id="jpP-l3-Acu" customClass="CreateCategoryViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="createCategoryViewController" id="jpP-l3-Acu" customClass="CreateCategoryViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="59H-J7-gnZ"/>
                         <viewControllerLayoutGuide type="bottom" id="uQG-Y1-8gE"/>
@@ -580,7 +590,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Zp-lr-vwg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3769" y="1239"/>
+            <point key="canvasLocation" x="4154" y="1558"/>
         </scene>
         <!--All Tasks Individual Task View Controller-->
         <scene sceneID="hx5-EZ-Xoy">
@@ -1094,7 +1104,7 @@
         <!--Create Time Category View Controller-->
         <scene sceneID="DMJ-70-hgv">
             <objects>
-                <viewController id="Bna-Lc-SLc" customClass="CreateTimeCategoryViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="createTimecatVC" id="Bna-Lc-SLc" customClass="CreateTimeCategoryViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="RDr-GL-srF"/>
                         <viewControllerLayoutGuide type="bottom" id="AF3-hf-Qhn"/>
@@ -1228,7 +1238,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fOg-bd-ko1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3769" y="2133"/>
+            <point key="canvasLocation" x="4887" y="1558"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="qhn-HW-Raj">
@@ -1242,19 +1252,19 @@
                     </tabBar>
                     <connections>
                         <segue destination="YuX-tw-Wpr" kind="relationship" relationship="viewControllers" id="ukK-zl-9z4"/>
-                        <segue destination="niK-qQ-QJy" kind="relationship" relationship="viewControllers" id="wSq-Ao-m38"/>
                         <segue destination="Fpv-rT-N1y" kind="relationship" relationship="viewControllers" id="Pji-Wk-xv9"/>
                         <segue destination="jla-4h-ETG" kind="relationship" relationship="viewControllers" id="wvM-mR-PiH"/>
+                        <segue destination="8lY-cR-LxH" kind="relationship" relationship="viewControllers" id="bu8-rW-lDc"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q3Z-jP-tJO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-18.399999999999999" y="823.53823088455783"/>
         </scene>
-        <!--All Tasks View Controller-->
+        <!--All Tasks-->
         <scene sceneID="6Af-qn-5mY">
             <objects>
-                <tableViewController id="BGi-85-ZJy" customClass="AllTasksViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="All Tasks" id="BGi-85-ZJy" customClass="AllTasksViewController" customModule="AndysToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="myE-Y5-pBb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1264,7 +1274,7 @@
                                 <rect key="frame" x="0.0" y="92" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hDW-Js-0zi" id="dq8-iY-Y8L">
-                                    <frame key="frameInset" width="375" height="43"/>
+                                    <frame key="frameInset" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FSg-sM-jay">
@@ -1319,25 +1329,6 @@
             </objects>
             <point key="canvasLocation" x="921" y="1602"/>
         </scene>
-        <!--Create Tasks-->
-        <scene sceneID="9Z4-EI-dV0">
-            <objects>
-                <navigationController title="Create Tasks" automaticallyAdjustsScrollViewInsets="NO" id="niK-qQ-QJy" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Categories" id="4LW-eC-qrC"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="XXB-L1-lYN">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="WHD-lS-ijt" kind="relationship" relationship="rootViewController" id="oy7-v2-JXs"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0jC-aT-eiS" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1860" y="1602"/>
-        </scene>
         <!--All Tasks-->
         <scene sceneID="odz-Rp-b0Z">
             <objects>
@@ -1376,8 +1367,27 @@
             </objects>
             <point key="canvasLocation" x="-18" y="162"/>
         </scene>
+        <!--Categories-->
+        <scene sceneID="iaz-MV-IFT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8lY-cR-LxH" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Categories" id="5RD-PB-7nX"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6pJ-wx-laU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="vpo-4I-uGa" kind="relationship" relationship="rootViewController" id="o2p-tm-zZD"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6ua-B1-v88" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2320.8000000000002" y="1557.5712143928038"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Urp-wg-4f8"/>
+        <segue reference="JJZ-Dc-wW8"/>
     </inferredMetricsTieBreakers>
 </document>

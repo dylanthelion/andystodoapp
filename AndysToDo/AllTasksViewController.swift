@@ -20,7 +20,6 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     let taskDTO = TaskDTO.globalManager
     
     override func viewDidLoad() {
-        self.title = Constants.mainTasksVCTitle
         taskDTO.delegate = self
         if taskDTO.AllTasks == nil {
             taskDTO.loadTasks()

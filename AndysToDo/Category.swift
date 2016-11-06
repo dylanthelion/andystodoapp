@@ -31,6 +31,8 @@ class  Category : Equatable {
 class TimeCategory : Category {
     
     var color : CGColor?
+    var StartOfTimeWindow : Float?
+    var EndOfTimeWindow : Float?
     
     init(_name : String, _description : String, _start : Float, _end: Float, _color: CGColor?) {
         super.init(_name: _name, _description: _description)
@@ -43,6 +45,5 @@ class TimeCategory : Category {
         return Name != nil && Description != nil && StartOfTimeWindow != nil && EndOfTimeWindow != nil
     }
     
-    var StartOfTimeWindow : Float?
-    var EndOfTimeWindow : Float?
+    
 }

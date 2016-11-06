@@ -22,7 +22,7 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     var endTime : Float?
     var color : CGColor?
     let taskDTO = TaskDTO.globalManager
-    //var startTxtFieldIsSelected = false
+    var timecat : TimeCategory?
     
     // Picker views
     
@@ -42,6 +42,7 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         setupTextFieldInput()
         addTextViewBorder()
         addColorPicker()
+        populateViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -122,6 +123,18 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         DispatchQueue.main.async {
             for button in buttonsToAdd {
                 self.view.addSubview(button)
+            }
+        }
+    }
+    
+    func populateViews() {
+        if let _ = timecat {
+            name_txtField.text = timecat!.Name!
+            description_txtView.text = timecat!.Description
+            start_txtField.text = String(timecat!.StartOfTimeWindow!)
+            end_txtField.text = String(timecat!.EndOfTimeWindow!)
+            if let _ = timecat!.color {
+                self.view.backgroundColor = UIColor(cgColor: timecat!.color!)
             }
         }
     }
@@ -242,6 +255,10 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // IBActions
     
     @IBAction func submit(_ sender: AnyObject) {
+        if let _ = timecat {
+            // update timecat info
+            return
+        }
         if !validateForSubmit() {
             return
         }

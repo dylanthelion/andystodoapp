@@ -11,14 +11,33 @@ import Foundation
 class TimeConverter {
     
     class func convertFloatToTimeString(_time : Float) -> String {
-        let minutes : String = String((_time - floor(_time)) * 0.6)
+        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * 60)))
         var hours : String
         if(_time > Constants.hours_per_meridian) {
             hours = String(Int(floor(_time - Constants.hours_per_meridian)))
         } else {
             hours = String(Int(floor(_time)))
         }
+        if hours == "0" || hours == "00" {
+            hours = "12"
+        }
         return "\(hours):\(minutes)"
+    }
+    
+    class func convertFloatToTimeStringWithMeridian(_time: Float) -> String {
+        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * 60)))
+        var hours : String
+        var meridian = "AM"
+        if(_time > Constants.hours_per_meridian) {
+            hours = String(Int(floor(_time - Constants.hours_per_meridian)))
+            meridian = "PM"
+        } else {
+            hours = String(Int(floor(_time)))
+        }
+        if hours == "0" || hours == "00" {
+            hours = "12"
+        }
+        return "\(hours):\(minutes) \(meridian)"
     }
     
     class func dateToTimeConverter(_time : NSDate) -> String {
