@@ -8,46 +8,36 @@
 
 import UIKit
 
-class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
-    
-    // UI
-    
-    var filterApplied = false
+class MainTasksViewController : TaskDisplayViewController {
     
     // Model values
     
-    let taskDTO = TaskDTO.globalManager
     var isSorted = false
     var totalTasks = 0
     
     override func viewDidLoad() {
-        taskDTO.delegate = self
-        if taskDTO.AllTasks == nil {
-            taskDTO.loadTasks()
-        }
-        taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
+        super.viewDidLoad()
+        taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
         isSorted = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
+        super.viewWillAppear(animated)
         if totalTasks != taskDTO.AllTasks!.count {
             taskDTO.loadTasks()
-            taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
+            taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
         }
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
         }
         if !isSorted {
-            taskDTO.sortDisplayedTasks(forWindow: .day, units: 1)
+            taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
             isSorted = true
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
-        categoryFilters = nil
-        timeCategoryFilters = nil
+        super.viewWillDisappear(animated)
         isSorted = false
     }
     
@@ -80,7 +70,7 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
             cell.timeLabel.text = TimeConverter.dateToTimeConverter(_time: cellTask.StartTime!)
         }
         if let _ = cellTask.TimeCategory?.color {
-            cell.backgroundColor = UIColor.init(cgColor: (cellTask.TimeCategory?.color!)!)
+            cell.backgroundColor = UIColor(cgColor: cellTask.TimeCategory!.color!)
         } else {
             cell.backgroundColor = UIColor.clear
         }
@@ -91,13 +81,12 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     // Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
         if AllTasks![indexPath.row].inProgress {
-            let displayActiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayActiveTaskVC") as! DisplayActiveTaskViewController
+            let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
             displayActiveTaskVC.task = AllTasks![indexPath.row]
             self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
         } else {
-            let displayInactiveTaskVC = storyBoard.instantiateViewController(withIdentifier: "displayInactiveTaskVC") as! DisplayInactiveTaskViewController
+            let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
             displayInactiveTaskVC.task = AllTasks![indexPath.row]
             self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
         }
@@ -116,7 +105,7 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     // TaskDTODelegate
     
-    func handleModelUpdate() {
+    override func handleModelUpdate() {
         AllTasks = taskDTO.tasksToPopulate!
         totalTasks = taskDTO.AllTasks!.count
         DispatchQueue.main.async {
@@ -124,7 +113,7 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
         }
     }
     
-    func taskDidUpdate(_task: Task) {
+    override func taskDidUpdate(_task: Task) {
         _ = taskDTO.updateTask(_task: _task)
     }
     
@@ -132,47 +121,5 @@ class MainTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     func applyFilter() {
         taskDTO.applyFilter(categories: categoryFilters, timeCategories: timeCategoryFilters)
-    }
-    
-    override func removeCategoryFilter(_category: Category) {
-        let indexOf = self.categoryFilters?.index(of: _category)
-        self.categoryFilters?.remove(at: indexOf!)
-    }
-    
-    override func removeTimeCategoryFilter(_category: TimeCategory) {
-        let indexOf = self.timeCategoryFilters?.index(of: _category)
-        self.timeCategoryFilters?.remove(at: indexOf!)
-    }
-    
-    override func addCategoryFilter(_category : Category) {
-        if let _ = self.categoryFilters {
-            self.categoryFilters?.append(_category)
-        } else {
-            self.categoryFilters = [_category]
-        }
-    }
-    
-    override func addTimeCategoryFilter(_category: TimeCategory) {
-        if let _ = self.timeCategoryFilters {
-            self.timeCategoryFilters?.append(_category)
-        } else {
-            self.timeCategoryFilters = [_category]
-        }
-        
-    }
-    
-    // Segues
-    
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if(true) {
-            if let _ = self.categoryFilters {
-                self.categoryFilters?.removeAll()
-            }
-            if let _ = self.timeCategoryFilters {
-                self.timeCategoryFilters?.removeAll()
-            }
-        }
-        
-        return true
     }
 }

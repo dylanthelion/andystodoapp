@@ -22,7 +22,6 @@ class FilterViewController : UIViewController, TaskDTODelegate {
     var timeCategories : [TimeCategory]?
     var AllTasks : TaskDTO = TaskDTO.globalManager
     
-    @IBOutlet weak var categoriesLabel: UILabel!
     
     override func viewDidLoad() {
         width = self.view.frame.width / 2.0

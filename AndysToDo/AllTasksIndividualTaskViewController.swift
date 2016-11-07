@@ -8,40 +8,13 @@
 
 import UIKit
 
-class AllTasksIndividualTaskViewController : CreateTaskParentViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate {
-    
-    
-    // UI
-    
-    var textFieldSelected = 0
+class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate {
     
     // Model values
     
-    let taskDTO = TaskDTO.globalManager
     var task : Task?
     
-    var allTimeCategories : [TimeCategory]?
-    var chosenTimeCategory: TimeCategory? = nil
-    var startMonth : String?
-    var startDay : String?
-    var startHours : String?
-    var repeatable : Bool = false
-    
-    // Picker views
-    
-    let pickerView = UIPickerView()
-    let timeCatPickerView = UIPickerView()
-    var datePickerView = UIPickerView()
-    var timePickerDelegate : TimePickerViewDelegate?
-    let timePickerDataSource : TimePickerViewDataSource = TimePickerViewDataSource()
-    var timeCatPickerDataSource : TimecatPickerDataSource?
-    var timeCatDelegate : TimecatPickerDelegate?
-    var datePickerDelegate : DatePickerViewDelegate?
-    let datePickerDataSource = DatePickerDataSource()
-    
-    
     // Outlets
-  
     
     @IBOutlet weak var repeatable_lbl: UILabel!
     @IBOutlet weak var name_txtField: UITextField!
@@ -53,25 +26,12 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, Tas
     @IBOutlet weak var generateNewTask_btn: UIButton!
     
     override func viewDidLoad() {
-        allTimeCategories = taskDTO.AllTimeCategories
+        super.viewDidLoad()
         setupPickerDelegation()
         setupTextFieldDelegation()
         setupTextFieldInput()
         addTextViewBorder()
         populateTaskInfo()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
-        /*if repeatableDetails == nil {
-            repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
-            repeatable_btn.checked = false
-            repeatable = false
-        }*/
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
     }
     
     // View setup
@@ -114,14 +74,14 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, Tas
             start_txtField.text! = Constants.createTaskVC_repeatable
             startDateTextView.text! = Constants.createTaskVC_repeatable
             repeatable = true
-            self.generateNewTask_btn.setTitle("child task", for: .normal)
+            self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_child_task, for: .normal)
             self.repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
         } else {
             self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: task!.StartTime!)
             self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(_time: task!.StartTime!)
             self.repeatable_lbl.isHidden = true
             self.repeatable_btn.isHidden = true
-            self.generateNewTask_btn.setTitle("temp copy task", for: .normal)
+            self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_temp_copy, for: .normal)
         }
     }
     
@@ -248,36 +208,11 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, Tas
         self.timeCat_txtField.text = name
     }
     
-    // TaskDTODelegate
-    
-    func handleModelUpdate() {
-        
-    }
-    
-    func taskDidUpdate(_task: Task) {
-        
-    }
-    
     // IBActions
     
     
     @IBAction func toggleRepeatable(_ sender: AnyObject) {
-        /*repeatable_btn.toggleChecked()
-        switch repeatable {
-        case true:
-            repeatableDetails = nil
-            repeatable = false
-            DispatchQueue.main.async {
-                self.start_txtField.text = ""
-                self.startDateTextView.text = ""
-            }
-        case false:
-            let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
-            
-            let nextViewController = storyBoard.instantiateViewController(withIdentifier: Constants.create_repeatable_task_VC_id) as! CreateRepeatableTaskOccurrenceViewController
-            self.navigationController?.pushViewController(nextViewController, animated: true)
-            repeatable = true
-        }*/
+        
     }
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
@@ -337,7 +272,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, Tas
         }
         
         if repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || startDateTextView.text! == "" || start_txtField.text! == Constants.createTaskVC_repeatable || start_txtField.text! == "") {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: "Please include a start time for your child task", preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.allTasksIndividualTaskVC_alert_message_missing_child_details, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
@@ -427,7 +362,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, Tas
         let df = DateFormatter()
         df.dateFormat = Constants.standard_month_format
         let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
+        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
         let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
         let newTask = Task(_name: "Temp \(self.task!.Name!) instance", _description: self.task!.Description!, _start: date, _finish: nil, _category: self.task!.Categories, _timeCategory: self.task!.TimeCategory, _repeatable: nil)
         newTask.parentID = self.task!.ID!

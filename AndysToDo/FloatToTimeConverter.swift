@@ -11,7 +11,7 @@ import Foundation
 class TimeConverter {
     
     class func convertFloatToTimeString(_time : Float) -> String {
-        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * 60)))
+        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * Constants.seconds_per_minute)))
         var hours : String
         if(_time > Constants.hours_per_meridian) {
             hours = String(Int(floor(_time - Constants.hours_per_meridian)))
@@ -25,12 +25,12 @@ class TimeConverter {
     }
     
     class func convertFloatToTimeStringWithMeridian(_time: Float) -> String {
-        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * 60)))
+        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * Constants.seconds_per_minute)))
         var hours : String
-        var meridian = "AM"
+        var meridian = Constants.meridian_am
         if(_time > Constants.hours_per_meridian) {
             hours = String(Int(floor(_time - Constants.hours_per_meridian)))
-            meridian = "PM"
+            meridian = Constants.meridian_pm
         } else {
             hours = String(Int(floor(_time)))
         }
@@ -48,25 +48,25 @@ class TimeConverter {
     
     class func dateToTimeWithMeridianConverter(_time : NSDate) -> String {
         let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "hh:mm a"
+        dateformatter.dateFormat = Constants.standard_hours_meridian_format
         return dateformatter.string(from: _time as Date)
     }
     
     class func dateToShortDateConverter(_time: NSDate) -> String {
         let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "MMM dd"
+        dateformatter.dateFormat = Constants.standard_months_and_days_format
         return dateformatter.string(from: _time as Date)
     }
     
     class func dateToMonthConverter(_time: NSDate) -> String {
         let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "MMM"
+        dateformatter.dateFormat = Constants.standard_month_format
         return dateformatter.string(from: _time as Date)
     }
     
     class func dateToDateOfMonthConverter(_time: NSDate) -> String {
         let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "dd"
+        dateformatter.dateFormat = Constants.standard_days_format
         return dateformatter.string(from: _time as Date)
     }
 }

@@ -249,7 +249,7 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     // IBActions
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
-        let modifyVC = AddCategoriesViewController()
+        let modifyVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_add_category_VC_id) as! AddCategoriesViewController
         modifyVC.selectedCategories = self.allCategories
         modifyVC.taskDelegate = self
         self.navigationController?.pushViewController(modifyVC, animated: true)

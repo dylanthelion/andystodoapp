@@ -68,8 +68,8 @@ class DisplayActiveTaskViewController : UIViewController, TaskDTODelegate {
     
     func updateTimer() {
         let elapsedTime = Date().timeIntervalSince(task!.StartTime! as Date)
-        let hours = String(format: "%02d", Int(elapsedTime) / 60)
-        let minutes = String(format: "%02d", Int(elapsedTime) % 60)
+        let hours = String(format: "%02d", Int(elapsedTime) / Int(Constants.seconds_per_minute))
+        let minutes = String(format: "%02d", Int(elapsedTime) % Int(Constants.seconds_per_minute))
         timer_lbl.text = "\(hours):\(minutes)"
     }
     

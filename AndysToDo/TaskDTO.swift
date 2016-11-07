@@ -28,7 +28,6 @@ class TaskDTO {
         if(AllTasks != nil) {
             populateNonRepeatables()
             populateRepeatables()
-            //tasksToPopulate = AllTasks!
             // Inform delegate that tasks are loaded
             if let _ = delegate {
                 delegate!.handleModelUpdate()
@@ -44,7 +43,6 @@ class TaskDTO {
         AllTasks = loadFakeTasks()
         populateNonRepeatables()
         populateRepeatables()
-        //tasksToPopulate = AllTasks!
         // Inform delegate that tasks are loaded
         sortAllTasks()
         if let _ = delegate {
@@ -355,11 +353,11 @@ class TaskDTO {
                     var units = i
                     let component : TimeInterval
                     if _task.RepeatableTask!.UnitOfTime! == .Daily {
-                        component = TimeInterval(86400)
+                        component = TimeInterval(Constants.seconds_per_day)
                     } else if _task.RepeatableTask!.UnitOfTime! == .Hourly {
-                        component = TimeInterval(3600)
+                        component = TimeInterval(Constants.seconds_per_hour)
                     } else {
-                        component = TimeInterval(86400)
+                        component = TimeInterval(Constants.seconds_per_day)
                         units *= 7
                     }
                     let taskToAdd = Task(_name: "\(_task.Name!)\(i)", _description: _task.Description!, _start: _task.RepeatableTask?.FirstOccurrence!.addingTimeInterval(component * TimeInterval(units)), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil)
@@ -385,9 +383,9 @@ class TaskDTO {
     func sortDisplayedTasks(forWindow : Calendar.Component, units: Int) {
         var timeInterval : TimeInterval? = TimeInterval(0)
         if forWindow == .day {
-            timeInterval = TimeInterval (86400)
+            timeInterval = TimeInterval (Constants.seconds_per_day)
         } else if forWindow == .hour {
-            timeInterval = TimeInterval(3600)
+            timeInterval = TimeInterval(Constants.seconds_per_hour)
         }
         timeInterval! *= Double(units)
         let df = StandardDateFormatter()

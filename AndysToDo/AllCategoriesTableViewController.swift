@@ -36,7 +36,7 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
             return 2
             
         default:
-            print("Somethign went wrong in number of sections")
+            print("Something went wrong in number of sections")
             return 0
         }
     }
@@ -48,11 +48,11 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "categoryTableViewCell", for: indexPath) as! CategoryTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_category_table_view_cell_id, for: indexPath) as! CategoryTableViewCell
             cell.textLabel?.text = taskDTO.AllCategories![indexPath.row].Name!
             return cell
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "timecatTableViewCell", for: indexPath) as! TimecatTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_timecat_table_view_cell_id, for: indexPath) as! TimecatTableViewCell
             cell.name_lbl.text = taskDTO.AllTimeCategories![indexPath.row].Name!
             cell.time_lbl.text = "\(TimeConverter.convertFloatToTimeString(_time: taskDTO.AllTimeCategories![indexPath.row].StartOfTimeWindow!))-\(TimeConverter.convertFloatToTimeStringWithMeridian(_time: taskDTO.AllTimeCategories![indexPath.row].EndOfTimeWindow!))"
             return cell
@@ -60,11 +60,11 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
             switch indexPath.row {
                 case 0:
                     let cell = UITableViewCell()
-                    cell.textLabel?.text = "Category"
+                    cell.textLabel?.text = Constants.allCategoriesVC_category_cell_title
                     return cell
                 case 1:
                     let cell = UITableViewCell()
-                    cell.textLabel?.text = "Timecat"
+                    cell.textLabel?.text = Constants.allCategoriesVC_timecat_cell_title
                     return cell
                 default:
                 print("Something went wrong in cell for row")
@@ -79,11 +79,11 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0:
-            return "Categories"
+            return Constants.allCategoriesVC_category_table_header
         case 1:
-            return "Timecats"
+            return Constants.allCategoriesVC_timecat_table_header
         case 2:
-            return "Create:"
+            return Constants.allCategoriesVC_create_table_header
         default:
             print("Something went wrong in title for header")
             return ""
@@ -93,24 +93,23 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
     // UITableViewDelegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
         switch indexPath.section {
         case 0:
-            let createCatVC = storyBoard.instantiateViewController(withIdentifier: "createCategoryViewController") as! CreateCategoryViewController
+            let createCatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_category_VC_id) as! CreateCategoryViewController
             createCatVC.category = taskDTO.AllCategories![indexPath.row]
             self.navigationController?.pushViewController(createCatVC, animated: true)
         case 1:
-            let createTimecatVC = storyBoard.instantiateViewController(withIdentifier: "createTimecatVC") as! CreateTimeCategoryViewController
+            let createTimecatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
             createTimecatVC.timecat = taskDTO.AllTimeCategories![indexPath.row]
             self.navigationController?.pushViewController(createTimecatVC, animated: true)
             
         case 2:
             switch indexPath.row {
                 case 0:
-                    let createCatVC = storyBoard.instantiateViewController(withIdentifier: "createCategoryViewController") as! CreateCategoryViewController
+                    let createCatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_category_VC_id) as! CreateCategoryViewController
                     self.navigationController?.pushViewController(createCatVC, animated: true)
                 case 1:
-                    let createTimecatVC = storyBoard.instantiateViewController(withIdentifier: "createTimecatVC") as! CreateTimeCategoryViewController
+                    let createTimecatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
                     self.navigationController?.pushViewController(createTimecatVC, animated: true)
                 default:
                     print("Something went wrong in did select")

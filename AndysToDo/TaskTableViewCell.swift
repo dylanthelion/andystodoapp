@@ -34,14 +34,14 @@ class TaskTableViewCell : UITableViewCell {
         if let _ = task {
             if (onItState == OnItButtonState.Inactive) {
                 onItState = OnItButtonState.Active
-                if (self.task!.StartTime == nil) {
-                    self.task?.StartTime = NSDate()
-                }
+                self.task?.inProgress = true
+                self.task?.StartTime = NSDate()
                 DispatchQueue.main.async {
                     self.onItButton.alpha = Constants.alpha_solid
                 }
             } else if onItState == OnItButtonState.Active {
                 onItState = OnItButtonState.Finished
+                self.task?.inProgress = false
                 self.task?.FinishTime = NSDate()
                 DispatchQueue.main.async {
                     self.onItButton.alpha = Constants.alpha_solid
@@ -49,7 +49,7 @@ class TaskTableViewCell : UITableViewCell {
                     
                 }
             } else if onItState == OnItButtonState.Finished {
-                
+                self.task?.inProgress = false
                 onItState = OnItButtonState.Inactive
                 DispatchQueue.main.async  {
                     self.onItButton.alpha = Constants.alpha_faded

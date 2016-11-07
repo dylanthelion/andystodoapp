@@ -14,12 +14,8 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     
     var textFieldSelected : Int = 0
     var validRepeatableSubmitted = false
-    var top_y_coord : CGFloat = 396.0
+    var top_y_coord : CGFloat = Constants.createRepeatableVC_starting_checkboxes_y_coord
     var left_lbl_x_coord : CGFloat = 0.0
-    let checkbox_left_padding : CGFloat = 10.0
-    let checkbox_right_padding : CGFloat = 20.0
-    let lbl_left_padding : CGFloat = 10.0
-    let checkbox_width : CGFloat = 30.0
     var lbl_width : CGFloat = 0.0
     var labelsToAdd : [UILabel]?
     var checkboxesToAdd : [CheckboxButton]?
@@ -114,11 +110,11 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
             labelsToAdd = [UILabel]()
             checkboxesToAdd = [CheckboxButton]()
             let width = self.view.frame.width / 2.0
-            let lbl_width = width - (lbl_left_padding + checkbox_width + checkbox_left_padding + checkbox_right_padding)
+            let lbl_width = width - (Constants.createRepeatableVC_lbl_left_padding + Constants.createRepeatableVC_checkbox_width + Constants.createRepeatableVC_checkbox_left_padding + Constants.createRepeatableVC_checkbox_right_padding)
             
             for i in 0...6 {
-                let checkbox = CheckboxButton(frame: CGRect(x: left_lbl_x_coord + lbl_left_padding + lbl_width + checkbox_left_padding, y: top_y_coord, width: checkbox_width, height: checkbox_width))
-                let label = UILabel(frame: CGRect(x: left_lbl_x_coord + lbl_left_padding, y: top_y_coord, width: lbl_width, height: checkbox_width))
+                let checkbox = CheckboxButton(frame: CGRect(x: left_lbl_x_coord + Constants.createRepeatableVC_lbl_left_padding + lbl_width + Constants.createRepeatableVC_checkbox_left_padding, y: top_y_coord, width: Constants.createRepeatableVC_checkbox_width, height: Constants.createRepeatableVC_checkbox_width))
+                let label = UILabel(frame: CGRect(x: left_lbl_x_coord + Constants.createRepeatableVC_lbl_left_padding, y: top_y_coord, width: lbl_width, height: Constants.createRepeatableVC_checkbox_width))
                 label.text = Constants.days_of_week_as_strings[i]
                 checkbox.addTarget(self, action: #selector(toggleDidSelectDate(sender:)), for: .touchUpInside)
                 checkbox.tag = i
@@ -129,7 +125,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
                     left_lbl_x_coord += width
                 } else if i % 2 == 1 {
                     left_lbl_x_coord -= width
-                    top_y_coord += 50.0
+                    top_y_coord += Constants.createRepeatableVC_checkbox_row_height
                 }
             }
         }
@@ -314,7 +310,6 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         var areValid = true
         for repeatable in repeatables! {
             if(!repeatable.isValid()) {
-                print("Invalid repeatable:\nUnit: \(repeatable.UnitOfTime)\nNumber: \(repeatable.UnitsPerTask)\nFirst: \(repeatable.FirstOccurrence)\nTime: \(repeatable.TimeOfDay)\nDay: \(repeatable.DayOfWeek)")
                 areValid = false
                 break
             }
@@ -383,7 +378,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
             var repeatablesToReturn = [RepeatableTaskOccurrence]()
             for _checkbox in checkboxesToAdd! {
                 if _checkbox.checked {
-                    let daysToAdd = abs(_checkbox.tag - dayOfWeek) * 86400
+                    let daysToAdd = abs(_checkbox.tag - dayOfWeek) * Constants.seconds_per_day
                     if self.date == nil {
                         self.date = taskDate.addingTimeInterval(TimeInterval(daysToAdd))
                     }
@@ -401,7 +396,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     }
     
     func unwindToTaskCreate(date : NSDate, repeatable : [RepeatableTaskOccurrence]) {
-        let rootVC = self.navigationController?.viewControllers[0] as! CreateTaskParentViewController
+        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_create_tasks_VC_index] as! CreateTaskParentViewController
         if repeatable.count > 1 {
             rootVC.multipleRepeatables = repeatable
         } else {

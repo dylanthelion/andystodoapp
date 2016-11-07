@@ -36,8 +36,15 @@ struct Constants {
     static let main_tab_storyboard_id = "mainTabBarController"
     static let task_table_view_cell_id = "taskTableViewCell"
     static let create_repeatable_task_VC_id = "createRepeatableTaskVC"
+    static let main_storyboard_create_category_VC_id = "createCategoryViewController"
+    static let main_storyboard_create_timecat_VC_id = "createTimecatVC"
+    static let main_storyboard_activeTask_VC_id = "displayActiveTaskVC"
+    static let main_storyboard_inactiveTask_VC_id = "displayInactiveTaskVC"
+    static let main_storyboard_add_category_VC_id = "addCategoriesVC"
+    static let main_storyboard_all_tasks_individuAL_VC_ID = "allTasksIndividualVC"
     static let main_storyboard_main_tasks_VC_index = 0
-    static let main_storyboard_create_tasks_VC_index = 1
+    static let main_storyboard_create_tasks_VC_index = 0
+    static let main_storyboard : UIStoryboard = UIStoryboard(name: main_storyboard_id, bundle:nil)
     
     // Time constants
     
@@ -48,10 +55,15 @@ struct Constants {
     static let standard_month_format = "MMM"
     static let standard_hours_and_minutes_format = "hh:mm"
     static let standard_full_date_format = "MMM dd hh:mm a yyyy"
+    static let standard_hours_meridian_format = "hh:mm a"
+    static let standard_months_and_days_format = "MMM dd"
+    static let standard_days_format = "dd"
     static let months_per_year = 12
     static let days_per_month = 31
     static let total_meridians = 2
     static let days_per_week = 7
+    static let seconds_per_day = 86400
+    static let seconds_per_hour = 3600
     static let all_months_as_strings = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
     static let all_days_as_strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     static let all_hours_as_ints = [1,2,3,4,5,6,7,8,9,10,11,12]
@@ -71,6 +83,10 @@ struct Constants {
     static let login_button_width : CGFloat = 82.0
     static let login_button_height : CGFloat = 30.0
     static let button_y_position_offset : CGFloat = 10.0
+    
+    // Main Task VC
+    static let mainTaskVC_upper_limit_calendar_unit : Calendar.Component = Calendar.Component.day
+    static let mainTaskVC_upper_limit_number_of_units : Int = 1
     
     // FilterVC
     
@@ -103,6 +119,14 @@ struct Constants {
     static let timecatVC_alert_no_name_description_or_window_failure_message = "Please include a name, description, and a full time window"
     static let timecatVC_alert_success_message = "Category created"
     static let timecatVC_alert_name_uniqueness_failure_message = "That name is already taken"
+    static let timecatVC_color_label_bottom_y_coord : CGFloat = 402.0
+    static let timecatVC_color_picker_column_size : Int = 11
+    static let timecatVC_standard_view_padding : CGFloat = 10.0
+    static let timecatVC_color_picker_units_in_margins : CGFloat = 3.0
+    static let timecatVC_color_picker_selected_border_width : CGFloat = 2.0
+    static let timecatVC_color_picker_deselected_border_width : CGFloat = 0.0
+    static let timecatVC_color_picker_selected_border_color : CGColor = UIColor.black.cgColor
+    static let timecatVC_color_picker_deselected_border_color : CGColor = UIColor.clear.cgColor
     
     // CreatTaskVC
     
@@ -131,6 +155,12 @@ struct Constants {
     static let createRepeatableVC_alert_nonnumeric_numberOfUnits_value_failure_message = "Please enter a number in units per task. This is the number of hours, days, or weeks, between scheduled tasks"
     static let createRepeatableVC_alert_missing_data_failure_message = "Please fill out all visible fields"
     static let createRepeatableVC_repeatable = "Repeatable"
+    static let createRepeatableVC_starting_checkboxes_y_coord : CGFloat = 396.0
+    static let createRepeatableVC_checkbox_left_padding : CGFloat = 10.0
+    static let createRepeatableVC_checkbox_right_padding : CGFloat = 20.0
+    static let createRepeatableVC_lbl_left_padding : CGFloat = 10.0
+    static let createRepeatableVC_checkbox_width : CGFloat = 30.0
+    static let createRepeatableVC_checkbox_row_height : CGFloat = 50.0
     
     // Time picker views
     
@@ -150,6 +180,25 @@ struct Constants {
     static let timeOfDay_weekly_value = "Weekly"
     static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
     
+    // DisplayAllTasksVC
     
+    static let displayAllTasksVC_string_repeatable = "Repeatable"
+    static let displayAllTasksVC_string_no_time = "No time"
+    static let main_storyboard_display_task_table_view_cell_id = "allTasksTableViewCell"
     
+    // AllTasksIndividualTaskVC
+    
+    static let allTasksIndividualTaskVC_btn_title_child_task = "child task"
+    static let allTasksIndividualTaskVC_btn_title_temp_copy = "temp copy task"
+    static let allTasksIndividualTaskVC_alert_message_missing_child_details = "Please include a start time for your child task"
+    
+    // AllCategoriesTableVC
+    
+    static let main_storyboard_category_table_view_cell_id = "categoryTableViewCell"
+    static let main_storyboard_timecat_table_view_cell_id = "timecatTableViewCell"
+    static let allCategoriesVC_category_cell_title = "Category"
+    static let allCategoriesVC_timecat_cell_title = "Timecat"
+    static let allCategoriesVC_category_table_header = "Categories"
+    static let allCategoriesVC_timecat_table_header = "Timecats"
+    static let allCategoriesVC_create_table_header = "Create:"
 }

@@ -27,7 +27,6 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     
     override func viewDidLoad() {
         top_y_coord = Constants.addCatVC_starting_y_coord
-        self.view.backgroundColor = UIColor.white
         self.allCategories = taskDTO.AllCategories
         addCategoryButtons()
     }
@@ -60,11 +59,11 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
             let checkbox = CheckboxButton(frame: CGRect(x: Constants.addCatVC_button_x_coord, y: top_y_coord!, width: Constants.addCatVC_button_width, height: Constants.addCatVC_item_height))
             checkbox.tag = currentTag
             checkbox.addTarget(self, action: #selector(toggle_category(sender:)), for: .touchUpInside)
-            checkbox.setImage(UIImage(named: "checkbox_unchecked"), for: .normal)
+            checkbox.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
             if let _ = self.selectedCategories {
                 for _cat in self.selectedCategories! {
                     if _category == _cat {
-                        checkbox.setImage(UIImage(named: "checkbox_checked"), for: .normal)
+                        checkbox.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
                         checkbox.checked = true
                     }
                 }

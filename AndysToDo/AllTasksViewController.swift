@@ -8,28 +8,20 @@
 
 import UIKit
 
-class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
+class AllTasksViewController : TaskDisplayViewController {
     
     // UI
     
-    var filterApplied = false
     var tasksLoaded = false
     
-    // Model values
-    
-    let taskDTO = TaskDTO.globalManager
-    
     override func viewDidLoad() {
-        taskDTO.delegate = self
-        if taskDTO.AllTasks == nil {
-            taskDTO.loadTasks()
-        }
+        super.viewDidLoad()
         AllTasks = taskDTO.AllTasks
         tasksLoaded = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
+        super.viewWillAppear(animated)
         if !tasksLoaded {
             AllTasks = taskDTO.AllTasks
             tasksLoaded = true
@@ -43,9 +35,7 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
-        categoryFilters = nil
-        timeCategoryFilters = nil
+        super.viewWillDisappear(animated)
         tasksLoaded = false
     }
     
@@ -63,16 +53,16 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell : AllTasksTableViewCell = tableView.dequeueReusableCell(withIdentifier: "allTasksTableViewCell") as! AllTasksTableViewCell
+        let cell : AllTasksTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_display_task_table_view_cell_id) as! AllTasksTableViewCell
         let cellTask : Task = AllTasks![indexPath.row]
         cell.setTask(_task: cellTask)
         cell.name_lbl.text = cellTask.Name!
         if cellTask.isRepeatable() {
-            cell.time_lbl.text = "Repeatable"
+            cell.time_lbl.text = Constants.displayAllTasksVC_string_repeatable
         } else if let _ = cellTask.StartTime {
             cell.time_lbl.text = TimeConverter.dateToShortDateConverter(_time: cellTask.StartTime!)
         } else {
-            cell.time_lbl.text = "No time"
+            cell.time_lbl.text = Constants.displayAllTasksVC_string_no_time
         }
         if let _ = cellTask.TimeCategory?.color {
             cell.backgroundColor = UIColor.init(cgColor: (cellTask.TimeCategory?.color!)!)
@@ -86,8 +76,7 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     // Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyBoard : UIStoryboard = UIStoryboard(name: Constants.main_storyboard_id, bundle:nil)
-        let displayTaskVC = storyBoard.instantiateViewController(withIdentifier: "allTasksIndividualVC") as! AllTasksIndividualTaskViewController
+        let displayTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_all_tasks_individuAL_VC_ID) as! AllTasksIndividualTaskViewController
         displayTaskVC.task = AllTasks![indexPath.row]
         self.navigationController?.pushViewController(displayTaskVC, animated: true)
     }
@@ -104,14 +93,14 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
     
     // TaskDTODelegate
     
-    func handleModelUpdate() {
+    override func handleModelUpdate() {
         AllTasks = taskDTO.AllTasks!
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
     
-    func taskDidUpdate(_task: Task) {
+    override func taskDidUpdate(_task: Task) {
         _ = taskDTO.updateTask(_task: _task)
     }
     
@@ -122,46 +111,5 @@ class AllTasksViewController : TaskDisplayViewController, TaskDTODelegate {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }
-    
-    override func removeCategoryFilter(_category: Category) {
-        let indexOf = self.categoryFilters?.index(of: _category)
-        self.categoryFilters?.remove(at: indexOf!)
-    }
-    
-    override func removeTimeCategoryFilter(_category: TimeCategory) {
-        let indexOf = self.timeCategoryFilters?.index(of: _category)
-        self.timeCategoryFilters?.remove(at: indexOf!)
-    }
-    
-    override func addCategoryFilter(_category : Category) {
-        if let _ = self.categoryFilters {
-            self.categoryFilters?.append(_category)
-        } else {
-            self.categoryFilters = [_category]
-        }
-    }
-    
-    override func addTimeCategoryFilter(_category: TimeCategory) {
-        if let _ = self.timeCategoryFilters {
-            self.timeCategoryFilters?.append(_category)
-        } else {
-            self.timeCategoryFilters = [_category]
-        }
-    }
-    
-    // Segues
-    
-    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        if(true) {
-            if let _ = self.categoryFilters {
-                self.categoryFilters?.removeAll()
-            }
-            if let _ = self.timeCategoryFilters {
-                self.timeCategoryFilters?.removeAll()
-            }
-        }
-        
-        return true
     }
 }

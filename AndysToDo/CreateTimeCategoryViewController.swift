@@ -13,7 +13,6 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // UI
     
     var textFieldSelected : Int = 0
-    let distanceToBottomOfColorLabel : CGFloat = 402.0
     var lastColorSelected : ColorPickerButton?
     
     // Model values
@@ -84,15 +83,14 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         var marginWidth : CGFloat = 0.0
         var xCoord : CGFloat = 0.0
         var numberOfElementsPerRow : Int = 0
-        let numberOfElementsPerColumn = 10
         var yCoord : CGFloat = 0.0
         for i in 10...20 {
             if (Int(Float(width)) % i) == 0 {
                 buttonWidth = CGFloat(i)
-                marginWidth = CGFloat(i) * 3.0
+                marginWidth = CGFloat(i) * Constants.timecatVC_color_picker_units_in_margins
                 xCoord = marginWidth
-                numberOfElementsPerRow = Int(Float(width / buttonWidth)) - 6
-                yCoord = distanceToBottomOfColorLabel + 10.0
+                numberOfElementsPerRow = Int(Float(width / buttonWidth)) - Int(Constants.timecatVC_color_picker_units_in_margins * 2.0)
+                yCoord = Constants.timecatVC_color_label_bottom_y_coord + Constants.timecatVC_standard_view_padding
                 break
             }
         }
@@ -103,7 +101,7 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         }
         
         var buttonsToAdd : [ColorPickerButton] = [ColorPickerButton]()
-        let maxButtons = numberOfElementsPerRow * numberOfElementsPerColumn
+        let maxButtons = numberOfElementsPerRow * Constants.timecatVC_color_picker_column_size
         
         let currentDenominator = Int(floor(pow(Double(maxButtons), 1/3)))
         var totalButtons = 0
@@ -118,7 +116,6 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
                 }
             }
         }
-        print("Buttons: \(buttonsToAdd.count)")
         
         DispatchQueue.main.async {
             for button in buttonsToAdd {
@@ -226,21 +223,20 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         color = sender.backgroundColor!.cgColor
         DispatchQueue.main.async {
             if let _ = self.lastColorSelected {
-                self.lastColorSelected?.layer.borderWidth = 0.0
-                self.lastColorSelected?.layer.borderColor = UIColor.clear.cgColor
+                self.lastColorSelected?.layer.borderWidth = Constants.timecatVC_color_picker_deselected_border_width
+                self.lastColorSelected?.layer.borderColor = Constants.timecatVC_color_picker_deselected_border_color
             }
-            sender.layer.borderWidth = Constants.text_view_border_width
-            sender.layer.borderColor = UIColor.black.cgColor
+            sender.layer.borderWidth = Constants.timecatVC_color_picker_selected_border_width
+            sender.layer.borderColor = Constants.timecatVC_color_picker_selected_border_color
             self.lastColorSelected = sender
         }
-        print(color!.components!)
     }
     
     // TimePickerViewDelegateViewDelegate
     
     func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
         var time : Float = Float(hours)! + (Float(minutes)! / Constants.seconds_per_minute)
-        if meridian == Constants.meridian_pm {
+        if meridian == Constants.meridian_pm && hours != "12" {
             time += Constants.hours_per_meridian
         }
         if textFieldSelected == 1 {
