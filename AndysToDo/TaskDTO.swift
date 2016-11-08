@@ -145,8 +145,10 @@ class TaskDTO {
     }
     
     func updateTask(_task : Task) -> Bool {
-        for task in tasksToPopulate! {
+        print("ID: \(_task.ID!)\nName: \(_task.Name!)")
+        for task in AllTasks! {
             if task.ID! == _task.ID && _task.isValid() {
+                print("Update")
                 task.Categories = _task.Categories
                 task.Description = _task.Description
                 task.FinishTime = _task.FinishTime
@@ -156,8 +158,14 @@ class TaskDTO {
                 task.StartTime = _task.StartTime
                 task.TimeCategory = _task.TimeCategory
                 task.unwrappedRepeatables = _task.unwrappedRepeatables
-                sortAllTasks()
-                return true
+                if task.isRepeatable() {
+                    populateRepeatables()
+                    sortAllTasks()
+                    return true
+                } else {
+                    sortAllTasks()
+                    return true
+                }
             }
         }
         

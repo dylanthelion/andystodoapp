@@ -74,6 +74,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             start_txtField.text! = Constants.createTaskVC_repeatable
             startDateTextView.text! = Constants.createTaskVC_repeatable
             repeatable = true
+            self.repeatableDetails = task?.RepeatableTask
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_child_task, for: .normal)
             self.repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
         } else {
@@ -83,6 +84,9 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             self.repeatable_btn.isHidden = true
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_temp_copy, for: .normal)
         }
+        self.startTime = task?.StartTime
+        self.allCategories = task?.Categories
+        self.chosenTimeCategory = task?.TimeCategory
     }
     
     func populateTaskInfo() {
@@ -107,6 +111,23 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             }
         }
         
+    }
+    
+    func resetAfterSuccessfulSubmit() {
+        DispatchQueue.main.async {
+            self.name_txtField.text = self.task!.Name!
+            
+            self.description_txtView.text = self.task!.Description!
+            if !self.repeatable {
+                self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: self.startTime!)
+                self.start_txtField.text = TimeConverter.dateToTimeConverter(_time: self.startTime!)
+            } else {
+                self.startDateTextView.text = Constants.createTaskVC_repeatable
+                self.start_txtField.text = Constants.createTaskVC_repeatable
+            }
+            self.timeCat_txtField.text = ""
+            
+        }
     }
     
     // Text Delegate
@@ -231,9 +252,15 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
         if repeatable {
             if !validateRepeatable() {
                 return
+            } else {
+                resetAfterSuccessfulSubmit()
+                return
             }
         } else {
             if !validateNonRepeatableTask() {
+                return
+            } else {
+                resetAfterSuccessfulSubmit()
                 return
             }
         }
@@ -242,8 +269,9 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     
     @IBAction func generateNewTask(_ sender: AnyObject) {
         if task!.isRepeatable() {
-            if validateForSubmit() {
+            if validateForSubmit() && validateRepeatableChildforSubmit() {
                 if validateNewRepeatableInstance() {
+                    resetAfterSuccessfulSubmit()
                     return
                 } else {
                     return
@@ -252,6 +280,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
         } else {
             if validateForSubmit() {
                 if validateNewInstance() {
+                    resetAfterSuccessfulSubmit()
                     return
                 } else {
                     return
@@ -271,15 +300,18 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             return false
         }
         
-        if repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || startDateTextView.text! == "" || start_txtField.text! == Constants.createTaskVC_repeatable || start_txtField.text! == "") {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.allTasksIndividualTaskVC_alert_message_missing_child_details, preferredStyle: .alert)
+        if !repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
-        
-        if !repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, preferredStyle: .alert)
+        return true
+    }
+    
+    func validateRepeatableChildforSubmit() -> Bool {
+        if (startDateTextView.text! == Constants.createTaskVC_repeatable || startDateTextView.text! == "" || start_txtField.text! == Constants.createTaskVC_repeatable || start_txtField.text! == "") {
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.allTasksIndividualTaskVC_alert_message_missing_child_details, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false

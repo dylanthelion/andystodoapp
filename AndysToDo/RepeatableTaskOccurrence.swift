@@ -30,6 +30,7 @@ class RepeatableTaskOccurrence {
             case .Hourly:
                 return UnitsPerTask != nil && FirstOccurrence != nil
             case.Daily:
+                print("Repetition:\nUnits: \(UnitsPerTask)\nTime of day: \(TimeOfDay)\nFirst: \(FirstOccurrence)")
                 return UnitsPerTask != nil && TimeOfDay != nil && FirstOccurrence != nil
             case .Weekly:
                 return UnitsPerTask != nil && TimeOfDay != nil  && DayOfWeek != nil && FirstOccurrence != nil
