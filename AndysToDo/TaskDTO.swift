@@ -145,10 +145,8 @@ class TaskDTO {
     }
     
     func updateTask(_task : Task) -> Bool {
-        print("ID: \(_task.ID!)\nName: \(_task.Name!)")
         for task in AllTasks! {
             if task.ID! == _task.ID && _task.isValid() {
-                print("Update")
                 task.Categories = _task.Categories
                 task.Description = _task.Description
                 task.FinishTime = _task.FinishTime

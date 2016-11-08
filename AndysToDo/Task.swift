@@ -36,18 +36,11 @@ class Task : Equatable {
     }
     
     func isValid() -> Bool {
-        //print("ID: \(ID)\nName: \(Name)\nDescription: \(Description)\nStart Time: \(StartTime)")
-        print("Call is valid")
         return ID != nil && isValidWithoutId()
     }
     
     func isValidWithoutId() -> Bool {
-        print("Call with ID")
-        print("Repeatable: \(self.RepeatableTask)")
         if let _ = self.RepeatableTask {
-            if Name == "Task 5" {
-                print("Task:\nName: \(Name)\nDescription: \(Description)\nStart: \(StartTime)")
-            }
             return Name != nil && Description != nil && RepeatableTask!.isValid() && StartTime != nil
         } else {
             return Name != nil && Description != nil && StartTime != nil
