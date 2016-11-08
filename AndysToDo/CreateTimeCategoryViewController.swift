@@ -128,8 +128,8 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         if let _ = timecat {
             name_txtField.text = timecat!.Name!
             description_txtView.text = timecat!.Description
-            start_txtField.text = String(timecat!.StartOfTimeWindow!)
-            end_txtField.text = String(timecat!.EndOfTimeWindow!)
+            start_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat!.StartOfTimeWindow!)
+            end_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat!.EndOfTimeWindow!)
             if let _ = timecat!.color {
                 self.view.backgroundColor = UIColor(cgColor: timecat!.color!)
             }
