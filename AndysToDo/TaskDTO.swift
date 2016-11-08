@@ -206,6 +206,20 @@ class TaskDTO {
         return false
     }
     
+    func updateCategory(_oldCategory: Category, _category : Category) -> Bool {
+        if _category.isValid() {
+            for _cat in AllCategories! {
+                if _cat.Name == _oldCategory.Name! {
+                    _cat.Name = _category.Name!
+                    _cat.Description = _category.Description!
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
     // Time Category CRUD
     
     func createNewTimeCategory(_category : TimeCategory) -> Bool {

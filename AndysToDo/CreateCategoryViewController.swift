@@ -83,10 +83,6 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     // IBActions
     
     @IBAction func submit(_ sender: AnyObject) {
-        if let _ = category {
-            // update category info
-            return
-        }
         if !validateForSubmit() {
             return
         }
@@ -94,9 +90,11 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
         if !validateAndSubmitCategory() {
             return
         } else {
-            DispatchQueue.main.async {
-                self.name_txtField.text = ""
-                self.description_txtView.text = ""
+            if category == nil {
+                DispatchQueue.main.async {
+                    self.name_txtField.text = ""
+                    self.description_txtView.text = ""
+                }
             }
             return
         }
@@ -115,6 +113,19 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     }
     
     func validateAndSubmitCategory() -> Bool {
+        if let _ = category {
+            if taskDTO.updateCategory(_oldCategory: category!, _category: Category(_name: self.name_txtField.text!, _description: self.description_txtView.text)) {
+                let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
+                alertController.addAction(Constants.standard_ok_alert_action)
+                self.present(alertController, animated: true, completion: nil)
+                return true
+            } else {
+                let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
+                alertController.addAction(Constants.standard_ok_alert_action)
+                self.present(alertController, animated: true, completion: nil)
+                return false
+            }
+        }
         if taskDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
