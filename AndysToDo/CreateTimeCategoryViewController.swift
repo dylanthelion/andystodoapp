@@ -130,8 +130,13 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
             description_txtView.text = timecat!.Description
             start_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat!.StartOfTimeWindow!)
             end_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat!.EndOfTimeWindow!)
+            self.startTime = timecat?.StartOfTimeWindow
+            self.endTime = timecat?.EndOfTimeWindow
             if let _ = timecat!.color {
-                self.view.backgroundColor = UIColor(cgColor: timecat!.color!)
+                DispatchQueue.main.async {
+                    self.view.backgroundColor = UIColor(cgColor: self.timecat!.color!)
+                }
+                self.color = timecat?.color
             }
         }
     }
@@ -251,10 +256,6 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // IBActions
     
     @IBAction func submit(_ sender: AnyObject) {
-        if let _ = timecat {
-            // update timecat info
-            return
-        }
         if !validateForSubmit() {
             return
         }
@@ -279,6 +280,21 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     }
     
     func validateAndSubmitTimecat() -> Bool {
+        if let _ = timecat {
+            if taskDTO.updateTimeCategory(_oldCategory: timecat!, _category: TimeCategory(_name: self.name_txtField.text!, _description: self.description_txtView.text, _start: startTime!, _end: endTime!, _color: color)) {
+                let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
+                alertController.addAction(Constants.standard_ok_alert_action)
+                self.present(alertController, animated: true, completion: nil)
+                self.populateViews()
+                return true
+            } else {
+                let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
+                alertController.addAction(Constants.standard_ok_alert_action)
+                self.present(alertController, animated: true, completion: nil)
+                return false
+            }
+        }
+        
         if taskDTO.createNewTimeCategory(_category: TimeCategory(_name: name_txtField.text!, _description: description_txtView.text, _start: startTime!, _end: endTime!, _color: self.color)) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.timecatVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)

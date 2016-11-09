@@ -242,6 +242,23 @@ class TaskDTO {
         return false
     }
     
+    func updateTimeCategory(_oldCategory : TimeCategory, _category: TimeCategory) -> Bool {
+        if _category.isValid() {
+            for _cat in AllTimeCategories! {
+                if _cat.Name == _oldCategory.Name! {
+                    _cat.Name = _category.Name!
+                    _cat.Description = _category.Description!
+                    _cat.StartOfTimeWindow = _category.StartOfTimeWindow
+                    _cat.EndOfTimeWindow = _category.EndOfTimeWindow
+                    _cat.color = _category.color
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
     // ID generation
     
     func getNextID() -> Int {
