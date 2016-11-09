@@ -32,6 +32,9 @@ class DisplayActiveTaskViewController : UIViewController, TaskDTODelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        if !task!.inProgress {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -51,7 +54,12 @@ class DisplayActiveTaskViewController : UIViewController, TaskDTODelegate {
     }
     
     func setupTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        if (task?.inProgress)! {
+            timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+        } else {
+            timer?.invalidate()
+        }
+        
     }
     
     // TaskDTODelegate
@@ -67,7 +75,10 @@ class DisplayActiveTaskViewController : UIViewController, TaskDTODelegate {
     // Timer
     
     func updateTimer() {
-        let elapsedTime = Date().timeIntervalSince(task!.StartTime! as Date)
+        var elapsedTime = Date().timeIntervalSince(task!.StartTime! as Date)
+        if let check = task?.timeOnTask {
+            elapsedTime += check
+        }
         let hours = String(format: "%02d", Int(elapsedTime) / Int(Constants.seconds_per_minute))
         let minutes = String(format: "%02d", Int(elapsedTime) % Int(Constants.seconds_per_minute))
         timer_lbl.text = "\(hours):\(minutes)"
@@ -76,11 +87,58 @@ class DisplayActiveTaskViewController : UIViewController, TaskDTODelegate {
     // IBActions
     
     @IBAction func pause(_ sender: AnyObject) {
+        if (task?.inProgress)! {
+            let timeToAdd : TimeInterval = Date().timeIntervalSince(task?.StartTime! as! Date)
+            if let _ = task?.timeOnTask {
+                task?.timeOnTask! += timeToAdd
+            } else {
+                task?.timeOnTask = timeToAdd
+            }
+            task?.StartTime = Date() as NSDate?
+            task?.inProgress = false
+            if !taskDTO.updateTask(_task: task!) {
+                //alertOfError()
+            }
+        } else {
+            task?.inProgress = true
+            task?.StartTime = Date() as NSDate?
+            if !taskDTO.updateTask(_task: task!) {
+                //alertOfError()
+            }
+        }
+        setupTimer()
     }
     
     @IBAction func endTask(_ sender: AnyObject) {
+        
+        if task!.inProgress {
+            let timeToAdd : TimeInterval = Date().timeIntervalSince(task?.StartTime! as! Date)
+            if let _ = task?.timeOnTask {
+                task?.timeOnTask! += timeToAdd
+            } else {
+                task?.timeOnTask = timeToAdd
+            }
+        }
+        task?.FinishTime = Date() as NSDate?
+        task?.inProgress = false
+        if !taskDTO.updateTask(_task: task!) {
+            //alertOfError()
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
     
     @IBAction func goToEdit(_ sender: AnyObject) {
+        let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
+        displayInactiveTaskVC.task = task
+        self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
     }
+    
+    // Temporary error alert
+    
+    /*func alertOfError() {
+        let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: "Something went wrong", preferredStyle: .alert)
+        alertController.addAction(Constants.standard_ok_alert_action)
+        self.present(alertController, animated: true, completion: nil)
+    }*/
 }

@@ -19,6 +19,7 @@ class MainTasksViewController : TaskDisplayViewController {
         super.viewDidLoad()
         taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
         isSorted = true
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

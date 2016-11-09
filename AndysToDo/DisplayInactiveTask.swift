@@ -268,7 +268,12 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     
     
     @IBAction func postpone(_ sender: AnyObject) {
+        if !NumberHelper.isNilOrZero(num: task?.timeOnTask) && (task?.inProgress)! {
+            let timeToAdd : TimeInterval = Date().timeIntervalSince(task?.StartTime! as! Date)
+            task!.timeOnTask! += timeToAdd
+        }
         task!.StartTime! = task!.StartTime!.addingTimeInterval(86400)
+        task?.inProgress = false
         if taskDTO.updateTask(_task: task!) {
             self.navigationController?.popViewController(animated: true)
         } else {

@@ -19,6 +19,7 @@ class TaskDTO {
     var AllCategories : [Category]?
     var AllTimeCategories : [TimeCategory]?
     var nextTaskID : Int?
+    var archivedTasks : [Task]?
     
     class var globalManager : TaskDTO {
         return allTasks
@@ -156,7 +157,17 @@ class TaskDTO {
                 task.StartTime = _task.StartTime
                 task.TimeCategory = _task.TimeCategory
                 task.unwrappedRepeatables = _task.unwrappedRepeatables
-                if task.isRepeatable() {
+                task.siblingRepeatables = _task.siblingRepeatables
+                task.timeOnTask = _task.timeOnTask
+                if task.FinishTime != nil && !NumberHelper.isNilOrZero(num: task.timeOnTask) && !task.inProgress {
+                    if archiveTask(_task: task) {
+                        delegate?.taskDidUpdate(_task: _task)
+                        return true
+                    } else {
+                        print("Problem archiving")
+                        return false
+                    }
+                } else if task.isRepeatable() {
                     populateRepeatables()
                     sortAllTasks()
                     return true
@@ -166,7 +177,6 @@ class TaskDTO {
                 }
             }
         }
-        
         return false
     }
     
@@ -182,6 +192,33 @@ class TaskDTO {
         }
         sortAllTasks()
         delegate?.handleModelUpdate()
+    }
+    
+    func archiveTask(_task: Task) -> Bool {
+        let index = AllTasks!.index(of: _task)
+        let populatedIndex = tasksToPopulate?.index(of: _task)
+        if let _ = index {
+            AllTasks!.remove(at: index!)
+            if let _ = populatedIndex {
+                tasksToPopulate!.remove(at: populatedIndex!)
+            }
+            addToArchive(_task: _task)
+            return true
+        }
+        if let _ = populatedIndex {
+            tasksToPopulate!.remove(at: populatedIndex!)
+            addToArchive(_task: _task)
+            return true
+        }
+        return false
+    }
+    
+    func addToArchive(_task: Task) {
+        if let _ = archivedTasks {
+            archivedTasks?.append(_task)
+        } else {
+            archivedTasks = [_task]
+        }
     }
     
     // Category CRUD

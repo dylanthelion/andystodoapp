@@ -237,6 +237,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="bZw-Ke-qGU"/>
+                                    <constraint firstAttribute="width" constant="262" id="wzK-pG-CQK"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -289,9 +290,7 @@
                             <constraint firstItem="jJy-Df-agA" firstAttribute="top" secondItem="meA-Bb-pW1" secondAttribute="bottom" constant="43" id="Kfi-wx-YMJ"/>
                             <constraint firstItem="meA-Bb-pW1" firstAttribute="centerX" secondItem="V1B-hq-Soa" secondAttribute="centerX" id="Ocq-qE-73g"/>
                             <constraint firstItem="XQ3-P8-PYO" firstAttribute="top" secondItem="gmS-XK-QV4" secondAttribute="bottom" constant="47" id="Tnv-HZ-Upk"/>
-                            <constraint firstItem="RkT-QC-u9i" firstAttribute="leading" secondItem="V1B-hq-Soa" secondAttribute="leadingMargin" constant="40" id="XwZ-4X-SIR"/>
                             <constraint firstItem="jJy-Df-agA" firstAttribute="centerX" secondItem="V1B-hq-Soa" secondAttribute="centerX" id="YYa-4l-aU7"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="RkT-QC-u9i" secondAttribute="trailing" constant="41" id="bhu-UB-Vdx"/>
                             <constraint firstItem="RkT-QC-u9i" firstAttribute="centerX" secondItem="V1B-hq-Soa" secondAttribute="centerX" id="dSe-Sc-TMC"/>
                             <constraint firstItem="t41-DT-IzP" firstAttribute="centerX" secondItem="V1B-hq-Soa" secondAttribute="centerX" id="qW8-yw-Jc2"/>
                             <constraint firstItem="vWU-1i-3B1" firstAttribute="leading" secondItem="V1B-hq-Soa" secondAttribute="leadingMargin" id="wJX-3T-syN"/>
@@ -495,7 +494,7 @@
                 <navigationController title="Planner" automaticallyAdjustsScrollViewInsets="NO" id="YuX-tw-Wpr" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Planner" id="TR7-zf-KKL"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gOj-jh-ufj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="gOj-jh-ufj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1350,7 +1349,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Fpv-rT-N1y" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="All Tasks" id="gIx-0t-jOg"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HPf-oT-PwC">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="HPf-oT-PwC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1369,7 +1368,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jla-4h-ETG" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Create Task" id="tJI-O7-T2s"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="f1x-hI-KFx">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="f1x-hI-KFx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1388,7 +1387,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8lY-cR-LxH" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Categories" id="5RD-PB-7nX"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6pJ-wx-laU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6pJ-wx-laU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
