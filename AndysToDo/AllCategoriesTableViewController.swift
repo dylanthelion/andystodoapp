@@ -18,6 +18,9 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
