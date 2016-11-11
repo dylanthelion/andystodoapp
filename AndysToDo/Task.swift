@@ -23,6 +23,7 @@ class Task : Equatable {
     var siblingRepeatables : [Task]?
     var parentID : Int?
     var timeOnTask : TimeInterval?
+    var dueDate : NSDate?
     
     init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?) {
         Name = _name
@@ -35,6 +36,12 @@ class Task : Equatable {
         ID = TaskDTO.globalManager.getNextID()
         siblingRepeatables = [Task]()
         timeOnTask = 0.0
+    }
+    
+    convenience init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?, _dueDate : NSDate?, _parent: Int?) {
+        self.init(_name: _name, _description: _description, _start : _start, _finish : _finish, _category : _category, _timeCategory : _timeCategory, _repeatable : _repeatable)
+        dueDate = _dueDate
+        parentID = _parent
     }
     
     func isValid() -> Bool {
