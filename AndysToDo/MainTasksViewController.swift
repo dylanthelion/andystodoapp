@@ -19,6 +19,13 @@ class MainTasksViewController : TaskDisplayViewController {
         super.viewDidLoad()
         taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
         isSorted = true
+        for _task in AllTasks! {
+            if _task.inProgress {
+                let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
+                displayActiveTaskVC.task = _task
+                self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
+            }
+        }
         
     }
     
