@@ -77,14 +77,14 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     
     func resetAfterSuccessfulSubmit() {
         DispatchQueue.main.async {
+            if self.repeatable_btn.checked {
+                self.repeatable_btn.toggleChecked()
+            }
             self.name_txtField.text = ""
             self.start_txtField.text = ""
             self.description_txtView.text = ""
             self.timeCat_txtField.text = ""
             self.startDateTextView.text = ""
-            if self.repeatable_btn.checked {
-                self.repeatable_btn.toggleChecked()
-            }
         }
         repeatable = false
     }
