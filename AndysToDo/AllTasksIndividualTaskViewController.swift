@@ -95,6 +95,10 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             return
         }
         setupRepeatable()
+        populateNonRepeatableData()
+    }
+    
+    func populateNonRepeatableData() {
         self.name_txtField.text = task!.Name!
         self.startHours = TimeConverter.dateToTimeWithMeridianConverter(_time: task!.StartTime!)
         
@@ -110,22 +114,15 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
                 self.view.backgroundColor = UIColor(cgColor: task!.TimeCategory!.color!)
             }
         }
-        
     }
     
     func resetAfterSuccessfulSubmit() {
         DispatchQueue.main.async {
-            self.name_txtField.text = self.task!.Name!
-            
-            self.description_txtView.text = self.task!.Description!
-            if !self.repeatable {
-                self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: self.startTime!)
-                self.start_txtField.text = TimeConverter.dateToTimeConverter(_time: self.startTime!)
+            if self.task!.isRepeatable() {
+                self.populateTaskInfo()
             } else {
-                self.startDateTextView.text = Constants.createTaskVC_repeatable
-                self.start_txtField.text = Constants.createTaskVC_repeatable
+                self.populateNonRepeatableData()
             }
-            self.timeCat_txtField.text = ""
             
         }
     }
