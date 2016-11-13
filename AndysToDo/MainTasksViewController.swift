@@ -31,16 +31,25 @@ class MainTasksViewController : TaskDisplayViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        var isUpdated = false
         if totalTasks != taskDTO.AllTasks!.count {
             taskDTO.loadTasks()
             taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
+            isUpdated = true
         }
         if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
             applyFilter()
+            isUpdated = true
         }
         if !isSorted {
             taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
             isSorted = true
+            isUpdated = true
+        }
+        if !isUpdated {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -72,6 +81,7 @@ class MainTasksViewController : TaskDisplayViewController {
             cell.onItButton.alpha = Constants.alpha_solid
         case false :
             cell.onItState = OnItButtonState.Inactive
+            cell.onItButton.alpha = Constants.alpha_faded
         }
         cell.taskTitleLabel.text = cellTask.Name!
         if let _ = cellTask.StartTime {
