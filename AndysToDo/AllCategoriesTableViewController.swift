@@ -58,6 +58,9 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
             let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_timecat_table_view_cell_id, for: indexPath) as! TimecatTableViewCell
             cell.name_lbl.text = taskDTO.AllTimeCategories![indexPath.row].Name!
             cell.time_lbl.text = "\(TimeConverter.convertFloatToTimeString(_time: taskDTO.AllTimeCategories![indexPath.row].StartOfTimeWindow!))-\(TimeConverter.convertFloatToTimeStringWithMeridian(_time: taskDTO.AllTimeCategories![indexPath.row].EndOfTimeWindow!))"
+            if let _ = taskDTO.AllTimeCategories![indexPath.row].color {
+                cell.backgroundColor = UIColor(cgColor: taskDTO.AllTimeCategories![indexPath.row].color!)
+            }
             return cell
         case 2:
             switch indexPath.row {
