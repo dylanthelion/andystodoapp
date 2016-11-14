@@ -181,6 +181,11 @@ class TaskDTO {
     }
     
     func deleteTask(_task : Task) {
+        if !CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
+            for task in _task.unwrappedRepeatables! {
+                deleteTask(_task: task)
+            }
+        }
         if let checkIndex = AllTasks?.index(of: _task) {
             AllTasks!.remove(at: checkIndex)
         }

@@ -86,8 +86,11 @@ class AllTasksViewController : TaskDisplayViewController {
             if AllTasks!.count == taskDTO.AllTasks!.count {
                 taskDTO.AllTasks!.remove(at: indexPath.row)
             }
+            let taskToDelete = AllTasks![indexPath.row]
             AllTasks!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            taskDTO.deleteTask(_task: taskToDelete)
+            
         }
     }
     
