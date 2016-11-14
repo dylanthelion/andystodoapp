@@ -37,6 +37,8 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             DispatchQueue.main.async {
                 self.startDateTextView.text = Constants.createRepeatableVC_repeatable
                 self.start_txtField.text = Constants.createRepeatableVC_repeatable
+                self.startDateTextView.isUserInteractionEnabled = false
+                self.start_txtField.isUserInteractionEnabled = false
             }
         }
     }
@@ -85,6 +87,8 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             self.description_txtView.text = ""
             self.timeCat_txtField.text = ""
             self.startDateTextView.text = ""
+            self.start_txtField.isUserInteractionEnabled = true
+            self.startDateTextView.isUserInteractionEnabled = true
         }
         repeatable = false
     }
