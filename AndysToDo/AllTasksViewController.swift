@@ -29,7 +29,7 @@ class AllTasksViewController : TaskDisplayViewController {
                 self.tableView.reloadData()
             }
         }
-        if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
+        if categoryFilters != nil || timeCategoryFilters != nil {
             applyFilter()
         }
     }

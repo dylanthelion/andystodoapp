@@ -37,7 +37,7 @@ class MainTasksViewController : TaskDisplayViewController {
             taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
             isUpdated = true
         }
-        if(!CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
+        if categoryFilters != nil || timeCategoryFilters != nil {
             applyFilter()
             isUpdated = true
         }

@@ -36,8 +36,8 @@ class TaskDisplayViewController : UITableViewController, TaskDisplayProtocol, Ta
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
-        categoryFilters = nil
-        timeCategoryFilters = nil
+        categoryFilters = [Category]()
+        timeCategoryFilters = [TimeCategory]()
     }
     
     func removeCategoryFilter(_category: Category) {
