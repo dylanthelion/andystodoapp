@@ -118,6 +118,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     
     func resetAfterSuccessfulSubmit() {
         DispatchQueue.main.async {
+            self.setupRepeatable()
             if self.task!.isRepeatable() {
                 self.populateTaskInfo()
             } else {
