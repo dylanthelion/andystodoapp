@@ -84,6 +84,9 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             self.repeatable_btn.isHidden = true
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_temp_copy, for: .normal)
         }
+        if let _ = task?.TimeCategory {
+            self.timeCat_txtField.text = task!.TimeCategory!.Name!
+        }
         self.startTime = task?.StartTime
         self.allCategories = task?.Categories
         self.chosenTimeCategory = task?.TimeCategory
