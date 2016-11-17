@@ -18,9 +18,10 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // Model values
     
     var startTime : Float?
+    var startHours: String?
     var endTime : Float?
     var color : CGColor?
-    let taskDTO = TaskDTO.globalManager
+    let timecatDTO = TimeCategoryDTO.shared
     var timecat : TimeCategory?
     
     // Picker views
@@ -33,33 +34,24 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     @IBOutlet weak var name_txtField: UITextField!
     @IBOutlet weak var start_txtField: UITextField!
     @IBOutlet weak var end_txtField: UITextField!
-    @IBOutlet weak var description_txtView: UITextView!
+    @IBOutlet weak var description_txtView: BorderedTextView!
     
     override func viewDidLoad() {
         setupPickerDelegation()
-        setupTextFieldDelegation()
         setupTextFieldInput()
-        addTextViewBorder()
         addColorPicker()
         populateViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
+        timecatDTO.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
+        timecatDTO.delegate = nil
     }
     
     // View setup
-    
-    func setupTextFieldDelegation(){
-        name_txtField.delegate = self
-        start_txtField.delegate = self
-        end_txtField.delegate = self
-        description_txtView.delegate = self
-    }
     
     func setupPickerDelegation() {
         timePickerDelegate = TimePickerViewDelegate(_delegate: self)
@@ -72,49 +64,10 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         self.end_txtField.inputView = pickerView
     }
     
-    func addTextViewBorder() {
-        description_txtView.layer.borderWidth = Constants.text_view_border_width
-        description_txtView.layer.borderColor = Constants.text_view_border_color
-    }
-    
     func addColorPicker() {
-        let width = self.view.frame.width
-        var buttonWidth : CGFloat = 0.0
-        var marginWidth : CGFloat = 0.0
-        var xCoord : CGFloat = 0.0
-        var numberOfElementsPerRow : Int = 0
-        var yCoord : CGFloat = 0.0
-        for i in 10...20 {
-            if (Int(Float(width)) % i) == 0 {
-                buttonWidth = CGFloat(i)
-                marginWidth = CGFloat(i) * Constants.timecatVC_color_picker_units_in_margins
-                xCoord = marginWidth
-                numberOfElementsPerRow = Int(Float(width / buttonWidth)) - Int(Constants.timecatVC_color_picker_units_in_margins * 2.0)
-                yCoord = Constants.timecatVC_color_label_bottom_y_coord + Constants.timecatVC_standard_view_padding
-                break
-            }
-        }
-        
-        if numberOfElementsPerRow == 0 {
-            print("No effective modulus")
-            return
-        }
-        
-        var buttonsToAdd : [ColorPickerButton] = [ColorPickerButton]()
-        let maxButtons = numberOfElementsPerRow * Constants.timecatVC_color_picker_column_size
-        
-        let currentDenominator = Int(floor(pow(Double(maxButtons), 1/3)))
-        var totalButtons = 0
-        for outerIndex in 1...currentDenominator {
-            for innerIndex in 1...currentDenominator {
-                for cubicIndex in 1...currentDenominator {
-                    let totalIndex = (outerIndex - 1) * Int(pow(Double(currentDenominator), 2.0)) + (innerIndex - 1) * currentDenominator + cubicIndex - 1
-                    let button = ColorPickerButton(frame: CGRect(x: xCoord + (buttonWidth * CGFloat(totalIndex % numberOfElementsPerRow)), y: yCoord + (buttonWidth * CGFloat(totalIndex / numberOfElementsPerRow)), width: buttonWidth, height: buttonWidth), _r: 1.0 / Float(outerIndex), _g: 1.0 / Float(innerIndex), _b: 1.0 / Float(cubicIndex))
-                    button.addTarget(self, action: #selector(selectColor(sender:)), for: .touchUpInside)
-                    buttonsToAdd.append(button)
-                    totalButtons += 1
-                }
-            }
+        let buttonsToAdd = ColorPickerHelper.colorPicker(viewWidth : self.view.frame.width)
+        for btn in buttonsToAdd {
+            btn.addTarget(self, action: #selector(selectColor(sender:)), for: .touchUpInside)
         }
         
         DispatchQueue.main.async {
@@ -135,8 +88,25 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
             if let _ = timecat!.color {
                 DispatchQueue.main.async {
                     self.view.backgroundColor = UIColor(cgColor: self.timecat!.color!)
+                    if let _ = self.lastColorSelected {
+                        self.lastColorSelected!.deselect()
+                        self.lastColorSelected = nil
+                    }
                 }
                 self.color = timecat?.color
+            }
+        }
+    }
+    
+    func resetAfterSuccessfulSubmit() {
+        DispatchQueue.main.async {
+            self.start_txtField.text = ""
+            self.end_txtField.text = ""
+            self.name_txtField.text = ""
+            self.description_txtView.text = ""
+            if let _ = self.lastColorSelected {
+                self.lastColorSelected!.deselect()
+                self.lastColorSelected = nil
             }
         }
     }
@@ -226,15 +196,11 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     
     func selectColor(sender : ColorPickerButton) {
         color = sender.backgroundColor!.cgColor
-        DispatchQueue.main.async {
-            if let _ = self.lastColorSelected {
-                self.lastColorSelected?.layer.borderWidth = Constants.timecatVC_color_picker_deselected_border_width
-                self.lastColorSelected?.layer.borderColor = Constants.timecatVC_color_picker_deselected_border_color
-            }
-            sender.layer.borderWidth = Constants.timecatVC_color_picker_selected_border_width
-            sender.layer.borderColor = Constants.timecatVC_color_picker_selected_border_color
-            self.lastColorSelected = sender
+        if let _ = self.lastColorSelected {
+            self.lastColorSelected?.deselect()
         }
+        sender.select()
+        self.lastColorSelected = sender
     }
     
     // TimePickerViewDelegateViewDelegate
@@ -281,7 +247,7 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     
     func validateAndSubmitTimecat() -> Bool {
         if let _ = timecat {
-            if taskDTO.updateTimeCategory(_oldCategory: timecat!, _category: TimeCategory(_name: self.name_txtField.text!, _description: self.description_txtView.text, _start: startTime!, _end: endTime!, _color: color)) {
+            if timecatDTO.updateTimeCategory(_oldCategory: timecat!, _category: TimeCategory(_name: self.name_txtField.text!, _description: self.description_txtView.text, _start: startTime!, _end: endTime!, _color: color)) {
                 let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
                 alertController.addAction(Constants.standard_ok_alert_action)
                 self.present(alertController, animated: true, completion: nil)
@@ -294,16 +260,11 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
                 return false
             }
         }
-        if taskDTO.createNewTimeCategory(_category: TimeCategory(_name: name_txtField.text!, _description: description_txtView.text, _start: startTime!, _end: endTime!, _color: self.color)) {
+        if timecatDTO.createNewTimeCategory(_category: TimeCategory(_name: name_txtField.text!, _description: description_txtView.text, _start: startTime!, _end: endTime!, _color: self.color)) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.timecatVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
-            DispatchQueue.main.async {
-                self.start_txtField.text = ""
-                self.end_txtField.text = ""
-                self.name_txtField.text = ""
-                self.description_txtView.text = ""
-            }
+            resetAfterSuccessfulSubmit()
             return true
         } else {
             let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.timecatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)

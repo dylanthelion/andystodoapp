@@ -15,6 +15,7 @@ class TaskDisplayViewController : UITableViewController, TaskDisplayProtocol, Ta
     // UI
     
     var filterApplied = false
+    var loaded = false
     
     // Model values
     
@@ -22,22 +23,36 @@ class TaskDisplayViewController : UITableViewController, TaskDisplayProtocol, Ta
     var categoryFilters : [Category]?
     var timeCategoryFilters : [TimeCategory]?
     let taskDTO = TaskDTO.globalManager
+    let categoryDTO = CategoryDTO.shared
+    let timecatDTO = TimeCategoryDTO.shared
     
     override func viewDidLoad() {
-        taskDTO.delegate = self
-        if taskDTO.AllTasks == nil {
+        if CollectionHelper.IsNilOrEmpty(_coll: taskDTO.AllTasks) {
+            taskDTO.delegate = self
+            categoryDTO.delegate = self
+            timecatDTO.delegate = self
+            loaded = true
+            categoryDTO.loadCategories()
+            timecatDTO.loadTimeCategories()
             taskDTO.loadTasks()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
+        if !loaded {
+            taskDTO.delegate = self
+            categoryDTO.delegate = self
+            timecatDTO.delegate = self
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+        categoryDTO.delegate = nil
+        timecatDTO.delegate = nil
         categoryFilters = [Category]()
         timeCategoryFilters = [TimeCategory]()
+        loaded = false
     }
     
     func removeCategoryFilter(_category: Category) {

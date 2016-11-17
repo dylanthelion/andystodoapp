@@ -14,12 +14,12 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     
     var allCategories : [Category]?
     var selectedCategories : [Category]?
-    let taskDTO = TaskDTO.globalManager
+    let categoryDTO = CategoryDTO.shared
+    let timecatDTO = TimeCategoryDTO.shared
     
     // UI values
     
     var top_y_coord : CGFloat?
-    var currentTag : Int = 0
     
     // Task VC
     
@@ -27,16 +27,18 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
     
     override func viewDidLoad() {
         top_y_coord = Constants.addCatVC_starting_y_coord
-        self.allCategories = taskDTO.AllCategories
+        self.allCategories = categoryDTO.AllCategories
         addCategoryButtons()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
+        categoryDTO.delegate = self
+        timecatDTO.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
+        categoryDTO.delegate = nil
+        timecatDTO.delegate = nil
     }
     
     // TaskDTODelegate
@@ -53,28 +55,26 @@ class AddCategoriesViewController: UIViewController, TaskDTODelegate {
         if self.allCategories == nil {
             return
         }
-        
-        
-        for _category in self.allCategories! {
-            let checkbox = CheckboxButton(frame: CGRect(x: Constants.addCatVC_button_x_coord, y: top_y_coord!, width: Constants.addCatVC_button_width, height: Constants.addCatVC_item_height))
-            checkbox.tag = currentTag
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.allCategories!.map({ $0.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
+        for (index, checkbox) in checkboxesAndLabels.0.enumerated() {
             checkbox.addTarget(self, action: #selector(toggle_category(sender:)), for: .touchUpInside)
-            checkbox.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
-            if let _ = self.selectedCategories {
+            if !CollectionHelper.IsNilOrEmpty(_coll: selectedCategories) {
                 for _cat in self.selectedCategories! {
-                    if _category == _cat {
+                    if self.allCategories![index] == _cat {
                         checkbox.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
                         checkbox.checked = true
                     }
                 }
             }
-            let name_label = UILabel(frame: CGRect(x: Constants.addCatVC_label_x_coord, y: top_y_coord!, width: Constants.addCatVC_label_width, height: Constants.addCatVC_item_height))
-            name_label.text = _category.Name!
-            top_y_coord! += Constants.addCatVC_row_diff
-            currentTag += 1
+            
             DispatchQueue.main.async {
                 self.view.addSubview(checkbox)
-                self.view.addSubview(name_label)
+            }
+        }
+        
+        for lbl in checkboxesAndLabels.1 {
+            DispatchQueue.main.async {
+                self.view.addSubview(lbl)
             }
         }
     }

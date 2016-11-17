@@ -23,10 +23,10 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     var startTime : NSDate?
     var allCategories : [Category]?
     let taskDTO = TaskDTO.globalManager
+    let categoryDTO = CategoryDTO.shared
+    let timecatDTO = TimeCategoryDTO.shared
     var allTimeCategories : [TimeCategory]?
     var chosenTimeCategory: TimeCategory? = nil
-    var startMonth : String?
-    var startDay : String?
     var startHours : String?
     var repeatable : Bool = false
     var loaded = false
@@ -44,14 +44,16 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     let datePickerDataSource = DatePickerDataSource()
     
     override func viewDidLoad() {
-        allTimeCategories = taskDTO.AllTimeCategories
+        allTimeCategories = timecatDTO.AllTimeCategories
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        categoryDTO.delegate = self
+        timecatDTO.delegate = self
         if !loaded {
-            self.timeCatPickerDataSource!.reloadTimecats(_categories: taskDTO.AllTimeCategories!)
-            self.timeCatDelegate?.allTimeCategories = taskDTO.AllTimeCategories!
+            self.timeCatPickerDataSource!.reloadTimecats(_categories: timecatDTO.AllTimeCategories!)
+            self.timeCatDelegate?.allTimeCategories = timecatDTO.AllTimeCategories!
             DispatchQueue.main.async {
                 self.timeCatPickerView.reloadAllComponents()
             }
@@ -61,6 +63,8 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+        categoryDTO.delegate = nil
+        timecatDTO.delegate = nil
         loaded = false
     }
     

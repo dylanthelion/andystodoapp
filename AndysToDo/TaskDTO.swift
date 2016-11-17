@@ -16,8 +16,6 @@ class TaskDTO {
     var AllTasks : [Task]?
     var filteredTasks : [Task]?
     var tasksToPopulate : [Task]?
-    var AllCategories : [Category]?
-    var AllTimeCategories : [TimeCategory]?
     var nextTaskID : Int?
     var archivedTasks : [Task]?
     
@@ -35,8 +33,6 @@ class TaskDTO {
             }
             return
         }
-        loadCategories()
-        loadTimeCategories()
         // logic to load tasks from file and/or server
         
         // Until persistence is finished, load fake tasks
@@ -48,6 +44,8 @@ class TaskDTO {
         sortAllTasks()
         if let _ = delegate {
             delegate!.handleModelUpdate()
+        } else {
+            print("Delegate is nil")
         }
     }
     
@@ -55,22 +53,22 @@ class TaskDTO {
         let task1 = Task(_name: "Task 1", _description: "Fake task", _start: Date().addingTimeInterval(5400) as NSDate?, _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil)
         task1.ID = nextTaskID!
         nextTaskID! += 1
-        let task2 = Task(_name: "Task 2", _description: "Fake task with a fake category", _start: Date().addingTimeInterval(720000) as NSDate?, _finish: nil, _category: [AllCategories![0]], _timeCategory: nil, _repeatable: nil)
+        let task2 = Task(_name: "Task 2", _description: "Fake task with a fake category", _start: Date().addingTimeInterval(720000) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories![0]], _timeCategory: nil, _repeatable: nil)
         task2.ID = nextTaskID!
         nextTaskID! += 1
-        let task3 = Task(_name: "Task 3", _description: "Fake task with multiple fake categories", _start: Date().addingTimeInterval(3600) as NSDate?, _finish: nil, _category: AllCategories!, _timeCategory: nil, _repeatable: nil)
+        let task3 = Task(_name: "Task 3", _description: "Fake task with multiple fake categories", _start: Date().addingTimeInterval(3600) as NSDate?, _finish: nil, _category: CategoryDTO.shared.AllCategories!, _timeCategory: nil, _repeatable: nil)
         task3.ID = nextTaskID!
         nextTaskID! += 1
-        let task4 = Task(_name: "Task 4", _description: "Fake task with a fake time category", _start: Date().addingTimeInterval(14400) as NSDate?, _finish: nil, _category: [AllCategories![1]], _timeCategory: AllTimeCategories![3], _repeatable: nil)
+        let task4 = Task(_name: "Task 4", _description: "Fake task with a fake time category", _start: Date().addingTimeInterval(14400) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories![1]], _timeCategory: TimeCategoryDTO.shared.AllTimeCategories![3], _repeatable: nil)
         task4.ID = nextTaskID!
         nextTaskID! += 1
         let repeatable1 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Daily, _unitCount: 2, _time: 13.5, _firstOccurrence: Date().addingTimeInterval(4000) as NSDate?, _dayOfWeek: nil)
-        let task5 = Task(_name: "Task 5", _description: "Fake task with daily repetition", _start: Date().addingTimeInterval(4000) as NSDate?, _finish: nil, _category: [AllCategories![2]], _timeCategory: AllTimeCategories![2], _repeatable: repeatable1)
+        let task5 = Task(_name: "Task 5", _description: "Fake task with daily repetition", _start: Date().addingTimeInterval(4000) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories![2]], _timeCategory: TimeCategoryDTO.shared.AllTimeCategories![2], _repeatable: repeatable1)
         task5.ID = nextTaskID!
         task5.inProgress = true
         nextTaskID! += 1
         let repeatble2 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Weekly, _unitCount: 1, _time: 12.0, _firstOccurrence: Date().addingTimeInterval(400000) as NSDate?, _dayOfWeek: DayOfWeek.Monday)
-        let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: Date().addingTimeInterval(400000) as NSDate?, _finish: nil, _category: [AllCategories![2], AllCategories![0]], _timeCategory: AllTimeCategories![1], _repeatable: repeatble2)
+        let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: Date().addingTimeInterval(400000) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories![2], CategoryDTO.shared.AllCategories![0]], _timeCategory: TimeCategoryDTO.shared.AllTimeCategories![1], _repeatable: repeatble2)
         task6.ID = nextTaskID!
         nextTaskID! += 1
         let taskToDelete = Task(_name: "Task to delete", _description: "Shouldn't show", _start: Date()
@@ -80,43 +78,10 @@ class TaskDTO {
         return [task1, task2, task3, task4, task5, task6, taskToDelete]
     }
     
-    func loadCategories() {
-        // logic to load categories from file and/or server
-        
-        // Until persistence is finished, load fake categories
-        
-        
-        AllCategories = loadFakeCategories()
-    }
-    
-    func loadFakeCategories() -> [Category] {
-        let category1 = Category(_name: "Category 1", _description: "Fake Category")
-        let category2 = Category(_name: "Category 2", _description: "Another fake Category")
-        let category3 = Category(_name: "Category 3", _description: "The worst fake category")
-        return [category1, category2, category3]
-    }
-    
-    func loadTimeCategories() {
-        // logic to load categories from file and/or server
-        
-        // Until persistence is finished, load fake categories
-        
-        
-        AllTimeCategories = loadFakeTimeCategories()
-    }
-    
-    func loadFakeTimeCategories() -> [TimeCategory] {
-        let category1 = TimeCategory(_name: "Time Cat 1", _description: "Fake Morning", _start: 8.5, _end: 11.0, _color: UIColor.red.cgColor)
-        let category2 = TimeCategory(_name: "Time Cat 2", _description: "Fake Lunch Hours", _start: 12.25, _end: 13.25, _color: UIColor.green.cgColor)
-        let category3 = TimeCategory(_name: "Time Cat 3", _description: "Fake Afternoon", _start: 14.0, _end: 17.0, _color: UIColor.green.cgColor)
-        let category4 = TimeCategory(_name: "Time Cat 4", _description: "Fake evening", _start: 18.5, _end: 21.75, _color: nil)
-        return [category1, category2, category3, category4]
-    }
-    
-    // Task CRUD
+    // CRUD
     
     func createNewTask(_task : Task) -> Bool {
-        if _task.isValid() {
+        if _task.isValid()  && !AllTasks!.map({ $0.Name! }).contains(where: { $0 == _task.Name! }) {
             AllTasks!.append(_task)
             sortAllTasks()
             return true
@@ -148,36 +113,58 @@ class TaskDTO {
     func updateTask(_task : Task) -> Bool {
         for task in AllTasks! {
             if task.ID! == _task.ID && _task.isValid() {
-                task.Categories = _task.Categories
-                task.Description = _task.Description
-                task.FinishTime = _task.FinishTime
-                task.inProgress = _task.inProgress
-                task.Name = _task.Name
-                task.RepeatableTask = _task.RepeatableTask
-                task.StartTime = _task.StartTime
-                task.TimeCategory = _task.TimeCategory
-                task.unwrappedRepeatables = _task.unwrappedRepeatables
-                task.siblingRepeatables = _task.siblingRepeatables
-                task.timeOnTask = _task.timeOnTask
-                if task.FinishTime != nil && !NumberHelper.isNilOrZero(num: task.timeOnTask) && !task.inProgress {
-                    if archiveTask(_task: task) {
-                        delegate?.taskDidUpdate(_task: _task)
-                        return true
-                    } else {
-                        print("Problem archiving")
-                        return false
+                editTask(_task: _task, indexOf: AllTasks!.index(of: task)!, _populated: false)
+            } else if !CollectionHelper.IsNilOrEmpty(_coll: task.unwrappedRepeatables) {
+                for repeatableTask in tasksToPopulate! {
+                    for repeatable in task.unwrappedRepeatables! {
+                        if repeatableTask == repeatable {
+                            editTask(_task: repeatable, indexOf: tasksToPopulate!.index(of: repeatable)!, _populated: true)
+                            return true
+                        }
                     }
-                } else if task.isRepeatable() {
-                    populateRepeatables()
-                    sortAllTasks()
-                    return true
-                } else {
-                    sortAllTasks()
-                    return true
                 }
             }
         }
         return false
+    }
+    
+    func editTask(_task : Task, indexOf: Int, _populated : Bool) {
+        var task : Task
+        if !_populated {
+            task = AllTasks![indexOf]
+        } else {
+            task = tasksToPopulate![indexOf]
+        }
+        task.Categories = _task.Categories
+        task.Description = _task.Description
+        task.FinishTime = _task.FinishTime
+        task.inProgress = _task.inProgress
+        task.Name = _task.Name
+        task.RepeatableTask = _task.RepeatableTask
+        task.StartTime = _task.StartTime
+        task.TimeCategory = _task.TimeCategory
+        task.unwrappedRepeatables = _task.unwrappedRepeatables
+        task.siblingRepeatables = _task.siblingRepeatables
+        task.timeOnTask = _task.timeOnTask
+        if task.FinishTime != nil && !NumberHelper.isNilOrZero(num: task.timeOnTask) && !task.inProgress {
+            if archiveTask(_task: task) {
+                delegate?.taskDidUpdate(_task: _task)
+                return
+            } else if task.isRepeatable() {
+                populateRepeatables()
+                sortAllTasks()
+                return
+            } else {
+                print("Problem archiving")
+                return
+            }
+        } else if !_populated {
+            sortAllTasks()
+            return
+        } else {
+            sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
+            return
+        }
     }
     
     func deleteTask(_task : Task) {
@@ -224,81 +211,6 @@ class TaskDTO {
         } else {
             archivedTasks = [_task]
         }
-    }
-    
-    // Category CRUD
-    
-    func createNewCategory(_category : Category) -> Bool {
-        if _category.isValid() {
-            var isUnique = true
-            for _cat in AllCategories! {
-                if _cat == _category {
-                    isUnique = false
-                    break
-                }
-            }
-            if isUnique {
-                AllCategories!.append(_category)
-                return true
-            } else {
-                return false
-            }
-            
-        }
-        return false
-    }
-    
-    func updateCategory(_oldCategory: Category, _category : Category) -> Bool {
-        if _category.isValid() {
-            for _cat in AllCategories! {
-                if _cat.Name == _oldCategory.Name! {
-                    _cat.Name = _category.Name!
-                    _cat.Description = _category.Description!
-                    return true
-                }
-            }
-        }
-        
-        return false
-    }
-    
-    // Time Category CRUD
-    
-    func createNewTimeCategory(_category : TimeCategory) -> Bool {
-        if _category.isValid() {
-            var isUnique = true
-            for _cat in AllTimeCategories! {
-                if _cat == _category {
-                    isUnique = false
-                    break
-                }
-            }
-            if isUnique {
-                AllTimeCategories!.append(_category)
-                return true
-            } else {
-                return false
-            }
-            
-        }
-        return false
-    }
-    
-    func updateTimeCategory(_oldCategory : TimeCategory, _category: TimeCategory) -> Bool {
-        if _category.isValid() {
-            for _cat in AllTimeCategories! {
-                if _cat.Name == _oldCategory.Name! {
-                    _cat.Name = _category.Name!
-                    _cat.Description = _category.Description!
-                    _cat.StartOfTimeWindow = _category.StartOfTimeWindow
-                    _cat.EndOfTimeWindow = _category.EndOfTimeWindow
-                    _cat.color = _category.color
-                    return true
-                }
-            }
-        }
-        
-        return false
     }
     
     // ID generation
@@ -399,6 +311,8 @@ class TaskDTO {
         return filteredTasks
     }
     
+    // Populate tasks
+    
     func populateNonRepeatables() {
         if AllTasks == nil {
             return
@@ -458,6 +372,8 @@ class TaskDTO {
         }
         _task.unwrappedRepeatables!.removeAll()
     }
+    
+    // Sort tasks
     
     func sortDisplayedTasks(forWindow : Calendar.Component, units: Int) {
         var timeInterval : TimeInterval? = TimeInterval(0)

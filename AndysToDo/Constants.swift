@@ -90,13 +90,9 @@ struct Constants {
     
     // FilterVC
     
-    static let filterVC_checkbox_x_coord : CGFloat = 10.0
     static let filterVC_starting_y_coord : CGFloat = 132.0
     static let filterVC_full_row_offset : CGFloat = 40.0
-    static let filterVC_checkbox_height_and_width : CGFloat = 30.0
     static let filterVC_full_header_offset : CGFloat = 44.0
-    static let filterVC_label_right_margin : CGFloat = 20.0
-    static let filterVC_label_bottom_margin : CGFloat = 10.0
     static let filterVC_header_label_height : CGFloat = 34.0
     static let filterVC_header_font_size : CGFloat = 22.0
     static let filterVC_header_x_coord : CGFloat = 40.0
@@ -120,9 +116,6 @@ struct Constants {
     static let timecatVC_alert_success_message = "Category created"
     static let timecatVC_alert_name_uniqueness_failure_message = "That name is already taken"
     static let timecatVC_color_label_bottom_y_coord : CGFloat = 402.0
-    static let timecatVC_color_picker_column_size : Int = 11
-    static let timecatVC_standard_view_padding : CGFloat = 10.0
-    static let timecatVC_color_picker_units_in_margins : CGFloat = 3.0
     static let timecatVC_color_picker_selected_border_width : CGFloat = 2.0
     static let timecatVC_color_picker_deselected_border_width : CGFloat = 0.0
     static let timecatVC_color_picker_selected_border_color : CGColor = UIColor.black.cgColor
@@ -162,24 +155,6 @@ struct Constants {
     static let createRepeatableVC_checkbox_width : CGFloat = 30.0
     static let createRepeatableVC_checkbox_row_height : CGFloat = 50.0
     
-    // Time picker views
-    
-    static let picker_minutes_per_hour = 12
-    static let total_unitsOfTime = 3
-    static let picker_all_minutes_as_ints = [00,05,10,15,20,25,30,35,40,45,50,55]
-    
-    // TaskTableViewCellOnItButton
-    
-    static let taskTableViewCell_onIt = "ON IT!"
-    static let taskTableViewCell_done = "DONE"
-    
-    // Enums
-    
-    static let timeOfDay_daily_value = "Daily"
-    static let timeOfDay_hourly_value = "Hourly"
-    static let timeOfDay_weekly_value = "Weekly"
-    static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
-    
     // DisplayAllTasksVC
     
     static let displayAllTasksVC_string_repeatable = "Repeatable"
@@ -201,4 +176,37 @@ struct Constants {
     static let allCategoriesVC_category_table_header = "Categories"
     static let allCategoriesVC_timecat_table_header = "Timecats"
     static let allCategoriesVC_create_table_header = "Create:"
+    
+    // Helper views
+    
+    // Checkboxes and labels
+    
+    static let checkboxesAndLabels_checkbox_x_coord : CGFloat = 10.0
+    static let checkboxesAndLabels_full_row_offset : CGFloat = 40.0
+    static let checkboxesAndLabels_checkbox_height_and_width : CGFloat = 30.0
+    static let checkboxesAndLabels_label_margin : CGFloat = 10.0
+    
+    // Color Picker
+    
+    static let colorPicker_units_in_margins : CGFloat = 3.0
+    static let colorPicker_standard_view_padding : CGFloat = 10.0
+    static let colorPicker_column_size : Int = 11
+    
+    // Time picker views
+    
+    static let picker_minutes_per_hour = 12
+    static let total_unitsOfTime = 3
+    static let picker_all_minutes_as_ints = [00,05,10,15,20,25,30,35,40,45,50,55]
+    
+    // TaskTableViewCellOnItButton
+    
+    static let taskTableViewCell_onIt = "ON IT!"
+    static let taskTableViewCell_done = "DONE"
+    
+    // Enums
+    
+    static let timeOfDay_daily_value = "Daily"
+    static let timeOfDay_hourly_value = "Hourly"
+    static let timeOfDay_weekly_value = "Weekly"
+    static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
 }

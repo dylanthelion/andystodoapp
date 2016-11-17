@@ -20,18 +20,19 @@ class DisplayActiveTaskViewController : UIViewController, TaskDTODelegate {
     
     @IBOutlet weak var startTime_lbl: UILabel!
     @IBOutlet weak var timer_lbl: UILabel!
-    @IBOutlet weak var description_txtView: UITextView!
+    @IBOutlet weak var description_txtView: BorderedTextView!
     
     override func viewDidLoad() {
         populateLabels()
         setupTimer()
-        if let _ = task?.TimeCategory?.color {
-            self.view.backgroundColor = UIColor(cgColor: task!.TimeCategory!.color!)
-        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        if let _ = task?.TimeCategory?.color {
+            self.view.backgroundColor = UIColor(cgColor: task!.TimeCategory!.color!)
+        }
         if !task!.inProgress {
             self.navigationController?.popViewController(animated: true)
         }

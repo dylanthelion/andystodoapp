@@ -10,6 +10,11 @@ import UIKit
 
 class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate {
     
+    // DatePickerViewDelegateViewDelegate
+    
+    var startMonth: String?
+    var startDay: String?
+    
     // UI
     
     var textFieldSelected = 0
@@ -18,13 +23,12 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     // Model values
     
     let taskDTO = TaskDTO.globalManager
+    let timecatDTO = TimeCategoryDTO.shared
     var task : Task?
     var allCategories : [Category]?
     var allTimeCategories : [TimeCategory]?
     var chosenTimeCategory: TimeCategory? = nil
     var startTime : NSDate?
-    var startMonth : String?
-    var startDay : String?
     var startHours : String?
     
     // Picker views
@@ -45,24 +49,23 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     @IBOutlet weak var name_txtField: UITextField!
     @IBOutlet weak var start_txtField: UITextField!
     @IBOutlet weak var timeCat_txtField: UITextField!
-    @IBOutlet weak var description_txtView: UITextView!
+    @IBOutlet weak var description_txtView: BorderedTextView!
     @IBOutlet weak var startDateTextView: UITextField!
     
     override func viewDidLoad() {
-        allTimeCategories = taskDTO.AllTimeCategories
+        allTimeCategories = timecatDTO.AllTimeCategories
         setupPickerDelegation()
-        setupTextFieldDelegation()
         setupTextFieldInput()
-        addTextViewBorder()
         populateTaskInfo()
         loaded = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        timecatDTO.delegate = self
         if !loaded {
-            self.timeCatPickerDataSource!.reloadTimecats(_categories: taskDTO.AllTimeCategories!)
-            self.timeCatDelegate?.allTimeCategories = taskDTO.AllTimeCategories!
+            self.timeCatPickerDataSource!.reloadTimecats(_categories: timecatDTO.AllTimeCategories!)
+            self.timeCatDelegate?.allTimeCategories = timecatDTO.AllTimeCategories!
             DispatchQueue.main.async {
                 self.timeCatPickerView.reloadAllComponents()
             }
@@ -72,18 +75,11 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+        timecatDTO.delegate = nil
         loaded = false
     }
     
     // View setup
-    
-    func setupTextFieldDelegation(){
-        name_txtField.delegate = self
-        start_txtField.delegate = self
-        timeCat_txtField.delegate = self
-        description_txtView.delegate = self
-        startDateTextView.delegate = self
-    }
     
     func setupPickerDelegation() {
         timeCatDelegate = TimecatPickerDelegate(_categories: allTimeCategories!, _delegate: self)
@@ -102,11 +98,6 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
         start_txtField.inputView = pickerView
         timeCat_txtField.inputView = timeCatPickerView
         startDateTextView.inputView = datePickerView
-    }
-    
-    func addTextViewBorder() {
-        description_txtView.layer.borderWidth = Constants.text_view_border_width
-        description_txtView.layer.borderColor = Constants.text_view_border_color
     }
     
     func populateTaskInfo() {
@@ -131,6 +122,18 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
             }
         }
         
+    }
+    
+    func updateForSuccessfulSubmit() {
+        if let _ = task?.TimeCategory?.color {
+            DispatchQueue.main.async {
+                self.view.backgroundColor = UIColor(cgColor: self.task!.TimeCategory!.color!)
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.view.backgroundColor = UIColor.white
+            }
+        }
     }
     
     // Text Delegate
@@ -213,8 +216,6 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
-        startMonth = months
-        startDay = days
         startDateTextView.text = fulldate
     }
     
@@ -228,7 +229,6 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     // TimecatPickerDelegateViewDelegate
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
-        self.chosenTimeCategory = timecat
         self.timeCat_txtField.text = name
     }
     
@@ -323,16 +323,11 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
-            DispatchQueue.main.async {
-                self.name_txtField.text = ""
-                self.start_txtField.text = ""
-                self.description_txtView.text = ""
-                self.timeCat_txtField.text = ""
-                self.startDateTextView.text = ""
-            }
+            updateForSuccessfulSubmit()
             return true
         } else {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message, preferredStyle: .alert)
+            //let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: "Herp", preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false

@@ -12,8 +12,6 @@ class FilterViewController : UIViewController, TaskDTODelegate {
     
     // UI
     
-    var width : CGFloat?
-    var label_width : CGFloat?
     var top_y_coord : CGFloat?
     
     // Model values
@@ -21,15 +19,14 @@ class FilterViewController : UIViewController, TaskDTODelegate {
     var categories : [Category]?
     var timeCategories : [TimeCategory]?
     var AllTasks : TaskDTO = TaskDTO.globalManager
-    
+    let categoryDTO = CategoryDTO.shared
+    let timecatDTO = TimeCategoryDTO.shared
     
     override func viewDidLoad() {
-        width = self.view.frame.width / 2.0
         top_y_coord = Constants.filterVC_starting_y_coord
-        label_width = width! - (Constants.filterVC_checkbox_height_and_width + Constants.filterVC_label_right_margin)
         AllTasks.delegate = self
-        AllTasks.loadCategories()
-        AllTasks.loadTimeCategories()
+        categoryDTO.loadCategories()
+        timecatDTO.loadTimeCategories()
         self.handleModelUpdate()
         addCategoryFilterViews()
         addTimecatFilterViews()
@@ -41,6 +38,8 @@ class FilterViewController : UIViewController, TaskDTODelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         AllTasks.delegate = nil
+        categoryDTO.delegate = nil
+        timecatDTO.delegate = nil
     }
     
     func loadCategories() {
@@ -53,27 +52,20 @@ class FilterViewController : UIViewController, TaskDTODelegate {
         if CollectionHelper.IsNilOrEmpty(_coll: self.categories) {
             return
         }
-        for (index, _category) in self.categories!.enumerated() {
-            let index_offset : CGFloat = CGFloat(index % 2)
-            let btn_add_filter = CheckboxButton(frame: CGRect(x: (Constants.filterVC_checkbox_x_coord + (width! * index_offset)), y: top_y_coord!, width: Constants.filterVC_checkbox_height_and_width, height: Constants.filterVC_checkbox_height_and_width))
-            
-            btn_add_filter.setImage(UIImage(named: "checkbox_unchecked"), for: .normal)
-            btn_add_filter.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
-            btn_add_filter.tag = index
-            let label_add_filter = UILabel(frame: CGRect(x: ((Constants.filterVC_checkbox_x_coord + Constants.filterVC_checkbox_height_and_width
-                + Constants.filterVC_label_bottom_margin) + (width! * index_offset)), y: top_y_coord!, width: label_width!, height: Constants.filterVC_checkbox_height_and_width))
-            label_add_filter.text = _category.Name!
-            if index % 2 == 1 {
-                top_y_coord! += Constants.filterVC_full_row_offset
-            }
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.categories!.map({ $0.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
+        for btn in checkboxesAndLabels.0 {
+            btn.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
             DispatchQueue.main.async {
-                self.view.addSubview(btn_add_filter)
-                self.view.addSubview(label_add_filter)
+                self.view.addSubview(btn)
             }
         }
-        if (self.categories!.count % 2 == 1) {
-            top_y_coord! += Constants.filterVC_full_row_offset
+        for lbl in checkboxesAndLabels.1 {
+            DispatchQueue.main.async {
+                self.view.addSubview(lbl)
+            }
         }
+        top_y_coord! += (Constants.filterVC_full_row_offset * (CGFloat((categories?.count)! / 2)))
+        top_y_coord! += (Constants.filterVC_full_row_offset * CGFloat((categories?.count)! % 2))
     }
     
     func addTimecatFilterViews() {
@@ -82,25 +74,24 @@ class FilterViewController : UIViewController, TaskDTODelegate {
         }
         
         addTimeCategoriesHeader(y_coord: top_y_coord!)
+        
         top_y_coord! += Constants.filterVC_full_header_offset
-        for (index, _category) in self.timeCategories!.enumerated() {
-            let index_offset : CGFloat = CGFloat(index % 2)
-            let btn_add_filter = CheckboxButton(frame: CGRect(x: (Constants.filterVC_checkbox_x_coord + (width! * index_offset)), y: top_y_coord!, width: Constants.filterVC_checkbox_height_and_width, height: Constants.filterVC_checkbox_height_and_width))
-            btn_add_filter.setImage(UIImage(named: "checkbox_unchecked"), for: .normal)
-            btn_add_filter.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
-            if let _ = self.categories {
-                btn_add_filter.tag = index + self.categories!.count
-            } else {
-                btn_add_filter.tag = index
-            }
-            let label_add_filter = UILabel(frame: CGRect(x: ((Constants.filterVC_checkbox_x_coord + Constants.filterVC_checkbox_height_and_width + Constants.filterVC_label_bottom_margin) + (width! * index_offset)), y: top_y_coord!, width: label_width!, height: Constants.filterVC_checkbox_height_and_width))
-            label_add_filter.text = _category.Name!
-            if index % 2 == 1 {
-                top_y_coord! += Constants.filterVC_full_row_offset
-            }
+        let startingIndex : Int
+        if let _ = categories {
+            startingIndex = categories!.count
+        } else {
+            startingIndex = 0
+        }
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.timeCategories!.map({ $0.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!, startingIndex: startingIndex)
+        for btn in checkboxesAndLabels.0 {
+            btn.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
             DispatchQueue.main.async {
-                self.view.addSubview(btn_add_filter)
-                self.view.addSubview(label_add_filter)
+                self.view.addSubview(btn)
+            }
+        }
+        for lbl in checkboxesAndLabels.1 {
+            DispatchQueue.main.async {
+                self.view.addSubview(lbl)
             }
         }
     }
@@ -159,11 +150,11 @@ class FilterViewController : UIViewController, TaskDTODelegate {
     }
     
     func handleModelUpdate() {
-        if let _ = AllTasks.AllCategories {
-            self.categories = AllTasks.AllCategories!
+        if let _ = categoryDTO.AllCategories {
+            self.categories = categoryDTO.AllCategories!
         }
-        if let _ = AllTasks.AllTimeCategories {
-            self.timeCategories = AllTasks.AllTimeCategories!
+        if let _ = timecatDTO.AllTimeCategories {
+            self.timeCategories = timecatDTO.AllTimeCategories!
         }
     }
 }

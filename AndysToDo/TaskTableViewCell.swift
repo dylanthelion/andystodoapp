@@ -15,9 +15,7 @@ class TaskTableViewCell : UITableViewCell {
     var onItState : OnItButtonState = OnItButtonState.Inactive
     
     @IBOutlet weak var timeLabel: UILabel!
-    
     @IBOutlet weak var taskTitleLabel: UILabel!
-    
     @IBOutlet weak var onItButton: UIButton!
     
     override func awakeFromNib() {

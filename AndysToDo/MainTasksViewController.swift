@@ -14,6 +14,7 @@ class MainTasksViewController : TaskDisplayViewController {
     
     var isSorted = false
     var totalTasks = 0
+    var filtered = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +25,7 @@ class MainTasksViewController : TaskDisplayViewController {
                 let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
                 displayActiveTaskVC.task = _task
                 self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
+                break
             }
         }
         
@@ -37,9 +39,14 @@ class MainTasksViewController : TaskDisplayViewController {
             taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
             isUpdated = true
         }
-        if categoryFilters != nil || timeCategoryFilters != nil {
+        if !CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters) {
             applyFilter()
+            filtered = true
             isUpdated = true
+        }
+        if filtered {
+            applyFilter()
+            filtered = false
         }
         if !isSorted {
             taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
@@ -85,7 +92,7 @@ class MainTasksViewController : TaskDisplayViewController {
         }
         cell.taskTitleLabel.text = cellTask.Name!
         if let _ = cellTask.StartTime {
-            cell.timeLabel.text = TimeConverter.dateToTimeConverter(_time: cellTask.StartTime!)
+            cell.timeLabel.text = TimeConverter.dateToTimeWithMeridianConverter(_time: cellTask.StartTime!)
         }
         if let _ = cellTask.TimeCategory?.color {
             cell.backgroundColor = UIColor(cgColor: cellTask.TimeCategory!.color!)
@@ -113,11 +120,13 @@ class MainTasksViewController : TaskDisplayViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            if AllTasks!.count == taskDTO.tasksToPopulate!.count {
+            /*if AllTasks!.count == taskDTO.tasksToPopulate!.count {
                 taskDTO.tasksToPopulate!.remove(at: indexPath.row)
-            }
+            }*/
+            let taskToDelete = AllTasks![indexPath.row]
             AllTasks!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
+            taskDTO.deleteTask(_task: taskToDelete)
         }
     }
     

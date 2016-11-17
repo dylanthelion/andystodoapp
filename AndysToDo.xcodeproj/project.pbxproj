@@ -73,6 +73,11 @@
 		74DFB0A71DC16E300069AAC2 /* DatePickerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DFB0A61DC16E300069AAC2 /* DatePickerViewDelegate.swift */; };
 		74DFB0A91DC1731F0069AAC2 /* DatePickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DFB0A81DC1731F0069AAC2 /* DatePickerDataSource.swift */; };
 		74DFB0AB1DC176070069AAC2 /* TimePickerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DFB0AA1DC176070069AAC2 /* TimePickerViewDelegate.swift */; };
+		74EBE35D1DDE52FE005736B0 /* CategoryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE35C1DDE52FE005736B0 /* CategoryDTO.swift */; };
+		74EBE35F1DDE5347005736B0 /* TimeCategoryDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE35E1DDE5347005736B0 /* TimeCategoryDTO.swift */; };
+		74EBE3611DDEA7A3005736B0 /* CheckboxesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3601DDEA7A3005736B0 /* CheckboxesHelper.swift */; };
+		74EBE3641DDEB7DF005736B0 /* BorderedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3631DDEB7DF005736B0 /* BorderedTextView.swift */; };
+		74EBE3661DDEBDC5005736B0 /* ColorPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3651DDEBDC5005736B0 /* ColorPickerHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -167,6 +172,11 @@
 		74DFB0A61DC16E300069AAC2 /* DatePickerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerViewDelegate.swift; sourceTree = "<group>"; };
 		74DFB0A81DC1731F0069AAC2 /* DatePickerDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerDataSource.swift; sourceTree = "<group>"; };
 		74DFB0AA1DC176070069AAC2 /* TimePickerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePickerViewDelegate.swift; sourceTree = "<group>"; };
+		74EBE35C1DDE52FE005736B0 /* CategoryDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryDTO.swift; sourceTree = "<group>"; };
+		74EBE35E1DDE5347005736B0 /* TimeCategoryDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeCategoryDTO.swift; sourceTree = "<group>"; };
+		74EBE3601DDEA7A3005736B0 /* CheckboxesHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckboxesHelper.swift; sourceTree = "<group>"; };
+		74EBE3631DDEB7DF005736B0 /* BorderedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderedTextView.swift; sourceTree = "<group>"; };
+		74EBE3651DDEBDC5005736B0 /* ColorPickerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPickerHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -253,6 +263,8 @@
 			isa = PBXGroup;
 			children = (
 				741DF0391DB43F5000E9B785 /* TaskDTO.swift */,
+				74EBE35C1DDE52FE005736B0 /* CategoryDTO.swift */,
+				74EBE35E1DDE5347005736B0 /* TimeCategoryDTO.swift */,
 			);
 			name = DTO;
 			sourceTree = "<group>";
@@ -260,6 +272,7 @@
 		741DF0771DB47F8900E9B785 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				74EBE3621DDEB7CE005736B0 /* TextViews */,
 				740CB46E1DCC46EA00ABF0BD /* Protocols */,
 				74DFB0A51DC16E0F0069AAC2 /* DataSources */,
 				74DFB0A41DC16E080069AAC2 /* Delegates */,
@@ -366,6 +379,8 @@
 				741DF07E1DBAF18700E9B785 /* CollectionHelper.swift */,
 				741C72CB1DC4325600331E07 /* StandardDateFormatter.swift */,
 				74B410481DD59689003B07BA /* NumberHelper.swift */,
+				74EBE3601DDEA7A3005736B0 /* CheckboxesHelper.swift */,
+				74EBE3651DDEBDC5005736B0 /* ColorPickerHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -414,6 +429,14 @@
 				741C72CF1DC446AD00331E07 /* UnitOfTimePickerDataSource.swift */,
 			);
 			name = DataSources;
+			sourceTree = "<group>";
+		};
+		74EBE3621DDEB7CE005736B0 /* TextViews */ = {
+			isa = PBXGroup;
+			children = (
+				74EBE3631DDEB7DF005736B0 /* BorderedTextView.swift */,
+			);
+			name = TextViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -561,15 +584,18 @@
 				74C500071DAFE24D00CF7421 /* HTTPRequestHelper.swift in Sources */,
 				74D6C1091DBC57A400217DBD /* CreateTimeCategoryViewController.swift in Sources */,
 				74B353641DC41D00004A66DF /* TimecatPickerDelegate.swift in Sources */,
+				74EBE35F1DDE5347005736B0 /* TimeCategoryDTO.swift in Sources */,
 				741DF07A1DB47FA400E9B785 /* TaskTableViewCell.swift in Sources */,
 				74C500041DAFE0B300CF7421 /* MainLoginViewController.swift in Sources */,
 				74B410491DD59689003B07BA /* NumberHelper.swift in Sources */,
 				74DFB0A91DC1731F0069AAC2 /* DatePickerDataSource.swift in Sources */,
 				740CB4721DCC483F00ABF0BD /* TaskDisplayViewController.swift in Sources */,
 				741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */,
+				74EBE3661DDEBDC5005736B0 /* ColorPickerHelper.swift in Sources */,
 				740CB4761DCC951B00ABF0BD /* CreateTaskParentViewController.swift in Sources */,
 				74C2BDA41DAEA5C1006D683D /* AppDelegate.swift in Sources */,
 				741DF0371DB43EE400E9B785 /* MainTasksViewController.swift in Sources */,
+				74EBE3641DDEB7DF005736B0 /* BorderedTextView.swift in Sources */,
 				74B3536A1DC43079004A66DF /* DayOfWeekPickerDataSource.swift in Sources */,
 				74B353661DC41FDE004A66DF /* TimecatPickerDataSource.swift in Sources */,
 				741DF0861DBC34F200E9B785 /* CreateCategoryViewController.swift in Sources */,
@@ -584,6 +610,7 @@
 				740CB46B1DCC43E000ABF0BD /* AllTasksViewController.swift in Sources */,
 				741DF0811DBB133200E9B785 /* FilterViewController.swift in Sources */,
 				74B353621DC4170D004A66DF /* TimePickerViewDataSource.swift in Sources */,
+				74EBE35D1DDE52FE005736B0 /* CategoryDTO.swift in Sources */,
 				74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */,
 				740CB4691DCAC95100ABF0BD /* DisplayInactiveTask.swift in Sources */,
 				741C72CE1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift in Sources */,
@@ -599,6 +626,7 @@
 				741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */,
 				74D6C10F1DBC782D00217DBD /* AddCategoriesViewController.swift in Sources */,
 				74DFB0AB1DC176070069AAC2 /* TimePickerViewDelegate.swift in Sources */,
+				74EBE3611DDEA7A3005736B0 /* CheckboxesHelper.swift in Sources */,
 				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
 				741DF07C1DB492FE00E9B785 /* FloatToTimeConverter.swift in Sources */,
 				74D6C10D1DBC735C00217DBD /* CreateTaskViewController.swift in Sources */,

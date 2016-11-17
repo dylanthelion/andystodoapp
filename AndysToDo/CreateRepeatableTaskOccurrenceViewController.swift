@@ -10,23 +10,24 @@ import UIKit
 
 class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DayOfWeekPickerDelegateViewDelegate, UnitOfTimePickerDelegateViewDelegate {
     
+    // DatePickerViewDelegateViewDelegate
+    
+    var startMonth: String?
+    var startDay: String?
+    
     // UI
     
     var textFieldSelected : Int = 0
     var validRepeatableSubmitted = false
     var top_y_coord : CGFloat = Constants.createRepeatableVC_starting_checkboxes_y_coord
-    var left_lbl_x_coord : CGFloat = 0.0
-    var lbl_width : CGFloat = 0.0
-    var labelsToAdd : [UILabel]?
-    var checkboxesToAdd : [CheckboxButton]?
+    var labelsToAdd : [UILabel] = [UILabel]()
+    var checkboxesToAdd : [CheckboxButton] = [CheckboxButton]()
     
     // Model values
     
     var _timeOfDay : Float?
     var _dayOfWeek : DayOfWeek?
     var daysOfWeek : [DayOfWeek]?
-    var startMonth : String?
-    var startDay : String?
     var startHours : String?
     var date : NSDate?
     
@@ -56,7 +57,6 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     
     override func viewDidLoad() {
         setupPickerDelegation()
-        setupTextFieldDelegation()
         setupTextFieldInput()
         daysOfWeek = [DayOfWeek]()
     }
@@ -74,14 +74,6 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     }
     
     // View setup
-    
-    func setupTextFieldDelegation() {
-        unitOfTime_txtField.delegate = self
-        unitsPerTask_txtField.delegate = self
-        firstTimeOfDay_txtField.delegate = self
-        firstDate_txtField.delegate = self
-        dayOfWeek_txtField.delegate = self
-    }
     
     func setupPickerDelegation() {
         timePickerDelegate = TimePickerViewDelegate(_delegate: self)
@@ -106,47 +98,28 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     }
     
     func addDayOfWeekCheckBoxes() {
-        if CollectionHelper.IsNilOrEmpty(_coll: labelsToAdd) {
-            labelsToAdd = [UILabel]()
-            checkboxesToAdd = [CheckboxButton]()
-            let width = self.view.frame.width / 2.0
-            let lbl_width = width - (Constants.createRepeatableVC_lbl_left_padding + Constants.createRepeatableVC_checkbox_width + Constants.createRepeatableVC_checkbox_left_padding + Constants.createRepeatableVC_checkbox_right_padding)
-            
-            for i in 0...6 {
-                let checkbox = CheckboxButton(frame: CGRect(x: left_lbl_x_coord + Constants.createRepeatableVC_lbl_left_padding + lbl_width + Constants.createRepeatableVC_checkbox_left_padding, y: top_y_coord, width: Constants.createRepeatableVC_checkbox_width, height: Constants.createRepeatableVC_checkbox_width))
-                let label = UILabel(frame: CGRect(x: left_lbl_x_coord + Constants.createRepeatableVC_lbl_left_padding, y: top_y_coord, width: lbl_width, height: Constants.createRepeatableVC_checkbox_width))
-                label.text = Constants.days_of_week_as_strings[i]
-                checkbox.addTarget(self, action: #selector(toggleDidSelectDate(sender:)), for: .touchUpInside)
-                checkbox.tag = i
-                checkbox.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
-                labelsToAdd!.append(label)
-                checkboxesToAdd!.append(checkbox)
-                if i % 2 == 0 {
-                    left_lbl_x_coord += width
-                } else if i % 2 == 1 {
-                    left_lbl_x_coord -= width
-                    top_y_coord += Constants.createRepeatableVC_checkbox_row_height
-                }
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: Array(Constants.days_of_week_as_strings.prefix(7)), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord)
+        for checkbox in checkboxesAndLabels.0 {
+            checkbox.addTarget(self, action: #selector(toggleDidSelectDate(sender:)), for: .touchUpInside)
+            checkboxesToAdd.append(checkbox)
+            DispatchQueue.main.async {
+                self.view.addSubview(checkbox)
             }
         }
-        
-        
-        DispatchQueue.main.async {
-            for _label in self.labelsToAdd! {
-                self.view.addSubview(_label)
-            }
-            for _checkbox in self.checkboxesToAdd! {
-                self.view.addSubview(_checkbox)
+        for lbl in checkboxesAndLabels.1 {
+            labelsToAdd.append(lbl)
+            DispatchQueue.main.async {
+                self.view.addSubview(lbl)
             }
         }
     }
     
     func removeCheckboxesFromView() {
         DispatchQueue.main.async {
-            for _label in self.labelsToAdd! {
+            for _label in self.labelsToAdd {
                 _label.removeFromSuperview()
             }
-            for _checkbox in self.checkboxesToAdd! {
+            for _checkbox in self.checkboxesToAdd {
                 _checkbox.removeFromSuperview()
             }
             
@@ -236,8 +209,6 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
-        startMonth = months
-        startDay = days
         firstDate_txtField.text = fulldate
     }
     
@@ -373,10 +344,10 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController, TaskDTODe
         let formatter = StandardDateFormatter()
         let year = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
         let taskDate = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        if self.dayOfWeek_txtField.text! == "Multiple" {
+        if self.dayOfWeek_txtField.text! == Constants.days_of_week_as_strings[7] {
             let dayOfWeek = Int(Calendar(identifier: .gregorian).component(.weekday, from: taskDate as Date)) - 1
             var repeatablesToReturn = [RepeatableTaskOccurrence]()
-            for _checkbox in checkboxesToAdd! {
+            for _checkbox in checkboxesToAdd {
                 if _checkbox.checked {
                     let daysToAdd = abs(_checkbox.tag - dayOfWeek) * Constants.seconds_per_day
                     if self.date == nil {

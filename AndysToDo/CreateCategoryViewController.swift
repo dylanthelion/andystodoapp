@@ -14,44 +14,39 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     // Model values
     
-    let taskDTO = TaskDTO.globalManager
+    let categoryDTO = CategoryDTO.shared
     var category: Category?
     
     // Outlets
     
     @IBOutlet weak var name_txtField: UITextField!
-    @IBOutlet weak var description_txtView: UITextView!
+    @IBOutlet weak var description_txtView: BorderedTextView!
     
     override func viewDidLoad() {
-        setupTextFieldDelegation()
-        addTextViewBorder()
         populateViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
+        categoryDTO.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
+        categoryDTO.delegate = nil
     }
     
     // View setup
-    
-    func setupTextFieldDelegation(){
-        name_txtField.delegate = self
-        description_txtView.delegate = self
-    }
-    
-    func addTextViewBorder() {
-        description_txtView.layer.borderWidth = Constants.text_view_border_width
-        description_txtView.layer.borderColor = Constants.text_view_border_color
-    }
     
     func populateViews() {
         if let _ = category {
             name_txtField.text = category!.Name!
             description_txtView.text = category!.Description!
+        }
+    }
+    
+    func resetAfterSuccessfulSubmit() {
+        DispatchQueue.main.async {
+            self.name_txtField.text = ""
+            self.description_txtView.text = ""
         }
     }
     
@@ -91,10 +86,7 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
             return
         } else {
             if category == nil {
-                DispatchQueue.main.async {
-                    self.name_txtField.text = ""
-                    self.description_txtView.text = ""
-                }
+                resetAfterSuccessfulSubmit()
             }
             return
         }
@@ -114,7 +106,7 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     func validateAndSubmitCategory() -> Bool {
         if let _ = category {
-            if taskDTO.updateCategory(_oldCategory: category!, _category: Category(_name: self.name_txtField.text!, _description: self.description_txtView.text)) {
+            if categoryDTO.updateCategory(_oldCategory: category!, _category: Category(_name: self.name_txtField.text!, _description: self.description_txtView.text)) {
                 let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
                 alertController.addAction(Constants.standard_ok_alert_action)
                 self.present(alertController, animated: true, completion: nil)
@@ -126,7 +118,7 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
                 return false
             }
         }
-        if taskDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
+        if categoryDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)

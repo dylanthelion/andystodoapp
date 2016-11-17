@@ -34,11 +34,16 @@ class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        viewDelegate?.startMonth = months[pickerView.selectedRow(inComponent: 0)].substring(to: months[pickerView.selectedRow(inComponent: 0)].index(months[pickerView.selectedRow(inComponent: 0)].startIndex, offsetBy: 3))
+        viewDelegate?.startDay = days[pickerView.selectedRow(inComponent: 1)]
         viewDelegate?.handleDidSelect(months: months[pickerView.selectedRow(inComponent: 0)].substring(to: months[pickerView.selectedRow(inComponent: 0)].index(months[pickerView.selectedRow(inComponent: 0)].startIndex, offsetBy: 3)), days: days[pickerView.selectedRow(inComponent: 1)], fulldate: "\(months[pickerView.selectedRow(inComponent: 0)]) \(days[pickerView.selectedRow(inComponent: 1)])")
     }
 }
 
 protocol  DatePickerViewDelegateViewDelegate {
+    
+    var startMonth : String? { get set }
+    var startDay : String? { get set }
     
     func handleDidSelect(months : String, days: String, fulldate : String)
 }

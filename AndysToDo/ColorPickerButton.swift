@@ -28,4 +28,18 @@ class ColorPickerButton : UIButton {
     
     override func awakeFromNib() {
     }
+    
+    func select() {
+        DispatchQueue.main.async {
+            self.layer.borderWidth = Constants.timecatVC_color_picker_selected_border_width
+            self.layer.borderColor = Constants.timecatVC_color_picker_selected_border_color
+        }
+    }
+    
+    func deselect() {
+        DispatchQueue.main.async {
+            self.layer.borderWidth = Constants.timecatVC_color_picker_deselected_border_width
+            self.layer.borderColor = Constants.timecatVC_color_picker_deselected_border_color
+        }
+    }
 }

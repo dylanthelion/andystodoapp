@@ -10,6 +10,11 @@ import UIKit
 
 class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate {
     
+    // DatePickerViewDelegateViewDelegate
+    
+    var startMonth: String?
+    var startDay: String?
+    
     // Model values
     
     var task : Task?
@@ -21,29 +26,19 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     @IBOutlet weak var start_txtField: UITextField!
     @IBOutlet weak var repeatable_btn: CheckboxButton!
     @IBOutlet weak var timeCat_txtField: UITextField!
-    @IBOutlet weak var description_txtView: UITextView!
+    @IBOutlet weak var description_txtView: BorderedTextView!
     @IBOutlet weak var startDateTextView: UITextField!
     @IBOutlet weak var generateNewTask_btn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPickerDelegation()
-        setupTextFieldDelegation()
         setupTextFieldInput()
-        addTextViewBorder()
         populateTaskInfo()
         loaded = true
     }
     
     // View setup
-    
-    func setupTextFieldDelegation(){
-        name_txtField.delegate = self
-        start_txtField.delegate = self
-        timeCat_txtField.delegate = self
-        description_txtView.delegate = self
-        startDateTextView.delegate = self
-    }
     
     func setupPickerDelegation() {
         timeCatDelegate = TimecatPickerDelegate(_categories: allTimeCategories!, _delegate: self)
@@ -64,16 +59,10 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
         startDateTextView.inputView = datePickerView
     }
     
-    func addTextViewBorder() {
-        description_txtView.layer.borderWidth = Constants.text_view_border_width
-        description_txtView.layer.borderColor = Constants.text_view_border_color
-    }
-    
     func setupRepeatable() {
         self.repeatable_btn.isUserInteractionEnabled = false
         if self.task!.isRepeatable() {
-            start_txtField.text! = Constants.createTaskVC_repeatable
-            startDateTextView.text! = Constants.createTaskVC_repeatable
+            resetRepeatableTextFields()
             repeatable = true
             self.repeatableDetails = task?.RepeatableTask
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_child_task, for: .normal)
@@ -87,10 +76,17 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
         }
         if let _ = task?.TimeCategory {
             self.timeCat_txtField.text = task!.TimeCategory!.Name!
+        } else {
+            self.timeCat_txtField.text = ""
         }
         self.startTime = task?.StartTime
         self.allCategories = task?.Categories
         self.chosenTimeCategory = task?.TimeCategory
+    }
+    
+    func resetRepeatableTextFields() {
+        start_txtField.text! = Constants.createTaskVC_repeatable
+        startDateTextView.text! = Constants.createTaskVC_repeatable
     }
     
     func populateTaskInfo() {
@@ -116,6 +112,8 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             chosenTimeCategory = task!.TimeCategory!
             if let _ = task?.TimeCategory?.color {
                 self.view.backgroundColor = UIColor(cgColor: task!.TimeCategory!.color!)
+            } else {
+                self.view.backgroundColor = UIColor.white
             }
         }
     }
@@ -212,8 +210,6 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
-        startMonth = months
-        startDay = days
         startDateTextView.text = fulldate
     }
     
@@ -227,7 +223,6 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     // TimecatPickerDelegateViewDelegate
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
-        self.chosenTimeCategory = timecat
         self.timeCat_txtField.text = name
     }
     
@@ -338,6 +333,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatable_information_failure_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
+            resetRepeatableTextFields()
             return false
         }
     }
@@ -409,6 +405,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatable_information_failure_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
+            resetRepeatableTextFields()
             return false
         }
     }

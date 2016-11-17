@@ -10,21 +10,24 @@ import UIKit
 
 class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate {
     
+    // DatePickerViewDelegateViewDelegate
+    
+    var startMonth: String?
+    var startDay: String?
+    
     // Outlets
     
     @IBOutlet weak var name_txtField: UITextField!
     @IBOutlet weak var start_txtField: UITextField!
     @IBOutlet weak var repeatable_btn: CheckboxButton!
     @IBOutlet weak var timeCat_txtField: UITextField!
-    @IBOutlet weak var description_txtView: UITextView!
+    @IBOutlet weak var description_txtView: BorderedTextView!
     @IBOutlet weak var startDateTextView: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPickerDelegation()
-        setupTextFieldDelegation()
         setupTextFieldInput()
-        addTextViewBorder()
         loaded = true
     }
     
@@ -44,15 +47,11 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         }
     }
     
-    // View setup
-    
-    func setupTextFieldDelegation(){
-        name_txtField.delegate = self
-        start_txtField.delegate = self
-        timeCat_txtField.delegate = self
-        description_txtView.delegate = self
-        startDateTextView.delegate = self
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
+    
+    // View setup
     
     func setupPickerDelegation() {
         timeCatDelegate = TimecatPickerDelegate(_categories: allTimeCategories!, _delegate: self)
@@ -73,25 +72,23 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         startDateTextView.inputView = datePickerView
     }
     
-    func addTextViewBorder() {
-        description_txtView.layer.borderWidth = Constants.text_view_border_width
-        description_txtView.layer.borderColor = Constants.text_view_border_color
-    }
-    
     func resetAfterSuccessfulSubmit() {
         DispatchQueue.main.async {
             if self.repeatable_btn.checked {
                 self.repeatable_btn.toggleChecked()
             }
+            self.start_txtField.isUserInteractionEnabled = true
+            self.startDateTextView.isUserInteractionEnabled = true
             self.name_txtField.text = ""
             self.start_txtField.text = ""
             self.description_txtView.text = ""
             self.timeCat_txtField.text = ""
             self.startDateTextView.text = ""
-            self.start_txtField.isUserInteractionEnabled = true
-            self.startDateTextView.isUserInteractionEnabled = true
+            
         }
         repeatable = false
+        repeatableDetails = nil
+        multipleRepeatables = nil
     }
     
     // Text Delegate
@@ -174,22 +171,19 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
-        startMonth = months
-        startDay = days
         startDateTextView.text = fulldate
     }
     
     // TimePickerViewDelegateViewDelegate
     
     func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
-        startHours = fullTime
         start_txtField.text = fullTime
+        startHours = fullTime
     }
     
     // TimecatPickerDelegateViewDelegate
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
-        self.chosenTimeCategory = timecat
         self.timeCat_txtField.text = name
     }
     
