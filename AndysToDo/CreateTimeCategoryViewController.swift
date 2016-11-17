@@ -294,7 +294,6 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
                 return false
             }
         }
-        
         if taskDTO.createNewTimeCategory(_category: TimeCategory(_name: name_txtField.text!, _description: description_txtView.text, _start: startTime!, _end: endTime!, _color: self.color)) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.timecatVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)

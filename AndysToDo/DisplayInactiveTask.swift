@@ -13,6 +13,7 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     // UI
     
     var textFieldSelected = 0
+    var loaded = false
     
     // Model values
     
@@ -54,14 +55,24 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
         setupTextFieldInput()
         addTextViewBorder()
         populateTaskInfo()
+        loaded = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        if !loaded {
+            self.timeCatPickerDataSource!.reloadTimecats(_categories: taskDTO.AllTimeCategories!)
+            self.timeCatDelegate?.allTimeCategories = taskDTO.AllTimeCategories!
+            DispatchQueue.main.async {
+                self.timeCatPickerView.reloadAllComponents()
+            }
+            loaded = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+        loaded = false
     }
     
     // View setup

@@ -32,6 +32,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
         setupTextFieldInput()
         addTextViewBorder()
         populateTaskInfo()
+        loaded = true
     }
     
     // View setup

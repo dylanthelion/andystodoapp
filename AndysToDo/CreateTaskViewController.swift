@@ -25,6 +25,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         setupTextFieldDelegation()
         setupTextFieldInput()
         addTextViewBorder()
+        loaded = true
     }
     
     override func viewWillAppear(_ animated: Bool) {

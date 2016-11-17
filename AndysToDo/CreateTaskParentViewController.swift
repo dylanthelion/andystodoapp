@@ -29,6 +29,7 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     var startDay : String?
     var startHours : String?
     var repeatable : Bool = false
+    var loaded = false
     
     // Picker views
     
@@ -48,10 +49,19 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         taskDTO.delegate = self
+        if !loaded {
+            self.timeCatPickerDataSource!.reloadTimecats(_categories: taskDTO.AllTimeCategories!)
+            self.timeCatDelegate?.allTimeCategories = taskDTO.AllTimeCategories!
+            DispatchQueue.main.async {
+                self.timeCatPickerView.reloadAllComponents()
+            }
+            loaded = true
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         taskDTO.delegate = nil
+        loaded = false
     }
     
     // Categories
