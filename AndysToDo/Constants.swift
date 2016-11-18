@@ -209,4 +209,7 @@ struct Constants {
     static let timeOfDay_hourly_value = "Hourly"
     static let timeOfDay_weekly_value = "Weekly"
     static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
+    static let totalExpectedUnitsOfTime = 5
+    static let expectedUnitOfTime_All = [UnitOfTime.Minute, UnitOfTime.Hour, UnitOfTime.Day, UnitOfTime.Week, UnitOfTime.Month]
+    static let expectedUnitsOfTimeAsString = ["Minutes", "Hours", "Days", "Weeks", "Months"]
 }

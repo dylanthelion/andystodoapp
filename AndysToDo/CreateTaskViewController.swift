@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate {
+class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate {
     
     // DatePickerViewDelegateViewDelegate
     
@@ -23,6 +23,8 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     @IBOutlet weak var timeCat_txtField: UITextField!
     @IBOutlet weak var description_txtView: BorderedTextView!
     @IBOutlet weak var startDateTextView: UITextField!
+    @IBOutlet weak var expectedTotalUnits_txtField: UITextField!
+    @IBOutlet weak var expectedUnitOfTime_txtField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,6 +60,9 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         timeCatDelegate = TimecatPickerDelegate(_categories: allTimeCategories!, _delegate: self)
         timeCatPickerDataSource = TimecatPickerDataSource(_categories: allTimeCategories!)
         timePickerDelegate = TimePickerViewDelegate(_delegate: self)
+        expectedPickerDelegate = ExpectedUnitOfTimePickerDelegate(_delegate: self)
+        expectedUnitOfTimePickerView.delegate = expectedPickerDelegate
+        expectedUnitOfTimePickerView.dataSource = expectedPickerDataSource
         pickerView.delegate = timePickerDelegate!
         pickerView.dataSource = timePickerDataSource
         timeCatPickerView.dataSource = timeCatPickerDataSource
@@ -80,6 +85,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         start_txtField.inputView = pickerView
         timeCat_txtField.inputView = timeCatPickerView
         startDateTextView.inputView = datePickerView
+        expectedUnitOfTime_txtField.inputView = expectedUnitOfTimePickerView
     }
     
     func resetAfterSuccessfulSubmit() {
@@ -94,11 +100,14 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             self.description_txtView.text = ""
             self.timeCat_txtField.text = ""
             self.startDateTextView.text = ""
+            self.expectedUnitOfTime_txtField.text = ""
+            self.expectedTotalUnits_txtField.text = ""
             self.setStartingDate()
         }
         repeatable = false
         repeatableDetails = nil
         multipleRepeatables = nil
+        expectedUnitOfTime = nil
     }
     
     // Text Delegate
@@ -135,6 +144,11 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         case 3:
             addPickerViewDoneButton()
             return true
+        case 4:
+            return true
+        case 5:
+            addPickerViewDoneButton()
+            return true
         default:
             print("Invalid text field tag")
             return false
@@ -142,7 +156,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if textFieldSelected == 0 {
+        if textFieldSelected == 0 || textFieldSelected == 4 {
             self.navigationItem.rightBarButtonItem = nil
         }
         return true
@@ -172,6 +186,10 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             timeCat_txtField.resignFirstResponder()
         case 3:
             startDateTextView.resignFirstResponder()
+        case 4:
+            print("Do nothing")
+        case 5:
+            expectedUnitOfTime_txtField.resignFirstResponder()
         default:
             print("Invalid text field tag assigned")
         }
@@ -195,6 +213,13 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
         self.timeCat_txtField.text = name
+    }
+    
+    // ExpectedUnitOfTimePickerDelegateViewDelegate
+    
+    func handleDidSelect(unit: UnitOfTime, text: String) {
+        self.expectedUnitOfTime = unit
+        expectedUnitOfTime_txtField.text = text
     }
     
     // IBActions
@@ -269,8 +294,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     }
     
     func validateRepeatable(_repeatable : RepeatableTaskOccurrence) -> Bool {
-        
-        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence! as NSDate? , _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable)
+        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence! as NSDate? , _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
         if taskDTO.createNewTask(_task: task) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
@@ -289,7 +313,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         var newTasks = [Task]()
         var areValid = true
         for (index, _repeatable) in _repeatables.enumerated() {
-            let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence!, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable)
+            let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence!, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
             if !task.isValidWithoutId() {
                 areValid = false
                 break
@@ -324,7 +348,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
         //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
         let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: date, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: nil)
+        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: date, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
         if taskDTO.createNewTask(_task: task) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)

@@ -51,6 +51,7 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     @IBOutlet weak var timeCat_txtField: UITextField!
     @IBOutlet weak var description_txtView: BorderedTextView!
     @IBOutlet weak var startDateTextView: UITextField!
+    @IBOutlet weak var expectedTime_lbl: UILabel!
     
     override func viewDidLoad() {
         allTimeCategories = timecatDTO.AllTimeCategories
@@ -121,7 +122,9 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
                 self.view.backgroundColor = UIColor(cgColor: task!.TimeCategory!.color!)
             }
         }
-        
+        if let _ = task?.expectedTimeRequirement {
+            self.expectedTime_lbl.text = "\(task!.expectedTimeRequirement!.1) \(Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: task!.expectedTimeRequirement!.0)!])"
+        }
     }
     
     func updateForSuccessfulSubmit() {

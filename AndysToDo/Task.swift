@@ -24,6 +24,7 @@ class Task : Equatable {
     var parentID : Int?
     var timeOnTask : TimeInterval?
     var dueDate : NSDate?
+    var expectedTimeRequirement : (UnitOfTime, Int)?
     
     init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?) {
         Name = _name
@@ -38,10 +39,13 @@ class Task : Equatable {
         timeOnTask = 0.0
     }
     
-    convenience init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?, _dueDate : NSDate?, _parent: Int?) {
+    convenience init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?, _dueDate : NSDate?, _parent: Int?, _expectedUnitOfTime : UnitOfTime?, _expectedTotalUnits : Int?) {
         self.init(_name: _name, _description: _description, _start : _start, _finish : _finish, _category : _category, _timeCategory : _timeCategory, _repeatable : _repeatable)
         dueDate = _dueDate
         parentID = _parent
+        if let _ = _expectedUnitOfTime, let _ = _expectedTotalUnits {
+            expectedTimeRequirement = (_expectedUnitOfTime!, _expectedTotalUnits!)
+        }
     }
     
     func isValid() -> Bool {

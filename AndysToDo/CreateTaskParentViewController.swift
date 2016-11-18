@@ -21,6 +21,7 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     var repeatableDetails : RepeatableTaskOccurrence?
     var multipleRepeatables : [RepeatableTaskOccurrence]?
     var startTime : NSDate?
+    var expectedUnitOfTime : UnitOfTime?
     var allCategories : [Category]?
     let taskDTO = TaskDTO.globalManager
     let categoryDTO = CategoryDTO.shared
@@ -36,12 +37,15 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     let pickerView = UIPickerView()
     let timeCatPickerView = UIPickerView()
     var datePickerView = UIPickerView()
+    var expectedUnitOfTimePickerView = UIPickerView()
     var timePickerDelegate : TimePickerViewDelegate?
     let timePickerDataSource : TimePickerViewDataSource = TimePickerViewDataSource()
     var timeCatPickerDataSource : TimecatPickerDataSource?
     var timeCatDelegate : TimecatPickerDelegate?
     var datePickerDelegate : DatePickerViewDelegate?
     let datePickerDataSource = DatePickerDataSource()
+    let expectedPickerDataSource = ExpectedUnitOfTimePickerDataSource()
+    var expectedPickerDelegate : ExpectedUnitOfTimePickerDelegate?
     
     override func viewDidLoad() {
         allTimeCategories = timecatDTO.AllTimeCategories

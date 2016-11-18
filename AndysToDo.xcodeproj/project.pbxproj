@@ -79,6 +79,8 @@
 		74EBE3641DDEB7DF005736B0 /* BorderedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3631DDEB7DF005736B0 /* BorderedTextView.swift */; };
 		74EBE3661DDEBDC5005736B0 /* ColorPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3651DDEBDC5005736B0 /* ColorPickerHelper.swift */; };
 		74EBE3681DDF7DD1005736B0 /* CalendarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3671DDF7DD1005736B0 /* CalendarHelper.swift */; };
+		74EBE36A1DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3691DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift */; };
+		74EBE36C1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE36B1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -179,6 +181,8 @@
 		74EBE3631DDEB7DF005736B0 /* BorderedTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BorderedTextView.swift; sourceTree = "<group>"; };
 		74EBE3651DDEBDC5005736B0 /* ColorPickerHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPickerHelper.swift; sourceTree = "<group>"; };
 		74EBE3671DDF7DD1005736B0 /* CalendarHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHelper.swift; sourceTree = "<group>"; };
+		74EBE3691DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpectedUnitOfTimePickerViewDataSource.swift; sourceTree = "<group>"; };
+		74EBE36B1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpectedUnitOfTimePickerDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -418,6 +422,7 @@
 				74B353631DC41D00004A66DF /* TimecatPickerDelegate.swift */,
 				74B353671DC42458004A66DF /* DayOfWeekPickerDelegate.swift */,
 				741C72CD1DC443EA00331E07 /* UnitOfTimePickerDelegate.swift */,
+				74EBE36B1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift */,
 			);
 			name = Delegates;
 			sourceTree = "<group>";
@@ -430,6 +435,7 @@
 				74B353651DC41FDE004A66DF /* TimecatPickerDataSource.swift */,
 				74B353691DC43079004A66DF /* DayOfWeekPickerDataSource.swift */,
 				741C72CF1DC446AD00331E07 /* UnitOfTimePickerDataSource.swift */,
+				74EBE3691DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift */,
 			);
 			name = DataSources;
 			sourceTree = "<group>";
@@ -621,10 +627,12 @@
 				740CB4741DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift in Sources */,
 				74DFB0A71DC16E300069AAC2 /* DatePickerViewDelegate.swift in Sources */,
 				74B353681DC42458004A66DF /* DayOfWeekPickerDelegate.swift in Sources */,
+				74EBE36C1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift in Sources */,
 				741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */,
 				740CB46D1DCC45B100ABF0BD /* AllTasksTableViewCell.swift in Sources */,
 				74DA85391DCF04FF00BBC933 /* TimecatTableViewCell.swift in Sources */,
 				74DA85371DCF04CB00BBC933 /* CategoryTableViewCell.swift in Sources */,
+				74EBE36A1DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift in Sources */,
 				740CB4671DCAB12200ABF0BD /* DisplayActiveTaskViewController.swift in Sources */,
 				741C72CC1DC4325600331E07 /* StandardDateFormatter.swift in Sources */,
 				741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */,
