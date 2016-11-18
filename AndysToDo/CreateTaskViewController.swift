@@ -27,6 +27,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPickerDelegation()
+        setStartingDate()
         setupTextFieldInput()
         loaded = true
     }
@@ -66,6 +67,15 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         datePickerView.dataSource = datePickerDataSource
     }
     
+    func setStartingDate() {
+        let date = CalendarHelper.shortDateAsInt
+        datePickerView.selectRow(date.0 - 1, inComponent: 0, animated: true)
+        datePickerView.selectRow(date.1 - 1, inComponent: 1, animated: true)
+        self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: NSDate())
+        self.startDay = Constants.all_days_as_strings[date.1 - 1]
+        self.startMonth = Constants.all_months_as_strings[date.0 - 1]
+    }
+    
     func setupTextFieldInput() {
         start_txtField.inputView = pickerView
         timeCat_txtField.inputView = timeCatPickerView
@@ -84,7 +94,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             self.description_txtView.text = ""
             self.timeCat_txtField.text = ""
             self.startDateTextView.text = ""
-            
+            self.setStartingDate()
         }
         repeatable = false
         repeatableDetails = nil
