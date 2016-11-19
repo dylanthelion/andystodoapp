@@ -69,4 +69,23 @@ class TimeConverter {
         dateformatter.dateFormat = Constants.standard_days_format
         return dateformatter.string(from: _time as Date)
     }
+    
+    class func convertTimeIntervalToCalendarUnits(_interval : TimeInterval, _units : Calendar.Component) -> Int {
+        let denominator : Int
+        switch _units {
+        case .day:
+            denominator = Constants.seconds_per_day
+        case .hour:
+            denominator = Constants.seconds_per_hour
+        case .minute:
+            denominator = Int(Constants.seconds_per_minute)
+        case .month:
+            denominator = Constants.seconds_per_month
+        default:
+            print("Invalid unit for conversion")
+            return 0
+        }
+        
+        return Int(_interval) / denominator
+    }
 }

@@ -81,6 +81,12 @@
 		74EBE3681DDF7DD1005736B0 /* CalendarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3671DDF7DD1005736B0 /* CalendarHelper.swift */; };
 		74EBE36A1DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3691DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift */; };
 		74EBE36C1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE36B1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift */; };
+		74EBE36E1DE0288C005736B0 /* ArchiveTaskTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE36D1DE0288C005736B0 /* ArchiveTaskTableViewController.swift */; };
+		74EBE3701DE037CE005736B0 /* ArchivedTasksTableViewCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE36F1DE037CE005736B0 /* ArchivedTasksTableViewCells.swift */; };
+		74EBE3721DE03C82005736B0 /* ArchivedTasksChildTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3711DE03C82005736B0 /* ArchivedTasksChildTableViewController.swift */; };
+		74EBE3741DE03D1D005736B0 /* ArchivedTasksChildtableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3731DE03D1D005736B0 /* ArchivedTasksChildtableViewCell.swift */; };
+		74EBE3761DE0CDC7005736B0 /* DisplayArchivedTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3751DE0CDC7005736B0 /* DisplayArchivedTaskViewController.swift */; };
+		74EBE3781DE0D2C0005736B0 /* ColumnarLabelsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74EBE3771DE0D2C0005736B0 /* ColumnarLabelsHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -183,6 +189,12 @@
 		74EBE3671DDF7DD1005736B0 /* CalendarHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarHelper.swift; sourceTree = "<group>"; };
 		74EBE3691DDF851D005736B0 /* ExpectedUnitOfTimePickerViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpectedUnitOfTimePickerViewDataSource.swift; sourceTree = "<group>"; };
 		74EBE36B1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpectedUnitOfTimePickerDelegate.swift; sourceTree = "<group>"; };
+		74EBE36D1DE0288C005736B0 /* ArchiveTaskTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchiveTaskTableViewController.swift; sourceTree = "<group>"; };
+		74EBE36F1DE037CE005736B0 /* ArchivedTasksTableViewCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchivedTasksTableViewCells.swift; sourceTree = "<group>"; };
+		74EBE3711DE03C82005736B0 /* ArchivedTasksChildTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchivedTasksChildTableViewController.swift; sourceTree = "<group>"; };
+		74EBE3731DE03D1D005736B0 /* ArchivedTasksChildtableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArchivedTasksChildtableViewCell.swift; sourceTree = "<group>"; };
+		74EBE3751DE0CDC7005736B0 /* DisplayArchivedTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayArchivedTaskViewController.swift; sourceTree = "<group>"; };
+		74EBE3771DE0D2C0005736B0 /* ColumnarLabelsHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColumnarLabelsHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,6 +273,9 @@
 				740CB46A1DCC43E000ABF0BD /* AllTasksViewController.swift */,
 				740CB4731DCC8DC600ABF0BD /* AllTasksIndividualTaskViewController.swift */,
 				74DA85341DCF027200BBC933 /* AllCategoriesTableViewController.swift */,
+				74EBE36D1DE0288C005736B0 /* ArchiveTaskTableViewController.swift */,
+				74EBE3711DE03C82005736B0 /* ArchivedTasksChildTableViewController.swift */,
+				74EBE3751DE0CDC7005736B0 /* DisplayArchivedTaskViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -295,6 +310,8 @@
 				740CB46C1DCC45B100ABF0BD /* AllTasksTableViewCell.swift */,
 				74DA85361DCF04CB00BBC933 /* CategoryTableViewCell.swift */,
 				74DA85381DCF04FF00BBC933 /* TimecatTableViewCell.swift */,
+				74EBE36F1DE037CE005736B0 /* ArchivedTasksTableViewCells.swift */,
+				74EBE3731DE03D1D005736B0 /* ArchivedTasksChildtableViewCell.swift */,
 			);
 			name = TableViewCells;
 			sourceTree = "<group>";
@@ -388,6 +405,7 @@
 				74EBE3601DDEA7A3005736B0 /* CheckboxesHelper.swift */,
 				74EBE3651DDEBDC5005736B0 /* ColorPickerHelper.swift */,
 				74EBE3671DDF7DD1005736B0 /* CalendarHelper.swift */,
+				74EBE3771DE0D2C0005736B0 /* ColumnarLabelsHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -592,6 +610,7 @@
 				741C72D01DC446AD00331E07 /* UnitOfTimePickerDataSource.swift in Sources */,
 				74C500071DAFE24D00CF7421 /* HTTPRequestHelper.swift in Sources */,
 				74D6C1091DBC57A400217DBD /* CreateTimeCategoryViewController.swift in Sources */,
+				74EBE3741DE03D1D005736B0 /* ArchivedTasksChildtableViewCell.swift in Sources */,
 				74B353641DC41D00004A66DF /* TimecatPickerDelegate.swift in Sources */,
 				74EBE35F1DDE5347005736B0 /* TimeCategoryDTO.swift in Sources */,
 				741DF07A1DB47FA400E9B785 /* TaskTableViewCell.swift in Sources */,
@@ -599,6 +618,7 @@
 				74B410491DD59689003B07BA /* NumberHelper.swift in Sources */,
 				74DFB0A91DC1731F0069AAC2 /* DatePickerDataSource.swift in Sources */,
 				740CB4721DCC483F00ABF0BD /* TaskDisplayViewController.swift in Sources */,
+				74EBE3701DE037CE005736B0 /* ArchivedTasksTableViewCells.swift in Sources */,
 				741DEF7E1DB34DEE00E9B785 /* RepeatableTaskOccurrence.swift in Sources */,
 				74EBE3661DDEBDC5005736B0 /* ColorPickerHelper.swift in Sources */,
 				740CB4761DCC951B00ABF0BD /* CreateTaskParentViewController.swift in Sources */,
@@ -614,6 +634,7 @@
 				74D6C1111DBC998B00217DBD /* CreateRepeatableTaskOccurrenceViewController.swift in Sources */,
 				741DEF821DB34E4D00E9B785 /* UserAccount.swift in Sources */,
 				741DF03A1DB43F5000E9B785 /* TaskDTO.swift in Sources */,
+				74EBE3761DE0CDC7005736B0 /* DisplayArchivedTaskViewController.swift in Sources */,
 				741DEF801DB34E1F00E9B785 /* ModelEnums.swift in Sources */,
 				741DF07F1DBAF18700E9B785 /* CollectionHelper.swift in Sources */,
 				740CB46B1DCC43E000ABF0BD /* AllTasksViewController.swift in Sources */,
@@ -629,6 +650,7 @@
 				74B353681DC42458004A66DF /* DayOfWeekPickerDelegate.swift in Sources */,
 				74EBE36C1DDF8571005736B0 /* ExpectedUnitOfTimePickerDelegate.swift in Sources */,
 				741DEF7A1DB346FC00E9B785 /* Task.swift in Sources */,
+				74EBE3721DE03C82005736B0 /* ArchivedTasksChildTableViewController.swift in Sources */,
 				740CB46D1DCC45B100ABF0BD /* AllTasksTableViewCell.swift in Sources */,
 				74DA85391DCF04FF00BBC933 /* TimecatTableViewCell.swift in Sources */,
 				74DA85371DCF04CB00BBC933 /* CategoryTableViewCell.swift in Sources */,
@@ -638,7 +660,9 @@
 				741DEF771DB1D7EB00E9B785 /* LoginHelper.swift in Sources */,
 				74D6C10F1DBC782D00217DBD /* AddCategoriesViewController.swift in Sources */,
 				74DFB0AB1DC176070069AAC2 /* TimePickerViewDelegate.swift in Sources */,
+				74EBE3781DE0D2C0005736B0 /* ColumnarLabelsHelper.swift in Sources */,
 				74EBE3611DDEA7A3005736B0 /* CheckboxesHelper.swift in Sources */,
+				74EBE36E1DE0288C005736B0 /* ArchiveTaskTableViewController.swift in Sources */,
 				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
 				741DF07C1DB492FE00E9B785 /* FloatToTimeConverter.swift in Sources */,
 				74D6C10D1DBC735C00217DBD /* CreateTaskViewController.swift in Sources */,

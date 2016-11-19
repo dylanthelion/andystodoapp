@@ -64,6 +64,8 @@ struct Constants {
     static let days_per_week = 7
     static let seconds_per_day = 86400
     static let seconds_per_hour = 3600
+    static let seconds_per_week = 604800
+    static let seconds_per_month = 2592000
     static let all_months_as_strings = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
     static let all_days_as_strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     static let all_hours_as_ints = [1,2,3,4,5,6,7,8,9,10,11,12]
@@ -177,6 +179,10 @@ struct Constants {
     static let allCategoriesVC_timecat_table_header = "Timecats"
     static let allCategoriesVC_create_table_header = "Create:"
     
+    // DisplayArchivedTaskVC
+    
+    static let displayArchivedTaskVC_categories_lbls_top_y_coord : CGFloat = 499.0
+    
     // Helper views
     
     // Checkboxes and labels
@@ -185,6 +191,12 @@ struct Constants {
     static let checkboxesAndLabels_full_row_offset : CGFloat = 40.0
     static let checkboxesAndLabels_checkbox_height_and_width : CGFloat = 30.0
     static let checkboxesAndLabels_label_margin : CGFloat = 10.0
+    
+    // Label helper
+    
+    static let labelHelper_label_margin : CGFloat = 10.0
+    static let labelHelper_lblHeight : CGFloat = 21.0
+    static let labelHelper_full_row_offset : CGFloat = 40.0
     
     // Color Picker
     

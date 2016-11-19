@@ -14,7 +14,7 @@ class CheckboxesHelper {
         var top_y_coord = top_y_coord
         var checkboxes = [CheckboxButton]()
         var labels = [UILabel]()
-        let label_width : CGFloat = ((viewWidth / CGFloat(cols)) - (Constants.checkboxesAndLabels_label_margin * 3.0)) - Constants.checkboxesAndLabels_checkbox_height_and_width
+        let label_width : CGFloat = ((viewWidth / CGFloat(cols)) - (Constants.checkboxesAndLabels_label_margin * CGFloat(cols + 1))) - Constants.checkboxesAndLabels_checkbox_height_and_width
         for(index, _title) in titles.enumerated() {
             let index_offset : CGFloat = CGFloat(index % cols)
             let checkbox = CheckboxButton(frame: CGRect(x: (Constants.checkboxesAndLabels_checkbox_x_coord + ((viewWidth / CGFloat(cols)) * index_offset)), y: top_y_coord, width: Constants.checkboxesAndLabels_checkbox_height_and_width, height: Constants.checkboxesAndLabels_checkbox_height_and_width))
