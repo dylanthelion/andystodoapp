@@ -73,6 +73,20 @@ class AllTasksViewController : TaskDisplayViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
+            self.deleteTask(_task: self.AllTasks![index.row])
+        }
+        
+        delete.backgroundColor = UIColor.red
+        
+        let move = UITableViewRowAction(style: .normal, title: "Re-add") { action, index in
+            self.moveTaskToDayPlanner(_task: self.AllTasks![index.row])
+        }
+        move.backgroundColor = UIColor.green
+        return [move, delete]
+    }
+    
     // Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -82,16 +96,16 @@ class AllTasksViewController : TaskDisplayViewController {
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
+        /*if editingStyle == .delete {
             if AllTasks!.count == taskDTO.AllTasks!.count {
                 taskDTO.AllTasks!.remove(at: indexPath.row)
             }
             let taskToDelete = AllTasks![indexPath.row]
             AllTasks!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
-            taskDTO.deleteTask(_task: taskToDelete)
             
-        }
+            
+        }*/
     }
     
     // TaskDTODelegate
@@ -105,6 +119,27 @@ class AllTasksViewController : TaskDisplayViewController {
     
     override func taskDidUpdate(_task: Task) {
         _ = taskDTO.updateTask(_task: _task)
+    }
+    
+    // Table view edit buttons
+    
+    func deleteTask(_task : Task) {
+        taskDTO.deleteTask(_task: _task)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func moveTaskToDayPlanner(_task : Task) {
+        _task.inProgress = true
+        _task.StartTime = NSDate()
+        if taskDTO.updateTask(_task: _task) {
+            taskDTO.tasksToPopulate?.append(taskDTO.AllTasks![Int(taskDTO.AllTasks!.index(of: _task)!)])
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.tabBarController?.selectedIndex = 0
+            }
+        }
     }
     
     // Filtering
