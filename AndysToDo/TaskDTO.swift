@@ -235,6 +235,16 @@ class TaskDTO {
         }
     }
     
+    func deArchive(_task: Task) {
+        _task.FinishTime = nil
+        _task.StartTime = NSDate()
+        if updateTask(_task: _task) {
+            AllTasks!.append(_task)
+            archivedTasks!.remove(at: Int(archivedTasks!.index(of: _task)!))
+            delegate?.handleModelUpdate()
+        }
+    }
+    
     // ID generation
     
     func getNextID() -> Int {

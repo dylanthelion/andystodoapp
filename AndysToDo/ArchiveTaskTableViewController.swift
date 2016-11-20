@@ -78,6 +78,20 @@ class ArchiveTaskTableViewController : TaskDisplayViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
+            self.deleteTask(_task: self.AllTasks![index.row])
+        }
+        
+        delete.backgroundColor = UIColor.red
+        
+        let move = UITableViewRowAction(style: .normal, title: "Re-add") { action, index in
+            self.moveTaskToDayPlanner(_task: self.AllTasks![index.row])
+        }
+        move.backgroundColor = UIColor.green
+        return [move, delete]
+    }
+    
     // Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -101,6 +115,10 @@ class ArchiveTaskTableViewController : TaskDisplayViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+    }
+    
     // Present didselect view
     
     func pushChildrenTableView(_tasks : [Task]) {
@@ -113,6 +131,26 @@ class ArchiveTaskTableViewController : TaskDisplayViewController {
         let taskVC : DisplayArchivedTaskViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
         taskVC.task = _task
         self.navigationController?.pushViewController(taskVC, animated: true)
+    }
+    
+    // Table view edit actions
+    
+    func deleteTask(_task : Task) {
+        print("Delete")
+    }
+    
+    func moveTaskToDayPlanner(_task : Task) {
+        taskDTO.deArchive(_task: _task)
+    }
+    
+    // TaskDTODelegate
+    
+    override func handleModelUpdate() {
+        super.handleModelUpdate()
+        loadArchivedTasks()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     // Filter children from model
