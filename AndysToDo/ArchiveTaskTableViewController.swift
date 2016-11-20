@@ -13,15 +13,21 @@ class ArchiveTaskTableViewController : TaskDisplayViewController {
     // UI
     
     var sorted = false
+    var sortParam : TaskSortParameter = .Date
     
     // Model values
     
     var childTasks : [Task]?
     
+    // Outlets
+    @IBOutlet weak var sort_btn: UIBarButtonItem!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadArchivedTasks()
         sorted = true
+        sort_btn.title = "Sort Date"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -129,4 +135,33 @@ class ArchiveTaskTableViewController : TaskDisplayViewController {
             AllTasks!.remove(at: AllTasks!.index(of: _task)!)
         }
     }
+    
+    // IB Actions
+    
+    @IBAction func sort(_ sender: AnyObject) {
+        switch sortParam {
+        case .Date:
+            sortParam = .Name
+            sort_btn.title = "Sort Name"
+            AllTasks!.sort(by: {
+                return $0.Name! < $1.Name!
+            })
+        case .Name:
+            sortParam = .Date
+            sort_btn.title = "Sort Date"
+            AllTasks!.sort(by: {
+                return ($0.FinishTime! as Date) < ($1.FinishTime! as Date)
+            })
+        }
+        print("Sorted")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+}
+
+enum TaskSortParameter {
+    case Name
+    case Date
 }

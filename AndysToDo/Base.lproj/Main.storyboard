@@ -532,7 +532,7 @@
                 <navigationController title="Planner" automaticallyAdjustsScrollViewInsets="NO" id="YuX-tw-Wpr" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Planner" id="TR7-zf-KKL"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gOj-jh-ufj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="gOj-jh-ufj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1116,12 +1116,20 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="jgx-Th-AK7">
+                        <barButtonItem key="leftBarButtonItem" id="XB6-I8-oPG">
+                            <connections>
+                                <action selector="sort:" destination="hzK-P5-arf" id="Nms-Yh-QIk"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Filter" id="jrF-Jh-EZc">
                             <connections>
                                 <segue destination="tpU-ed-C5K" kind="show" id="PzB-J1-rL1"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="sort_btn" destination="XB6-I8-oPG" id="hJj-aj-UpS"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nkP-zn-eOx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1849,7 +1857,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Fpv-rT-N1y" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="All Tasks" id="gIx-0t-jOg"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HPf-oT-PwC">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="HPf-oT-PwC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1868,7 +1876,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jla-4h-ETG" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Create Task" id="tJI-O7-T2s"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="f1x-hI-KFx">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="f1x-hI-KFx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1887,7 +1895,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="8lY-cR-LxH" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Categories" id="5RD-PB-7nX"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6pJ-wx-laU">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6pJ-wx-laU">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1906,7 +1914,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7y4-cg-o08" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Archives" id="2k7-Jt-Cv7"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Upd-iS-1JT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Upd-iS-1JT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1921,6 +1929,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="JJZ-Dc-wW8"/>
+        <segue reference="PzB-J1-rL1"/>
     </inferredMetricsTieBreakers>
 </document>
