@@ -10,7 +10,7 @@ import UIKit
 
 class UnitOfTimePickerDelegate : NSObject, UIPickerViewDelegate {
     
-    let unitsOfTime = [Constants.timeOfDay_hourly_value, Constants.timeOfDay_daily_value, Constants.timeOfDay_weekly_value]
+    let unitsOfTime = Constants.timeOfDay_All_As_Strings
     var viewDelegate : UnitOfTimePickerDelegateViewDelegate?
     
     convenience init(_delegate : UnitOfTimePickerDelegateViewDelegate) {

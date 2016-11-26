@@ -35,10 +35,7 @@ class TimePickerViewDelegate : NSObject, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let hours : String = String(self.hours[pickerView.selectedRow(inComponent: 0)])
-        let minutes : String = String(format: "%02d", self.minutes[pickerView.selectedRow(inComponent: 1)])
-        let meridian : String = meridians[pickerView.selectedRow(inComponent: 2)]
-        viewDelegate?.handleDidSelect(hours: hours, minutes: minutes, meridian: meridian, fullTime: "\(hours):\(minutes) \(meridian)")
+        viewDelegate?.handleDidSelect(hours: String(self.hours[pickerView.selectedRow(inComponent: 0)]), minutes: String(format: "%02d", self.minutes[pickerView.selectedRow(inComponent: 1)]), meridian: meridians[pickerView.selectedRow(inComponent: 2)], fullTime: "\(self.hours[pickerView.selectedRow(inComponent: 0)]):\(String(format: "%02d", self.minutes[pickerView.selectedRow(inComponent: 1)])) \(meridians[pickerView.selectedRow(inComponent: 2)])")
     }
     
 }

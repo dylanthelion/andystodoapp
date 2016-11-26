@@ -18,4 +18,18 @@ class CollectionHelper {
         }
         return true
     }
+    
+    class func containsNoChildren(children : [Dynamic<Task>], ofParents : [Dynamic<Task>]) -> Bool {
+        for parent in ofParents {
+            for child in children {
+                if let _ = child.value.parentID {
+                    if child.value.parentID! == parent.value.ID! {
+                        return false
+                    }
+                }
+            }
+        }
+        
+        return true
+    }
 }

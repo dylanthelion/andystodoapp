@@ -8,45 +8,58 @@
 
 import UIKit
 
-class ArchivedTasksChildTableViewController: TaskDisplayViewController {
+private var taskHandle : UInt8 = 0
+
+class ArchivedTasksChildTableViewController : UITableViewController {
     
+    // View Model
     
+    let viewModel = ArchivedTaskChildrenViewModel()
+    
+    // Table view
+    
+    var dataSource : ArchivedTaskChildTableViewDataSource?
+    var delegate : ArchivedTaskChildTableViewDelegate?
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        modelBond.bind(dynamic: viewModel.tasksToPopulate!)
+        setupTableView()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    // Binding
+    
+    var modelBond: Bond<[Dynamic<Task>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &taskHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Task>]>
+        } else {
+            let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                //print("Update tasks in view")
+                if self.viewModel.emptied {
+                    self.navigationController?.popViewController(animated: true)
+                }
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &taskHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    // Setup
+    
+    func setupTableView() {
+        dataSource = ArchivedTaskChildTableViewDataSource(viewModel: viewModel)
+        delegate = ArchivedTaskChildTableViewDelegate(viewModel: viewModel, delegate : self)
+        self.tableView.dataSource = dataSource
+        self.tableView.delegate = delegate
     }
     
-    // Table view data source
+    // View presentation
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return AllTasks!.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "archiveTasksChildTableViewCell", for: indexPath) as! ArchivedTasksChildTableViewCell
-        cell.setTask(_task: AllTasks![indexPath.row])
-        cell.name_lbl.text = AllTasks![indexPath.row].Name!
-        cell.time_lbl.text = TimeConverter.dateToShortDateConverter(_time: AllTasks![indexPath.row].FinishTime!)
-        return cell
-    }
-    
-    // Table view delegate
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func presentArchivedTask(at index : Int) {
         let taskVC : DisplayArchivedTaskViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
-        taskVC.task = AllTasks![indexPath.row]
+        taskVC.viewModel.setTask(newTask: viewModel.tasksToPopulate!.value[index].value)
         self.navigationController?.pushViewController(taskVC, animated: true)
     }
 }

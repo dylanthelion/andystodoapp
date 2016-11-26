@@ -26,4 +26,10 @@ class CheckboxButton : UIButton {
             }
         }
     }
+    
+    func setChecked(_checked : Bool) {
+        if (_checked && !self.checked) || (!_checked && self.checked) {
+            self.toggleChecked()
+        }
+    }
 }

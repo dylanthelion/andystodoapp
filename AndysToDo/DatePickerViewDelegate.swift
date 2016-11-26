@@ -34,16 +34,20 @@ class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        viewDelegate?.startMonth = months[pickerView.selectedRow(inComponent: 0)].substring(to: months[pickerView.selectedRow(inComponent: 0)].index(months[pickerView.selectedRow(inComponent: 0)].startIndex, offsetBy: 3))
-        viewDelegate?.startDay = days[pickerView.selectedRow(inComponent: 1)]
         viewDelegate?.handleDidSelect(months: months[pickerView.selectedRow(inComponent: 0)].substring(to: months[pickerView.selectedRow(inComponent: 0)].index(months[pickerView.selectedRow(inComponent: 0)].startIndex, offsetBy: 3)), days: days[pickerView.selectedRow(inComponent: 1)], fulldate: "\(months[pickerView.selectedRow(inComponent: 0)]) \(days[pickerView.selectedRow(inComponent: 1)])")
+    }
+    
+    // Set date to today's date
+    
+    func setStartingDate(_ pickerView: UIPickerView) {
+        let date = CalendarHelper.shortDateAsInt
+        pickerView.selectRow(date.0 - 1, inComponent: 0, animated: true)
+        pickerView.selectRow(date.1 - 1, inComponent: 1, animated: true)
+        viewDelegate?.handleDidSelect(months: Constants.all_months_as_strings[date.0 - 1], days: Constants.all_days_as_strings[date.1 - 1], fulldate: TimeConverter.dateToShortDateConverter(_time: NSDate()))
     }
 }
 
 protocol  DatePickerViewDelegateViewDelegate {
-    
-    var startMonth : String? { get set }
-    var startDay : String? { get set }
     
     func handleDidSelect(months : String, days: String, fulldate : String)
 }

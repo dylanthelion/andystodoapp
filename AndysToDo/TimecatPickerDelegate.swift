@@ -24,14 +24,14 @@ class TimecatPickerDelegate : NSObject, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        viewDelegate?.chosenTimeCategory = allTimeCategories![row]
         viewDelegate?.handleDidSelect(timecat: allTimeCategories![row], name: allTimeCategories![row].Name!)
     }
 }
 
 protocol TimecatPickerDelegateViewDelegate {
     
-    var chosenTimeCategory : TimeCategory? { get set }
+    //var chosenTimeCategory : TimeCategory? { get set }
+    //var viewModel : CreateTaskViewModel { get set }
     
     func handleDidSelect(timecat : TimeCategory, name : String)
 }

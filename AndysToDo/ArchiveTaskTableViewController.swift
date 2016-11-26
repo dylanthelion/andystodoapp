@@ -8,198 +8,102 @@
 
 import UIKit
 
-class ArchiveTaskTableViewController : TaskDisplayViewController {
+private var taskHandle : UInt8 = 0
+private var filteredHandle : UInt8 = 0
+
+class ArchiveTaskTableViewController : TaskFilterableViewController {
     
-    // UI
+    // Table view
     
-    var sorted = false
-    var sortParam : TaskSortParameter = .Date
-    
-    // Model values
-    
-    var childTasks : [Task]?
+    var dataSource : ArchivedTaskTableViewDataSource?
+    var delegate : ArchivedTaskTableViewDelegate?
     
     // Outlets
-    @IBOutlet weak var sort_btn: UIBarButtonItem!
     
+    @IBOutlet weak var sort_btn: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadArchivedTasks()
-        sorted = true
-        sort_btn.title = "Sort Date"
+        viewModel = ArchiveTaskViewModel()
+        modelBond.bind(dynamic: (viewModel?.tasksToPopulate)!)
+        filterBond.bind(dynamic: (viewModel?.filteredTasks!)!)
+        sort_btn.title = "DATE"
+        setupTableView()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if !sorted {
-            loadArchivedTasks()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-        
-        if categoryFilters != nil || timeCategoryFilters != nil {
-            AllTasks = taskDTO.applyFilterToTasks(_tasks : AllTasks!, categories : categoryFilters, timeCategories : timeCategoryFilters)
-        }
-    }
+    // Binding
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        sorted = false
-    }
-    
-    // Load tasks
-    
-    func loadArchivedTasks() {
-        taskDTO.sortArchivedTasks()
-        AllTasks = taskDTO.archivedTasks
-        removeChildren()
-    }
-    
-    // Table view data source
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return AllTasks!.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "allTasksArchiveTableViewCell", for: indexPath) as! ArchivedTasksTableViewCells
-        cell.setTask(_task: AllTasks![indexPath.row])
-        cell.name_lbl.text = AllTasks![indexPath.row].Name!
-        cell.time_lbl.text = TimeConverter.dateToShortDateConverter(_time: AllTasks![indexPath.row].FinishTime!)
-        if let _ = AllTasks![indexPath.row].TimeCategory?.color {
-            cell.backgroundColor = UIColor(cgColor: AllTasks![indexPath.row].TimeCategory!.color!)
-        }
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
-            self.deleteTask(_task: self.AllTasks![index.row])
-        }
-        
-        delete.backgroundColor = UIColor.red
-        
-        let move = UITableViewRowAction(style: .normal, title: "Re-add") { action, index in
-            self.moveTaskToDayPlanner(_task: self.AllTasks![index.row])
-        }
-        move.backgroundColor = UIColor.green
-        return [move, delete]
-    }
-    
-    // Table view delegate
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let chosenTask = AllTasks![indexPath.row]
-        if CollectionHelper.IsNilOrEmpty(_coll: chosenTask.unwrappedRepeatables) {
-            pushTaskInfoView(_task: chosenTask)
-            return
-        }
-        var childTasksToDisplay = [Task]()
-        for _child in childTasks! {
-            if _child.parentID! == chosenTask.ID! {
-                childTasksToDisplay.append(_child)
-            }
-        }
-        if childTasksToDisplay.count > 0 {
-            pushChildrenTableView(_tasks: childTasksToDisplay)
-            return
+    var modelBond: Bond<[Dynamic<Task>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &taskHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Task>]>
         } else {
-            pushTaskInfoView(_task: chosenTask)
-            return
+            let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                DispatchQueue.main.async {
+                    //print("Apply filter in view")
+                    let archiveVM = self.viewModel! as! ArchiveTaskViewModel
+                    switch archiveVM.sortParam {
+                    case .Date :
+                        self.sort_btn.title = "DATE"
+                    case .Name:
+                        self.sort_btn.title = "NAME"
+                    }
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &taskHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
         }
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
+    var filterBond: Bond<[Dynamic<Task>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &filteredHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Task>]>
+        } else {
+            let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                DispatchQueue.main.async {
+                    //print("Apply filter in view")
+                    let archiveVM = self.viewModel! as! ArchiveTaskViewModel
+                    switch archiveVM.sortParam {
+                        case .Date :
+                            self.sort_btn.title = "DATE"
+                        case .Name:
+                            self.sort_btn.title = "NAME"
+                    }
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &filteredHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    // Setup
+    
+    func setupTableView() {
+        dataSource = ArchivedTaskTableViewDataSource(viewModel: viewModel! as! ArchiveTaskViewModel)
+        delegate = ArchivedTaskTableViewDelegate(viewModel: viewModel! as! ArchiveTaskViewModel, delegate : self)
+        self.tableView.dataSource = dataSource
+        self.tableView.delegate = delegate
+    }
+    
+    // IB Actions
+    
+    @IBAction func sort(_ sender: AnyObject) {
+        let archiveVM = self.viewModel! as! ArchiveTaskViewModel
+        archiveVM.sortBy()
     }
     
     // Present didselect view
     
     func pushChildrenTableView(_tasks : [Task]) {
         let childVC : ArchivedTasksChildTableViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "archivedTasksChildVC") as! ArchivedTasksChildTableViewController
-        childVC.AllTasks = _tasks
+        childVC.viewModel.setTasks(tasks: Dynamic.wrapArray(array: _tasks))
         self.navigationController?.pushViewController(childVC, animated: true)
     }
     
     func pushTaskInfoView(_task : Task) {
         let taskVC : DisplayArchivedTaskViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
-        taskVC.task = _task
+        taskVC.viewModel.setTask(newTask: _task)
         self.navigationController?.pushViewController(taskVC, animated: true)
     }
-    
-    // Table view edit actions
-    
-    func deleteTask(_task : Task) {
-        print("Delete")
-    }
-    
-    func moveTaskToDayPlanner(_task : Task) {
-        taskDTO.deArchive(_task: _task)
-    }
-    
-    // TaskDTODelegate
-    
-    override func handleModelUpdate() {
-        super.handleModelUpdate()
-        loadArchivedTasks()
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    // Filter children from model
-    
-    func removeChildren() {
-        if childTasks == nil {
-            childTasks = [Task]()
-        }
-        for _parent in AllTasks! {
-            for _child in AllTasks! {
-                if _child.parentID == nil {
-                    continue
-                }
-                if _parent.ID! == _child.parentID! && childTasks!.index(of: _child) == nil {
-                    childTasks!.append(_child)
-                }
-            }
-        }
-        for _task in childTasks! {
-            AllTasks!.remove(at: AllTasks!.index(of: _task)!)
-        }
-    }
-    
-    // IB Actions
-    
-    @IBAction func sort(_ sender: AnyObject) {
-        switch sortParam {
-        case .Date:
-            sortParam = .Name
-            sort_btn.title = "Sort Name"
-            AllTasks!.sort(by: {
-                return $0.Name! < $1.Name!
-            })
-        case .Name:
-            sortParam = .Date
-            sort_btn.title = "Sort Date"
-            AllTasks!.sort(by: {
-                return ($0.FinishTime! as Date) < ($1.FinishTime! as Date)
-            })
-        }
-        print("Sorted")
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-}
-
-enum TaskSortParameter {
-    case Name
-    case Date
 }

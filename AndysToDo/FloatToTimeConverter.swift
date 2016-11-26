@@ -88,4 +88,21 @@ class TimeConverter {
         
         return Int(_interval) / denominator
     }
+    
+    class func hoursDaysAndMonthToDate(startMonth : String, startDay : String, startHours : String) -> NSDate {
+        let formatter = StandardDateFormatter()
+        let df = DateFormatter()
+        df.dateFormat = Constants.standard_month_format
+        let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth, startDay: startDay)
+        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
+        return formatter.date(from: "\(startMonth) \(startDay) \(startHours) \(year)")! as NSDate
+    }
+    
+    class func hoursMinutesAndMeridianToTimeAsFloat(hours: String, minutes: String, meridian: String) -> Float {
+        var time : Float = Float(hours)! + (Float(minutes)! / Constants.seconds_per_minute)
+        if meridian == Constants.meridian_pm && hours != "12" {
+            time += Constants.hours_per_meridian
+        }
+        return time
+    }
 }

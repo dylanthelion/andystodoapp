@@ -69,7 +69,7 @@ struct Constants {
     static let all_months_as_strings = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
     static let all_days_as_strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     static let all_hours_as_ints = [1,2,3,4,5,6,7,8,9,10,11,12]
-    static let days_of_week_as_strings = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Multiple"]
+    
     
     // Login provider IDs
     
@@ -89,6 +89,8 @@ struct Constants {
     // Main Task VC
     static let mainTaskVC_upper_limit_calendar_unit : Calendar.Component = Calendar.Component.day
     static let mainTaskVC_upper_limit_number_of_units : Int = 1
+    static let mainTaskVC_upper_limit_time_interval : TimeInterval = 86400
+    static let mainTaskVC_MVVM_Queue = DispatchQueue(label: "andystodo.maintaskvc.mvvm")
     
     // FilterVC
     
@@ -182,6 +184,10 @@ struct Constants {
     // DisplayArchivedTaskVC
     
     static let displayArchivedTaskVC_categories_lbls_top_y_coord : CGFloat = 499.0
+    static let displayArchivedTaskVC_day = "Day"
+    static let displayArchivedTaskVC_hour = "Hour"
+    static let displayArchivedTaskVC_month = "Month"
+    static let displayArchivedTaskVC_minute = "Minute"
     
     // Helper views
     
@@ -217,11 +223,10 @@ struct Constants {
     
     // Enums
     
-    static let timeOfDay_daily_value = "Daily"
-    static let timeOfDay_hourly_value = "Hourly"
-    static let timeOfDay_weekly_value = "Weekly"
-    static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
-    static let totalExpectedUnitsOfTime = 5
-    static let expectedUnitOfTime_All = [UnitOfTime.Minute, UnitOfTime.Hour, UnitOfTime.Day, UnitOfTime.Week, UnitOfTime.Month]
-    static let expectedUnitsOfTimeAsString = ["Minutes", "Hours", "Days", "Weeks", "Months"]
+    static let timeOfDay_All = [RepetitionTimeCategory.Hourly, RepetitionTimeCategory.Daily, RepetitionTimeCategory.Weekly]
+    static let timeOfDay_All_As_Strings = ["Hourly", "Daily", "Weekly"]
+    static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Multiple]
+    static let days_of_week_as_strings = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Multiple"]
+    static let expectedUnitOfTime_All = [UnitOfTime.Minute, UnitOfTime.Hour, UnitOfTime.Day, UnitOfTime.Week, UnitOfTime.Month, UnitOfTime.Null]
+    static let expectedUnitsOfTimeAsString = ["Minutes", "Hours", "Days", "Weeks", "Months", "None"]
 }
