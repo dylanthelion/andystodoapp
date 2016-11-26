@@ -35,7 +35,6 @@ class RepeatableTaskOccurrence {
                 return UnitsPerTask != nil && TimeOfDay != nil  && DayOfWeek != nil && FirstOccurrence != nil
             }
         }
-        
         return false
     }
 }

@@ -8,11 +8,26 @@
 
 import UIKit
 
+private var handle: UInt8 = 0
+
 class TaskTableViewCell : UITableViewCell {
     
     var task : Task?
-    weak var delegate : MainTasksViewController?
-    var onItState : OnItButtonState = OnItButtonState.Inactive
+    var onItState : OnItButtonState  {
+        
+        get {
+            if task == nil {
+                return .Inactive
+            }
+            if task!.inProgress {
+                return .Active
+            }
+            if let _ = task!.FinishTime {
+                return .Finished
+            }
+            return .Inactive
+        }
+    }
     
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var taskTitleLabel: UILabel!
@@ -31,34 +46,19 @@ class TaskTableViewCell : UITableViewCell {
     @IBAction func ToggleOnItStatus(_ sender: AnyObject) {
         if let _ = task {
             if (onItState == OnItButtonState.Inactive) {
-                onItState = OnItButtonState.Active
                 self.task?.inProgress = true
                 self.task?.StartTime = NSDate()
-                DispatchQueue.main.async {
-                    self.onItButton.alpha = Constants.alpha_solid
-                }
             } else if onItState == OnItButtonState.Active {
-                onItState = OnItButtonState.Finished
                 self.task?.inProgress = false
                 self.task?.FinishTime = NSDate()
-                DispatchQueue.main.async {
-                    self.onItButton.alpha = Constants.alpha_solid
-                    self.onItButton.setTitle(Constants.taskTableViewCell_done, for: .normal)
-                    
-                }
             } else if onItState == OnItButtonState.Finished {
                 self.task?.inProgress = false
-                onItState = OnItButtonState.Inactive
-                DispatchQueue.main.async  {
-                    self.onItButton.alpha = Constants.alpha_faded
-                    self.onItButton.setTitle(Constants.taskTableViewCell_onIt, for: .normal)
-                }
+                self.task?.FinishTime = nil
             }
-            if let _ = delegate {
-                delegate!.taskDidUpdate(_task: self.task!)
-            }
+            let update = TaskDTO.globalManager.updateTask(_task: task!)
         }
     }
+    
 }
 
 enum OnItButtonState {

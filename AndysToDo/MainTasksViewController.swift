@@ -8,23 +8,26 @@
 
 import UIKit
 
+private var handle: UInt8 = 0
+private var filteredHandle : UInt8 = 0
+
 class MainTasksViewController : TaskDisplayViewController {
+    
+    // View Model
+    
+    let viewModel = PopulatedTasksVM()
     
     // Model values
     
-    var isSorted = false
-    var totalTasks = 0
-    var filtered = false
-    
+    //var isSorted = false
+    //var filtered = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
-        isSorted = true
-        for _task in AllTasks! {
-            if _task.inProgress {
-                let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
-                displayActiveTaskVC.task = _task
-                self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
+        self.modelBond.bind(dynamic: viewModel.tasksToPopulate)
+        self.filterBond.bind(dynamic: viewModel.filteredTasks!)
+        for _task in viewModel.tasksToPopulate.value {
+            if _task.value.inProgress {
+                self.presentActiveTaskController(_task: _task.value)
                 break
             }
         }
@@ -33,36 +36,42 @@ class MainTasksViewController : TaskDisplayViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        var isUpdated = false
-        if totalTasks != taskDTO.AllTasks!.count {
-            taskDTO.loadTasks()
-            taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
-            isUpdated = true
-        }
-        if !CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) || !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters) {
-            applyFilter()
-            filtered = true
-            isUpdated = true
-        }
-        if filtered {
-            applyFilter()
-            filtered = false
-        }
-        if !isSorted {
-            taskDTO.sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
-            isSorted = true
-            isUpdated = true
-        }
-        if !isUpdated {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        isSorted = false
+    }
+    
+    // Bonding
+    
+    var modelBond: Bond<[Dynamic<Task>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &handle) as AnyObject? {
+            return b as! Bond<[Dynamic<Task>]>
+        } else {
+            let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                DispatchQueue.main.async {
+                    //print("Update all in view")
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &handle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    var filterBond: Bond<[Dynamic<Task>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &filteredHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Task>]>
+        } else {
+            let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                DispatchQueue.main.async {
+                    //print("Apply filter in view")
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &filteredHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
     }
     
     // Table View datasource
@@ -72,27 +81,27 @@ class MainTasksViewController : TaskDisplayViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let _ = AllTasks {
-            return AllTasks!.count
-        }
-        return 0
+        return viewModel.tasksToPopulate.value.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell : TaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.task_table_view_cell_id) as! TaskTableViewCell
-        let cellTask : Task = AllTasks![indexPath.row]
+        let cellTask : Task = viewModel.tasksToPopulate.value[indexPath.row].value
         cell.setTask(_task: cellTask)
         switch cellTask.inProgress {
         case true :
-            cell.onItState = OnItButtonState.Active
             cell.onItButton.alpha = Constants.alpha_solid
         case false :
-            cell.onItState = OnItButtonState.Inactive
             cell.onItButton.alpha = Constants.alpha_faded
         }
         cell.taskTitleLabel.text = cellTask.Name!
         if let _ = cellTask.StartTime {
             cell.timeLabel.text = TimeConverter.dateToTimeWithMeridianConverter(_time: cellTask.StartTime!)
+        }
+        if let _ = cellTask.FinishTime {
+            cell.onItButton.setTitle(Constants.taskTableViewCell_done, for: .normal)
+        } else {
+            cell.onItButton.setTitle(Constants.taskTableViewCell_onIt, for: .normal)
         }
         if let _ = cellTask.TimeCategory?.color {
             cell.backgroundColor = UIColor(cgColor: cellTask.TimeCategory!.color!)
@@ -106,47 +115,39 @@ class MainTasksViewController : TaskDisplayViewController {
     // Table view delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if AllTasks![indexPath.row].inProgress {
-            let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
-            displayActiveTaskVC.task = AllTasks![indexPath.row]
-            self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
+        if viewModel.tasksToPopulate.value[indexPath.row].value.inProgress {
+            self.presentActiveTaskController(_task: viewModel.tasksToPopulate.value[indexPath.row].value)
         } else {
-            let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
-            displayInactiveTaskVC.task = AllTasks![indexPath.row]
-            self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
+            self.presentInactiveTaskController(_task: viewModel.tasksToPopulate.value[indexPath.row].value)
         }
-        
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            /*if AllTasks!.count == taskDTO.tasksToPopulate!.count {
-                taskDTO.tasksToPopulate!.remove(at: indexPath.row)
-            }*/
-            let taskToDelete = AllTasks![indexPath.row]
-            AllTasks!.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            taskDTO.deleteTask(_task: taskToDelete)
+            viewModel.deleteAt(index: indexPath.row)
         }
-    }
-    
-    // TaskDTODelegate
-    
-    override func handleModelUpdate() {
-        AllTasks = taskDTO.tasksToPopulate!
-        totalTasks = taskDTO.AllTasks!.count
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    override func taskDidUpdate(_task: Task) {
-        _ = taskDTO.updateTask(_task: _task)
     }
     
     // Filtering
     
-    func applyFilter() {
-        taskDTO.applyFilter(categories: categoryFilters, timeCategories: timeCategoryFilters)
+    /*func applyFilter() {
+        viewModel.applyFilter()
     }
-}
+    
+    func clearFilter() {
+        viewModel.clearFilter()
+    }*/
+    
+    // Present task
+    
+    func presentActiveTaskController(_task : Task) {
+        let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
+        displayActiveTaskVC.viewModel.task = Dynamic(_task)
+        self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
+    }
+    
+    func presentInactiveTaskController(_task : Task) {
+        let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
+        displayInactiveTaskVC.viewModel.setTask(newTask: _task)
+        self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
+    }}

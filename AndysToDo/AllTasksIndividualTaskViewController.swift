@@ -8,16 +8,14 @@
 
 import UIKit
 
+private var taskHandle : UInt8 = 0
+private var timecatHandle : UInt8 = 0
+
 class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate {
     
-    // DatePickerViewDelegateViewDelegate
+    // View Model
     
-    var startMonth: String?
-    var startDay: String?
-    
-    // Model values
-    
-    var task : Task?
+    let viewModel = AllTasksIndividualTaskViewModel()
     
     // Outlets
     
@@ -37,14 +35,48 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
         setupPickerDelegation()
         setupTextFieldInput()
         populateTaskInfo()
-        loaded = true
+        timecatDTOBond.bind(dynamic: viewModel.AllTimeCategories!)
+        taskDTOBond.bind(dynamic: viewModel.task!)
+    }
+    
+    // Binding
+    
+    var timecatDTOBond: Bond<[TimeCategory]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &timecatHandle) as AnyObject? {
+            return b as! Bond<[TimeCategory]>
+        } else {
+            let b = Bond<[TimeCategory]>() { [unowned self] v in
+                //print("Update timecats in view")
+                DispatchQueue.main.async {
+                    self.timeCatPickerView.reloadAllComponents()
+                }
+                
+            }
+            objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    var taskDTOBond: Bond<Task> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &taskHandle) as AnyObject? {
+            return b as! Bond<Task>
+        } else {
+            let b = Bond<Task>() { [unowned self] v in
+                //print("Update task in view")
+                DispatchQueue.main.async {
+                    self.populateTaskInfo()
+                }
+            }
+            objc_setAssociatedObject(self, &taskHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
     }
     
     // View setup
     
     func setupPickerDelegation() {
-        timeCatDelegate = TimecatPickerDelegate(_categories: allTimeCategories!, _delegate: self)
-        timeCatPickerDataSource = TimecatPickerDataSource(_categories: allTimeCategories!)
+        timeCatDelegate = TimecatPickerDelegate(_categories: viewModel.AllTimeCategories!.value, _delegate: self)
+        timeCatPickerDataSource = TimecatPickerDataSource(_categories: viewModel.AllTimeCategories!.value)
         timePickerDelegate = TimePickerViewDelegate(_delegate: self)
         expectedPickerDelegate = ExpectedUnitOfTimePickerDelegate(_delegate: self)
         expectedUnitOfTimePickerView.delegate = expectedPickerDelegate
@@ -66,33 +98,28 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     }
     
     func setupRepeatable() {
+        viewModel.setup()
         self.repeatable_btn.isUserInteractionEnabled = false
-        if self.task!.isRepeatable() {
+        if viewModel.task!.value.isRepeatable() {
             resetRepeatableTextFields()
-            repeatable = true
-            self.repeatableDetails = task?.RepeatableTask
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_child_task, for: .normal)
             self.repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
         } else {
-            self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: task!.StartTime!)
-            self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(_time: task!.StartTime!)
+            self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: viewModel.task!.value.StartTime!)
+            self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(_time: viewModel.task!.value.StartTime!)
             self.repeatable_lbl.isHidden = true
             self.repeatable_btn.isHidden = true
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_temp_copy, for: .normal)
         }
-        if let _ = task?.TimeCategory {
-            self.timeCat_txtField.text = task!.TimeCategory!.Name!
+        if let _ = viewModel.task!.value.TimeCategory {
+            self.timeCat_txtField.text = viewModel.task!.value.TimeCategory!.Name!
         } else {
             self.timeCat_txtField.text = ""
         }
-        if let _ = task?.expectedTimeRequirement {
-            self.expectedUnitOfTime_txtField.text = "\(Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: task!.expectedTimeRequirement!.0)!])"
-            self.expectedTotalUnits_txtField.text = String(task!.expectedTimeRequirement!.1)
-            self.expectedUnitOfTime = task!.expectedTimeRequirement!.0
+        if let _ = viewModel.task!.value.expectedTimeRequirement {
+            self.expectedUnitOfTime_txtField.text = "\(Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: viewModel.task!.value.expectedTimeRequirement!.0)!])"
+            self.expectedTotalUnits_txtField.text = String(viewModel.task!.value.expectedTimeRequirement!.1)
         }
-        self.startTime = task?.StartTime
-        self.allCategories = task?.Categories
-        self.chosenTimeCategory = task?.TimeCategory
     }
     
     func resetRepeatableTextFields() {
@@ -101,43 +128,17 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     }
     
     func populateTaskInfo() {
-        if task == nil {
-            print("No task")
-            return
-        }
         setupRepeatable()
         populateNonRepeatableData()
     }
     
     func populateNonRepeatableData() {
-        self.name_txtField.text = task!.Name!
-        self.startHours = TimeConverter.dateToTimeWithMeridianConverter(_time: task!.StartTime!)
-        
-        self.startMonth = TimeConverter.dateToMonthConverter(_time: task!.StartTime!)
-        self.startDay = TimeConverter.dateToDateOfMonthConverter(_time: task!.StartTime!)
-        self.description_txtView.text = task!.Description!
-        if let _ = task?.Categories {
-            allCategories = task!.Categories!
-        }
-        if let _ = task?.TimeCategory {
-            chosenTimeCategory = task!.TimeCategory!
-            if let _ = task?.TimeCategory?.color {
-                self.view.backgroundColor = UIColor(cgColor: task!.TimeCategory!.color!)
-            } else {
-                self.view.backgroundColor = UIColor.white
-            }
-        }
-    }
-    
-    func resetAfterSuccessfulSubmit() {
-        DispatchQueue.main.async {
-            self.setupRepeatable()
-            if self.task!.isRepeatable() {
-                self.populateTaskInfo()
-            } else {
-                self.populateNonRepeatableData()
-            }
-            
+        self.name_txtField.text = viewModel.task!.value.Name!
+        self.description_txtView.text = viewModel.task!.value.Description!
+        if let _ = viewModel.task?.value.TimeCategory?.color {
+            self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.TimeCategory!.color!)
+        } else {
+            self.view.backgroundColor = UIColor.white
         }
     }
     
@@ -149,6 +150,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        viewModel.Description = (textView.text as NSString).replacingCharacters(in: range, with: text)
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
@@ -192,6 +194,34 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
         }
         return true
     }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        textFieldSelected = textField.tag
+        switch textField.tag {
+        case 0:
+            viewModel.Name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+            return true
+        case 1:
+            return true
+        case 2:
+            return true
+        case 3:
+            return true
+        case 4:
+            if let check = Int((textField.text! as NSString).replacingCharacters(in: range, with: string)) {
+                viewModel.updateExpectedTimeRequirement(newUnitOfTime: nil, newValue: check)
+            } else {
+                viewModel.updateExpectedTimeRequirement(newUnitOfTime: nil, newValue: 0)
+            }
+            return true
+        case 5:
+            return true
+        default:
+            print("Invalid text field tag")
+            return false
+        }
+        
+        return true
+    }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         if textFieldSelected == 0 {
@@ -230,26 +260,31 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
+        viewModel.startMonth = months
+        viewModel.startDay = days
         startDateTextView.text = fulldate
     }
     
     // TimePickerViewDelegateViewDelegate
     
     func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
-        startHours = fullTime
         start_txtField.text = fullTime
+        viewModel.startHours = fullTime
     }
     
     // TimecatPickerDelegateViewDelegate
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
+        viewModel.TimeCategory = timecat
         self.timeCat_txtField.text = name
     }
     
     // ExpectedUnitOfTimePickerDelegateViewDelegate
     
     func handleDidSelect(unit: UnitOfTime, text: String) {
-        self.expectedUnitOfTime = unit
+        if let _ = viewModel.expectedTimeRequirement {
+            viewModel.expectedTimeRequirement = (unit, viewModel.expectedTimeRequirement!.1)
+        }
         expectedUnitOfTime_txtField.text = text
     }
     
@@ -262,7 +297,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
         let modifyVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_add_category_VC_id) as! AddCategoriesViewController
-        modifyVC.selectedCategories = self.allCategories
+        modifyVC.viewModel.selectedCategories = Dynamic(viewModel.AllCategories!.map({ Dynamic($0) }))
         modifyVC.taskDelegate = self
         self.navigationController?.pushViewController(modifyVC, animated: true)
     }
@@ -273,43 +308,35 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             return
         }
         
-        if repeatable {
-            if !validateRepeatable() {
-                return
-            } else {
-                resetAfterSuccessfulSubmit()
-                return
+        if viewModel.task!.value.isRepeatable() && !validateRepeatableChildforSubmit() {
+            return
+        }
+        let check = viewModel.submit()
+        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        if check.0 {
+            // handle success
+            if viewModel.task!.value.isRepeatable() {
+                resetRepeatableTextFields()
             }
         } else {
-            if !validateNonRepeatableTask() {
-                return
-            } else {
-                resetAfterSuccessfulSubmit()
-                return
-            }
+            // handle failure
         }
     }
     
     
     @IBAction func generateNewTask(_ sender: AnyObject) {
-        if task!.isRepeatable() {
-            if validateForSubmit() && validateRepeatableChildforSubmit() {
-                if validateNewRepeatableInstance() {
-                    resetAfterSuccessfulSubmit()
-                    return
-                } else {
-                    return
-                }
+        if !validateForSubmit() {
+            return
+        }
+        let check = viewModel.generateNewTask()
+        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        if check.0 {
+            // handle success
+            if viewModel.task!.value.isRepeatable() {
+                resetRepeatableTextFields()
             }
         } else {
-            if validateForSubmit() {
-                if validateNewInstance() {
-                    resetAfterSuccessfulSubmit()
-                    return
-                } else {
-                    return
-                }
-            }
+            // handle failure
         }
     }
     
@@ -324,7 +351,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             return false
         }
         
-        if !repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
+        if !viewModel.task!.value.isRepeatable() && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
             let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
@@ -341,105 +368,5 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController, UIT
             return false
         }
         return true
-    }
-    
-    func validateRepeatable() -> Bool {
-        self.task!.Name = name_txtField.text!
-        self.task!.Description = description_txtView.text
-        self.task!.StartTime = self.startTime
-        self.task!.FinishTime = nil
-        self.task!.Categories = self.allCategories
-        self.task!.TimeCategory = chosenTimeCategory
-        self.task!.RepeatableTask = repeatableDetails
-        if let _ = Int(self.expectedTotalUnits_txtField.text!), let _ = self.expectedUnitOfTime {
-            self.task!.expectedTimeRequirement = (self.expectedUnitOfTime!, Int(self.expectedTotalUnits_txtField.text!)!)
-        }
-        if taskDTO.updateTask(_task: self.task!) {
-            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            return true
-        } else {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatable_information_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            resetRepeatableTextFields()
-            return false
-        }
-    }
-    
-    func validateNonRepeatableTask() -> Bool {
-        let formatter = StandardDateFormatter()
-        let df = DateFormatter()
-        df.dateFormat = Constants.standard_month_format
-        let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
-        let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        self.task!.Name = name_txtField.text!
-        self.task!.Description = description_txtView.text
-        self.task!.StartTime = date
-        self.task!.FinishTime = nil
-        self.task!.Categories = self.allCategories
-        self.task!.TimeCategory = chosenTimeCategory
-        self.task!.RepeatableTask = nil
-        if let _ = Int(self.expectedTotalUnits_txtField.text!), let _ = self.expectedUnitOfTime {
-            self.task!.expectedTimeRequirement = (self.expectedUnitOfTime!, Int(self.expectedTotalUnits_txtField.text!)!)
-        }
-        if taskDTO.updateTask(_task: self.task!) {
-            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            return true
-        } else {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            return false
-        }
-    }
-    
-    func validateNewInstance() -> Bool {
-        let formatter = StandardDateFormatter()
-        let df = DateFormatter()
-        df.dateFormat = Constants.standard_month_format
-        let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
-        let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        //let newTask = Task(_name: "Temp \(self.task!.Name!)", _description: self.task!.Description!, _start: date, _finish: nil, _category: self.task!.Categories, _timeCategory: self.task!.TimeCategory, _repeatable: nil)
-        let newTask = Task(_name: "Temp \(self.task!.Name!)", _description: self.task!.Description!, _start: date, _finish: nil, _category: self.task!.Categories, _timeCategory: self.task!.TimeCategory, _repeatable: nil, _dueDate: nil, _parent: self.task!.ID!, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
-        if taskDTO.createNewTask(_task: newTask) {
-            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            return true
-        } else {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            return false
-        }
-    }
-    
-    func validateNewRepeatableInstance() -> Bool {
-        let formatter = StandardDateFormatter()
-        let df = DateFormatter()
-        df.dateFormat = Constants.standard_month_format
-        let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
-        let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        //let newTask = Task(_name: "Temp \(self.task!.Name!) instance", _description: self.task!.Description!, _start: date, _finish: nil, _category: self.task!.Categories, _timeCategory: self.task!.TimeCategory, _repeatable: nil)
-        let newTask = Task(_name: "Temp \(self.task!.Name!) instance", _description: self.task!.Description!, _start: date, _finish: nil, _category: self.task!.Categories, _timeCategory: self.task!.TimeCategory, _repeatable: nil, _dueDate: nil, _parent: self.task!.ID!, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
-        if taskDTO.createNewTempRepeatableTask(_task: newTask) {
-            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            return true
-        } else {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatable_information_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            resetRepeatableTextFields()
-            return false
-        }
     }
 }

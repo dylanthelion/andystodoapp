@@ -89,6 +89,7 @@ struct Constants {
     // Main Task VC
     static let mainTaskVC_upper_limit_calendar_unit : Calendar.Component = Calendar.Component.day
     static let mainTaskVC_upper_limit_number_of_units : Int = 1
+    static let mainTaskVC_upper_limit_time_interval : TimeInterval = 86400
     
     // FilterVC
     
@@ -220,8 +221,9 @@ struct Constants {
     static let timeOfDay_daily_value = "Daily"
     static let timeOfDay_hourly_value = "Hourly"
     static let timeOfDay_weekly_value = "Weekly"
-    static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday]
+    static let dayOfWeek_all = [DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday, DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Multiple]
     static let totalExpectedUnitsOfTime = 5
-    static let expectedUnitOfTime_All = [UnitOfTime.Minute, UnitOfTime.Hour, UnitOfTime.Day, UnitOfTime.Week, UnitOfTime.Month]
-    static let expectedUnitsOfTimeAsString = ["Minutes", "Hours", "Days", "Weeks", "Months"]
+    static let expectedUnitOfTime_All = [UnitOfTime.Minute, UnitOfTime.Hour, UnitOfTime.Day, UnitOfTime.Week, UnitOfTime.Month, UnitOfTime.Null]
+    static let expectedUnitsOfTimeAsString = ["Minutes", "Hours", "Days", "Weeks", "Months", "None"]
+    static let repetitionTimeCategory_All_As_Strings = ["Hourly", "Daily", "Weekly"]
 }

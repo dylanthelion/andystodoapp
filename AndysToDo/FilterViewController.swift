@@ -8,92 +8,138 @@
 
 import UIKit
 
-class FilterViewController : UIViewController, TaskDTODelegate {
+private var catHandle: UInt8 = 0
+private var timecatHandle : UInt8 = 0
+
+class FilterViewController : UIViewController {
     
     // UI
     
     var top_y_coord : CGFloat?
+    var allLabels : [UILabel]?
+    var allCheckboxes : [CheckboxButton]?
     
-    // Model values
+    // ViewModel
     
-    var categories : [Category]?
-    var timeCategories : [TimeCategory]?
-    var AllTasks : TaskDTO = TaskDTO.globalManager
-    let categoryDTO = CategoryDTO.shared
-    let timecatDTO = TimeCategoryDTO.shared
+    var viewModel = FilterViewModel()
     
     override func viewDidLoad() {
         top_y_coord = Constants.filterVC_starting_y_coord
-        AllTasks.delegate = self
-        categoryDTO.loadCategories()
-        timecatDTO.loadTimeCategories()
-        self.handleModelUpdate()
+        categoryModelBond.bind(dynamic: viewModel.categories!)
+        timecatModelBond.bind(dynamic: viewModel.timeCategories!)
         addCategoryFilterViews()
         addTimecatFilterViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? MainTasksViewController {
+            rootVC.viewModel.clearFilter()
+        } else if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? AllTasksViewController {
+            rootVC.viewModel.clearFilter()
+        }else if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? ArchiveTaskTableViewController {
+            rootVC.viewModel.clearFilter()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        AllTasks.delegate = nil
-        categoryDTO.delegate = nil
-        timecatDTO.delegate = nil
     }
     
     func loadCategories() {
         
     }
     
+    // Binding
+    
+    var categoryModelBond: Bond<[Dynamic<Category>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &catHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Category>]>
+        } else {
+            let b = Bond<[Dynamic<Category>]>() { [unowned self] v in
+                //print("Update cat in view")
+                DispatchQueue.main.async {
+                    self.refreshView()
+                    self.top_y_coord = Constants.filterVC_starting_y_coord
+                    self.addCategoryFilterViews()
+                    self.addTimecatFilterViews()
+                }
+            }
+            objc_setAssociatedObject(self, &catHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    var timecatModelBond: Bond<[Dynamic<TimeCategory>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &timecatHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<TimeCategory>]>
+        } else {
+            let b = Bond<[Dynamic<TimeCategory>]>() { [unowned self] v in
+                //print("Update timecat in view")
+                self.refreshView()
+                self.top_y_coord = Constants.filterVC_starting_y_coord
+                self.addCategoryFilterViews()
+                self.addTimecatFilterViews()
+            }
+            objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
     // Add filter UI
     
     func addCategoryFilterViews() {
-        if CollectionHelper.IsNilOrEmpty(_coll: self.categories) {
+        if CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
+            allLabels = [UILabel]()
+            allCheckboxes = [CheckboxButton]()
             return
         }
-        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.categories!.map({ $0.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.viewModel.categories!.value.map({ $0.value.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
         for btn in checkboxesAndLabels.0 {
             btn.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
-            DispatchQueue.main.async {
-                self.view.addSubview(btn)
-            }
+            self.view.addSubview(btn)
         }
         for lbl in checkboxesAndLabels.1 {
-            DispatchQueue.main.async {
-                self.view.addSubview(lbl)
-            }
+            self.view.addSubview(lbl)
         }
-        top_y_coord! += (Constants.filterVC_full_row_offset * (CGFloat((categories?.count)! / 2)))
-        top_y_coord! += (Constants.filterVC_full_row_offset * CGFloat((categories?.count)! % 2))
+        top_y_coord! += (Constants.filterVC_full_row_offset * (CGFloat((viewModel.categories?.value.count)! / 2)))
+        top_y_coord! += (Constants.filterVC_full_row_offset * CGFloat((viewModel.categories?.value.count)! % 2))
+        allLabels = checkboxesAndLabels.1
+        allCheckboxes = checkboxesAndLabels.0
     }
     
     func addTimecatFilterViews() {
-        if CollectionHelper.IsNilOrEmpty(_coll: self.timeCategories) {
+        if CollectionHelper.IsNilOrEmpty(_coll: viewModel.timeCategories?.value) {
             return
         }
-        
         addTimeCategoriesHeader(y_coord: top_y_coord!)
         
         top_y_coord! += Constants.filterVC_full_header_offset
         let startingIndex : Int
-        if let _ = categories {
-            startingIndex = categories!.count
+        if let _ = viewModel.categories {
+            startingIndex = viewModel.categories!.value.count
         } else {
             startingIndex = 0
         }
-        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.timeCategories!.map({ $0.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!, startingIndex: startingIndex)
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.viewModel.timeCategories!.value.map({ $0.value.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!, startingIndex: startingIndex)
         for btn in checkboxesAndLabels.0 {
             btn.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
-            DispatchQueue.main.async {
-                self.view.addSubview(btn)
-            }
+            self.view.addSubview(btn)
         }
         for lbl in checkboxesAndLabels.1 {
-            DispatchQueue.main.async {
-                self.view.addSubview(lbl)
-            }
+            self.view.addSubview(lbl)
         }
+        self.allLabels!.append(contentsOf: checkboxesAndLabels.1)
+        self.allCheckboxes!.append(contentsOf: checkboxesAndLabels.0)
+    }
+    
+    func refreshView() {
+        for lbl in self.allLabels! {
+            lbl.removeFromSuperview()
+        }
+        self.allLabels!.removeAll()
+        for chkbx in self.allCheckboxes! {
+            chkbx.removeFromSuperview()
+        }
+        self.allCheckboxes!.removeAll()
     }
     
     func addTimeCategoriesHeader(y_coord : CGFloat) {
@@ -106,55 +152,90 @@ class FilterViewController : UIViewController, TaskDTODelegate {
         header.textColor = Constants.filterVC_header_text_color
         header.text = Constants.filterVC_timecat_header_text
         header.textAlignment = .center
-        DispatchQueue.main.async {
-            self.view.addSubview(header)
-        }
+        self.view.addSubview(header)
+        self.allLabels!.append(header)
     }
     
     // Handle checkboxes
     
     func toggleFilter(sender : CheckboxButton) {
         
-        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as! TaskDisplayViewController
-        if !CollectionHelper.IsNilOrEmpty(_coll: self.categories) {
-            if sender.tag > (self.categories!.count - 1) {
-                if sender.checked {
-                    rootVC.removeTimeCategoryFilter(_category: self.timeCategories![sender.tag - self.categories!.count])
+        if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? AllTasksViewController {
+            if !CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
+                if sender.tag > (viewModel.categories!.value.count - 1) {
+                    if sender.checked {
+                        rootVC.viewModel.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
+                    } else {
+                        rootVC.viewModel.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
+                    }
+                    
                 } else {
-                    rootVC.addTimeCategoryFilter(_category: self.timeCategories![sender.tag - self.categories!.count])
+                    if sender.checked {
+                        rootVC.viewModel.removeCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
+                    } else {
+                        rootVC.viewModel.addCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
+                    }
+                    
                 }
-                
             } else {
-                if sender.checked {
-                    rootVC.removeCategoryFilter(_category: self.categories![sender.tag])
+                if(sender.checked) {
+                    rootVC.viewModel.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
                 } else {
-                    rootVC.addCategoryFilter(_category: self.categories![sender.tag])
+                    rootVC.viewModel.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
                 }
                 
             }
-        } else {
-            if(sender.checked) {
-                rootVC.removeTimeCategoryFilter(_category: self.timeCategories![sender.tag])
+        } else if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? MainTasksViewController {
+            if !CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
+                if sender.tag > (viewModel.categories!.value.count - 1) {
+                    if sender.checked {
+                        rootVC.viewModel.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
+                    } else {
+                        rootVC.viewModel.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
+                    }
+                    
+                } else {
+                    if sender.checked {
+                        rootVC.viewModel.removeCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
+                    } else {
+                        rootVC.viewModel.addCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
+                    }
+                    
+                }
             } else {
-                rootVC.addTimeCategoryFilter(_category: self.timeCategories![sender.tag])
+                if(sender.checked) {
+                    rootVC.viewModel.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                } else {
+                    rootVC.viewModel.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                }
+                
             }
-            
+        } else if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? ArchiveTaskTableViewController {
+            if !CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
+                if sender.tag > (viewModel.categories!.value.count - 1) {
+                    if sender.checked {
+                        rootVC.viewModel.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
+                    } else {
+                        rootVC.viewModel.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
+                    }
+                    
+                } else {
+                    if sender.checked {
+                        rootVC.viewModel.removeCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
+                    } else {
+                        rootVC.viewModel.addCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
+                    }
+                    
+                }
+            } else {
+                if(sender.checked) {
+                    rootVC.viewModel.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                } else {
+                    rootVC.viewModel.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                }
+                
+            }
         }
         sender.toggleChecked()
-    }
-    
-    // TaskDTODelegate
-    
-    func taskDidUpdate(_task: Task) {
-        
-    }
-    
-    func handleModelUpdate() {
-        if let _ = categoryDTO.AllCategories {
-            self.categories = categoryDTO.AllCategories!
-        }
-        if let _ = timecatDTO.AllTimeCategories {
-            self.timeCategories = timecatDTO.AllTimeCategories!
-        }
     }
 }

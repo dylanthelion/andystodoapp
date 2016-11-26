@@ -8,6 +8,8 @@
 
 import UIKit
 
+private var handle: UInt8 = 0
+
 class CheckboxButton : UIButton {
     
     var checked = false
@@ -24,6 +26,22 @@ class CheckboxButton : UIButton {
             DispatchQueue.main.async {
                 self.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
             }
+        }
+    }
+    
+    func setChecked(_checked : Bool) {
+        if (_checked && !self.checked) || (!_checked && self.checked) {
+            self.toggleChecked()
+        }
+    }
+    
+    var checkedBond: Bond<Bool> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &handle) as AnyObject? {
+            return b as! Bond<Bool>
+        } else {
+            let b = Bond<Bool>() { [unowned self] v in self.setChecked(_checked: v) }
+            objc_setAssociatedObject(self, &handle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
         }
     }
 }

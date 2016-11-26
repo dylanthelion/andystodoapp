@@ -8,21 +8,24 @@
 
 import UIKit
 
-class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate, TimePickerViewDelegateViewDelegate {
+class CreateTimeCategoryViewController : UIViewController, UITextFieldDelegate, UITextViewDelegate, TimePickerViewDelegateViewDelegate {
     
     // UI
     
     var textFieldSelected : Int = 0
     var lastColorSelected : ColorPickerButton?
     
+    // View Model
+    
+    let viewModel = CreateTimeCategoryViewModel()
+    
     // Model values
     
-    var startTime : Float?
+    /*var startTime : Float?
     var startHours: String?
     var endTime : Float?
-    var color : CGColor?
-    let timecatDTO = TimeCategoryDTO.shared
-    var timecat : TimeCategory?
+    var color : CGColor?*/
+    //var timecat : TimeCategory?
     
     // Picker views
     
@@ -44,11 +47,9 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        timecatDTO.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        timecatDTO.delegate = nil
     }
     
     // View setup
@@ -78,22 +79,19 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     }
     
     func populateViews() {
-        if let _ = timecat {
-            name_txtField.text = timecat!.Name!
-            description_txtView.text = timecat!.Description
-            start_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat!.StartOfTimeWindow!)
-            end_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat!.EndOfTimeWindow!)
-            self.startTime = timecat?.StartOfTimeWindow
-            self.endTime = timecat?.EndOfTimeWindow
-            if let _ = timecat!.color {
+        if let timecat = viewModel.timeCategory {
+            name_txtField.text = timecat.Name!
+            description_txtView.text = timecat.Description
+            start_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat.StartOfTimeWindow!)
+            end_txtField.text = TimeConverter.convertFloatToTimeString(_time: timecat.EndOfTimeWindow!)
+            if let _ = timecat.color {
                 DispatchQueue.main.async {
-                    self.view.backgroundColor = UIColor(cgColor: self.timecat!.color!)
+                    self.view.backgroundColor = UIColor(cgColor: self.viewModel.timeCategory!.color!)
                     if let _ = self.lastColorSelected {
                         self.lastColorSelected!.deselect()
                         self.lastColorSelected = nil
                     }
                 }
-                self.color = timecat?.color
             }
         }
     }
@@ -150,7 +148,26 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         return true
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        textFieldSelected = textField.tag
+        switch textField.tag {
+        case 0:
+            viewModel.name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+            return true
+        case 1:
+            return true
+        case 2:
+            return true
+        default:
+            print("Invalid text field tag")
+            return false
+        }
+        
+        return true
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        viewModel.description = (textView.text as NSString).replacingCharacters(in: range, with: text)
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
@@ -195,7 +212,7 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     // Color picker
     
     func selectColor(sender : ColorPickerButton) {
-        color = sender.backgroundColor!.cgColor
+        viewModel.color = sender.backgroundColor!.cgColor
         if let _ = self.lastColorSelected {
             self.lastColorSelected?.deselect()
         }
@@ -212,10 +229,10 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         }
         if textFieldSelected == 1 {
             start_txtField.text = fullTime
-            startTime = time
+            viewModel.StartOfTimeWindow = time
         } else {
             end_txtField.text = fullTime
-            endTime = time
+            viewModel.EndOfTimeWindow = time
         }
     }
     
@@ -225,17 +242,21 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
         if !validateForSubmit() {
             return
         }
+        
         if !validateAndSubmitTimecat() {
             return
-        } else {
-            return
+        } else if viewModel.timeCategory == nil {
+            resetAfterSuccessfulSubmit()
+        } else if let _ = viewModel.timeCategory!.color {
+            DispatchQueue.main.async {
+                self.view.backgroundColor = UIColor(cgColor: self.viewModel.timeCategory!.color!)
+            }
         }
     }
     
     // Validation
     
     func validateForSubmit() -> Bool {
-        
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text == "" || end_txtField.text == "" {
             let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.timecatVC_alert_no_name_description_or_window_failure_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
@@ -246,33 +267,17 @@ class CreateTimeCategoryViewController : UIViewController, TaskDTODelegate, UITe
     }
     
     func validateAndSubmitTimecat() -> Bool {
-        if let _ = timecat {
-            if timecatDTO.updateTimeCategory(_oldCategory: timecat!, _category: TimeCategory(_name: self.name_txtField.text!, _description: self.description_txtView.text, _start: startTime!, _end: endTime!, _color: color)) {
-                let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
-                alertController.addAction(Constants.standard_ok_alert_action)
-                self.present(alertController, animated: true, completion: nil)
-                self.populateViews()
-                return true
-            } else {
-                let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
-                alertController.addAction(Constants.standard_ok_alert_action)
-                self.present(alertController, animated: true, completion: nil)
-                return false
-            }
-        }
-        if timecatDTO.createNewTimeCategory(_category: TimeCategory(_name: name_txtField.text!, _description: description_txtView.text, _start: startTime!, _end: endTime!, _color: self.color)) {
-            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.timecatVC_alert_success_message, preferredStyle: .alert)
+        if viewModel.validateAndSubmitCategory() {
+            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
-            resetAfterSuccessfulSubmit()
             return true
         } else {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.timecatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
+            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
             return false
         }
-
     }
     
 }

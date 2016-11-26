@@ -8,14 +8,11 @@
 
 import UIKit
 
-class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate {
+class CreateCategoryViewController : UIViewController, UITextFieldDelegate, UITextViewDelegate {
     
-    // UI
+    // View Model
     
-    // Model values
-    
-    let categoryDTO = CategoryDTO.shared
-    var category: Category?
+    let viewModel = CreateCategoryViewModel()
     
     // Outlets
     
@@ -27,19 +24,17 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        categoryDTO.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        categoryDTO.delegate = nil
     }
     
     // View setup
     
     func populateViews() {
-        if let _ = category {
-            name_txtField.text = category!.Name!
-            description_txtView.text = category!.Description!
+        if let _ = viewModel.category {
+            name_txtField.text = viewModel.category!.Name!
+            description_txtView.text = viewModel.category!.Description!
         }
     }
     
@@ -50,24 +45,21 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
         }
     }
     
-    // TaskDTODelegate
-    
-    func handleModelUpdate() {
-        
-    }
-    
-    func taskDidUpdate(_task: Task) {
-        
-    }
-    
     // Text Delegate
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        viewModel.name = textField.text!
         textField.resignFirstResponder()
         return true
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        viewModel.name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        return true
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        viewModel.description = (textView.text as NSString).replacingCharacters(in: range, with: text)
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
@@ -84,11 +76,8 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
         
         if !validateAndSubmitCategory() {
             return
-        } else {
-            if category == nil {
-                resetAfterSuccessfulSubmit()
-            }
-            return
+        } else if viewModel.category == nil {
+            resetAfterSuccessfulSubmit()
         }
     }
     
@@ -105,20 +94,7 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     }
     
     func validateAndSubmitCategory() -> Bool {
-        if let _ = category {
-            if categoryDTO.updateCategory(_oldCategory: category!, _category: Category(_name: self.name_txtField.text!, _description: self.description_txtView.text)) {
-                let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
-                alertController.addAction(Constants.standard_ok_alert_action)
-                self.present(alertController, animated: true, completion: nil)
-                return true
-            } else {
-                let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
-                alertController.addAction(Constants.standard_ok_alert_action)
-                self.present(alertController, animated: true, completion: nil)
-                return false
-            }
-        }
-        if categoryDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
+        if viewModel.validateAndSubmitCategory() {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)

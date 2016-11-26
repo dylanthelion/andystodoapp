@@ -6,16 +6,7 @@
 //  Copyright © 2016 Dylan. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 protocol TaskDisplayProtocol {
-    
-    var AllTasks : [Task]? { get set }
-    var categoryFilters : [Category]? { get set }
-    var timeCategoryFilters : [TimeCategory]? { get set }
-    
-    func removeCategoryFilter(_category: Category)
-    func removeTimeCategoryFilter(_category: TimeCategory)
-    func addCategoryFilter(_category : Category)
-    func addTimeCategoryFilter(_category: TimeCategory)
 }

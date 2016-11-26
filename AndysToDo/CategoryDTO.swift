@@ -13,7 +13,7 @@ private let _DTO = CategoryDTO()
 class CategoryDTO {
     
     var delegate : TaskDTODelegate?
-    var AllCategories : [Category]?
+    var AllCategories : Dynamic<[Dynamic<Category>]>?
     
     class var shared : CategoryDTO {
         return _DTO
@@ -24,16 +24,14 @@ class CategoryDTO {
         
         // Until persistence is finished, load fake categories
         if AllCategories == nil {
-            AllCategories = loadFakeCategories()
+            AllCategories = Dynamic(loadFakeCategories())
         }
-        
-        
     }
     
-    func loadFakeCategories() -> [Category] {
-        let category1 = Category(_name: "Category 1", _description: "Fake Category")
-        let category2 = Category(_name: "Category 2", _description: "Another fake Category")
-        let category3 = Category(_name: "Category 3", _description: "The worst fake category")
+    func loadFakeCategories() -> [Dynamic<Category>] {
+        let category1 = Dynamic(Category(_name: "Category 1", _description: "Fake Category"))
+        let category2 = Dynamic(Category(_name: "Category 2", _description: "Another fake Category"))
+        let category3 = Dynamic(Category(_name: "Category 3", _description: "The worst fake category"))
         return [category1, category2, category3]
     }
     
@@ -42,34 +40,32 @@ class CategoryDTO {
     func createNewCategory(_category : Category) -> Bool {
         if _category.isValid() {
             var isUnique = true
-            for _cat in AllCategories! {
-                if _cat == _category {
+            for _cat in AllCategories!.value {
+                if _cat.value == _category {
                     isUnique = false
                     break
                 }
             }
             if isUnique {
-                AllCategories!.append(_category)
+                AllCategories!.value.append(Dynamic(_category))
                 return true
             } else {
                 return false
             }
-            
         }
         return false
     }
     
     func updateCategory(_oldCategory: Category, _category : Category) -> Bool {
         if _category.isValid() {
-            for _cat in AllCategories! {
-                if _cat.Name == _oldCategory.Name! {
-                    _cat.Name = _category.Name!
-                    _cat.Description = _category.Description!
+            for _cat in AllCategories!.value {
+                if _cat.value.Name == _oldCategory.Name! {
+                    _cat.value.Name = _category.Name!
+                    _cat.value.Description = _category.Description!
                     return true
                 }
             }
         }
-        
         return false
     }
 }

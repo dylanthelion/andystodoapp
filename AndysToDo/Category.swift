@@ -47,3 +47,29 @@ class TimeCategory : Category {
     
     
 }
+
+/*class TimeCategory : Equatable {
+    
+    var Name : String?
+    var Description : String?
+    var color : CGColor?
+    var StartOfTimeWindow : Float?
+    var EndOfTimeWindow : Float?
+    
+    init(_name : String, _description : String, _start : Float, _end: Float, _color: CGColor?) {
+        Name = _name
+        Description = _description
+        StartOfTimeWindow = _start
+        EndOfTimeWindow = _end
+        color = _color
+    }
+    
+    func isValid() -> Bool {
+        return Name != nil && Description != nil && StartOfTimeWindow != nil && EndOfTimeWindow != nil
+    }
+    
+    static func == (lhs: TimeCategory, rhs: TimeCategory) -> Bool {
+        return
+            lhs.Name! == rhs.Name!
+    }
+}*/

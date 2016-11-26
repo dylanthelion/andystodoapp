@@ -8,28 +8,17 @@
 
 import UIKit
 
-class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate {
-    
-    // DatePickerViewDelegateViewDelegate
-    
-    var startMonth: String?
-    var startDay: String?
+private var taskHandle : UInt8 = 0
+
+class DisplayInactiveTaskViewController : UIViewController, UITextFieldDelegate, UITextViewDelegate, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate {
     
     // UI
     
     var textFieldSelected = 0
-    var loaded = false
     
-    // Model values
+    // View Model
     
-    let taskDTO = TaskDTO.globalManager
-    let timecatDTO = TimeCategoryDTO.shared
-    var task : Task?
-    var allCategories : [Category]?
-    var allTimeCategories : [TimeCategory]?
-    var chosenTimeCategory: TimeCategory? = nil
-    var startTime : NSDate?
-    var startHours : String?
+    let viewModel = DisplayInactiveTaskViewModel()
     
     // Picker views
     
@@ -54,37 +43,23 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     @IBOutlet weak var expectedTime_lbl: UILabel!
     
     override func viewDidLoad() {
-        allTimeCategories = timecatDTO.AllTimeCategories
         setupPickerDelegation()
         setupTextFieldInput()
         populateTaskInfo()
-        loaded = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
-        timecatDTO.delegate = self
-        if !loaded {
-            self.timeCatPickerDataSource!.reloadTimecats(_categories: timecatDTO.AllTimeCategories!)
-            self.timeCatDelegate?.allTimeCategories = timecatDTO.AllTimeCategories!
-            DispatchQueue.main.async {
-                self.timeCatPickerView.reloadAllComponents()
-            }
-            loaded = true
-        }
+        //populateTaskInfo()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
-        timecatDTO.delegate = nil
-        loaded = false
     }
     
     // View setup
     
     func setupPickerDelegation() {
-        timeCatDelegate = TimecatPickerDelegate(_categories: allTimeCategories!, _delegate: self)
-        timeCatPickerDataSource = TimecatPickerDataSource(_categories: allTimeCategories!)
+        timeCatDelegate = TimecatPickerDelegate(_categories: viewModel.AllTimeCategories!, _delegate: self)
+        timeCatPickerDataSource = TimecatPickerDataSource(_categories: viewModel.AllTimeCategories!)
         timePickerDelegate = TimePickerViewDelegate(_delegate: self)
         pickerView.delegate = timePickerDelegate!
         pickerView.dataSource = timePickerDataSource
@@ -102,35 +77,25 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     }
     
     func populateTaskInfo() {
-        if task == nil {
-            print("No task")
-            return
-        }
-        self.name_txtField.text = task!.Name!
-        self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(_time: task!.StartTime!)
-        self.startHours = TimeConverter.dateToTimeWithMeridianConverter(_time: task!.StartTime!)
-        self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: task!.StartTime!)
-        self.startMonth = TimeConverter.dateToMonthConverter(_time: task!.StartTime!)
-        self.startDay = TimeConverter.dateToDateOfMonthConverter(_time: task!.StartTime!)
-        self.description_txtView.text = task!.Description!
-        if let _ = task?.Categories {
-            allCategories = task!.Categories!
-        }
-        if let _ = task?.TimeCategory {
-            chosenTimeCategory = task!.TimeCategory!
-            if let _ = task?.TimeCategory?.color {
-                self.view.backgroundColor = UIColor(cgColor: task!.TimeCategory!.color!)
+        self.name_txtField.text = viewModel.task!.value.Name!
+        self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(_time: viewModel.task!.value.StartTime!)
+        self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: viewModel.task!.value.StartTime!)
+        self.description_txtView.text = viewModel.task!.value.Description!
+        if let _ = viewModel.task!.value.TimeCategory {
+            self.timeCat_txtField.text = viewModel.task!.value.TimeCategory!.Name!
+            if let _ = viewModel.task!.value.TimeCategory?.color {
+                self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.TimeCategory!.color!)
             }
         }
-        if let _ = task?.expectedTimeRequirement {
-            self.expectedTime_lbl.text = "\(task!.expectedTimeRequirement!.1) \(Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: task!.expectedTimeRequirement!.0)!])"
+        if let _ = viewModel.task!.value.expectedTimeRequirement {
+            self.expectedTime_lbl.text = "\(viewModel.task!.value.expectedTimeRequirement!.1) \(Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: viewModel.task!.value.expectedTimeRequirement!.0)!])"
         }
     }
     
     func updateForSuccessfulSubmit() {
-        if let _ = task?.TimeCategory?.color {
+        if let _ = viewModel.task!.value.TimeCategory?.color {
             DispatchQueue.main.async {
-                self.view.backgroundColor = UIColor(cgColor: self.task!.TimeCategory!.color!)
+                self.view.backgroundColor = UIColor(cgColor: self.viewModel.task!.value.TimeCategory!.color!)
             }
         } else {
             DispatchQueue.main.async {
@@ -147,6 +112,8 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        viewModel.Description = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
@@ -186,6 +153,30 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
         return true
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        textFieldSelected = textField.tag
+        switch textField.tag {
+        case 0:
+            viewModel.Name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+            return true
+        case 1:
+            return true
+        case 2:
+            return true
+        case 3:
+            return true
+        case 4:
+            return true
+        case 5:
+            return true
+        default:
+            print("Invalid text field tag")
+            return false
+        }
+        
+        return true
+    }
+    
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
         if textFieldSelected == 0 {
             self.navigationItem.rightBarButtonItem = nil
@@ -219,13 +210,15 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
+        viewModel.startMonth = months
+        viewModel.startDay = days
         startDateTextView.text = fulldate
     }
     
     // TimePickerViewDelegateViewDelegate
     
     func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
-        startHours = fullTime
+        viewModel.startHours = fullTime
         start_txtField.text = fullTime
     }
     
@@ -233,38 +226,19 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
         self.timeCat_txtField.text = name
-    }
-    
-    // TaskDTODelegate
-    
-    func handleModelUpdate() {
-        
-    }
-    
-    func taskDidUpdate(_task: Task) {
-        
-    }
-    
-    // Categories
-    
-    func addCategory(_category : Category) {
-        if let _ = self.allCategories {
-            self.allCategories!.append(_category)
-        } else {
-            self.allCategories = [_category]
-        }
-    }
-    
-    func removeCategory(_category : Category) {
-        let indexOf = self.allCategories?.index(of: _category)
-        self.allCategories?.remove(at: indexOf!)
+        self.viewModel.TimeCategory = timecat
     }
     
     // IBActions
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
         let modifyVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_add_category_VC_id) as! AddCategoriesViewController
-        modifyVC.selectedCategories = self.allCategories
+        if let _ = viewModel.Categories {
+            modifyVC.viewModel.selectedCategories = Dynamic(self.viewModel.Categories!.map({ Dynamic($0) }))
+        } else {
+            modifyVC.viewModel.selectedCategories = Dynamic([Dynamic<Category>]())
+        }
+        
         modifyVC.taskDelegate = self
         self.navigationController?.pushViewController(modifyVC, animated: true)
     }
@@ -275,23 +249,19 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
             return
         }
         
-        if !validateNonRepeatableTask() {
-            return
+        let check = viewModel.submit()
+        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        if !check.0 {
+            // handle failure
+        } else {
+            // handle success
         }
     }
     
     
     @IBAction func postpone(_ sender: AnyObject) {
-        if !NumberHelper.isNilOrZero(num: task?.timeOnTask) && (task?.inProgress)! {
-            let timeToAdd : TimeInterval = Date().timeIntervalSince(task?.StartTime! as! Date)
-            task!.timeOnTask! += timeToAdd
-        }
-        task!.StartTime! = task!.StartTime!.addingTimeInterval(86400)
-        task?.inProgress = false
-        if taskDTO.updateTask(_task: task!) {
+        if viewModel.postpone() {
             self.navigationController?.popViewController(animated: true)
-        } else {
-            print("Something went wrong postponing task")
         }
     }
     
@@ -306,34 +276,5 @@ class DisplayInactiveTaskViewController : UIViewController, TaskDTODelegate, UIT
             return false
         }
         return true
-    }
-    
-    func validateNonRepeatableTask() -> Bool {
-        let formatter = StandardDateFormatter()
-        let df = DateFormatter()
-        df.dateFormat = Constants.standard_month_format
-        let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
-        let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        self.task!.Categories = self.allCategories
-        self.task!.Description = description_txtView.text
-        self.task!.FinishTime = nil
-        self.task!.Name = name_txtField.text!
-        self.task!.StartTime = date
-        self.task!.TimeCategory = chosenTimeCategory
-        self.task!.RepeatableTask = nil
-        if taskDTO.updateTask(_task: task!) {
-            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            updateForSuccessfulSubmit()
-            return true
-        } else {
-            //let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message, preferredStyle: .alert)
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: "Herp", preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
-            return false
-        }
     }
 }

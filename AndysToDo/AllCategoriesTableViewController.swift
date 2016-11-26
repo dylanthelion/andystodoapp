@@ -8,26 +8,56 @@
 
 import UIKit
 
-class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate {
+private var catHandle: UInt8 = 0
+private var timecatHandle : UInt8 = 0
+
+class AllCategoriesTableViewController : UITableViewController {
     
-    let categoryDTO = CategoryDTO.shared
-    let timecatDTO = TimeCategoryDTO.shared
+    // ViewModel
+    
+    var viewModel = AllCategoriesViewModel()
     
     override func viewDidLoad() {
-        
+        categoryModelBond.bind(dynamic: viewModel.categories!)
+        timecatModelBond.bind(dynamic: viewModel.timeCategories!)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        categoryDTO.delegate = self
-        timecatDTO.delegate = self
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        categoryDTO.delegate = nil
-        timecatDTO.delegate = nil
+    }
+    
+    // Binding
+    
+    var categoryModelBond: Bond<[Dynamic<Category>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &catHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Category>]>
+        } else {
+            let b = Bond<[Dynamic<Category>]>() { [unowned self] v in
+                //print("Update cat in view")
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &catHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    var timecatModelBond: Bond<[Dynamic<TimeCategory>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &timecatHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<TimeCategory>]>
+        } else {
+            let b = Bond<[Dynamic<TimeCategory>]>() { [unowned self] v in
+                //print("Update timecat in view")
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
     }
     
     // UITableViewDataSource
@@ -35,9 +65,9 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return categoryDTO.AllCategories!.count
+            return viewModel.categories!.value.count
         case 1:
-            return timecatDTO.AllTimeCategories!.count
+            return viewModel.timeCategories!.value.count
         case 2:
             return 2
             
@@ -55,14 +85,14 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_category_table_view_cell_id, for: indexPath) as! CategoryTableViewCell
-            cell.textLabel?.text = categoryDTO.AllCategories![indexPath.row].Name!
+            cell.textLabel?.text = viewModel.categories!.value[indexPath.row].value.Name!
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_timecat_table_view_cell_id, for: indexPath) as! TimecatTableViewCell
-            cell.name_lbl.text = timecatDTO.AllTimeCategories![indexPath.row].Name!
-            cell.time_lbl.text = "\(TimeConverter.convertFloatToTimeString(_time: timecatDTO.AllTimeCategories![indexPath.row].StartOfTimeWindow!))-\(TimeConverter.convertFloatToTimeStringWithMeridian(_time: timecatDTO.AllTimeCategories![indexPath.row].EndOfTimeWindow!))"
-            if let _ = timecatDTO.AllTimeCategories![indexPath.row].color {
-                cell.backgroundColor = UIColor(cgColor: timecatDTO.AllTimeCategories![indexPath.row].color!)
+            cell.name_lbl.text = viewModel.timeCategories!.value[indexPath.row].value.Name!
+            cell.time_lbl.text = "\(TimeConverter.convertFloatToTimeString(_time: viewModel.timeCategories!.value[indexPath.row].value.StartOfTimeWindow!))-\(TimeConverter.convertFloatToTimeStringWithMeridian(_time: viewModel.timeCategories!.value[indexPath.row].value.EndOfTimeWindow!))"
+            if let _ = viewModel.timeCategories!.value[indexPath.row].value.color {
+                cell.backgroundColor = UIColor(cgColor: viewModel.timeCategories!.value[indexPath.row].value.color!)
             }
             return cell
         case 2:
@@ -105,11 +135,11 @@ class AllCategoriesTableViewController : UITableViewController, TaskDTODelegate 
         switch indexPath.section {
         case 0:
             let createCatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_category_VC_id) as! CreateCategoryViewController
-            createCatVC.category = categoryDTO.AllCategories![indexPath.row]
+            createCatVC.viewModel.setCategory(cat: viewModel.categories!.value[indexPath.row].value)
             self.navigationController?.pushViewController(createCatVC, animated: true)
         case 1:
             let createTimecatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
-            createTimecatVC.timecat = timecatDTO.AllTimeCategories![indexPath.row]
+            createTimecatVC.viewModel.setCategory(timecat: viewModel.timeCategories!.value[indexPath.row].value)
             self.navigationController?.pushViewController(createTimecatVC, animated: true)
             
         case 2:

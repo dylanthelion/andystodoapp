@@ -8,35 +8,63 @@
 
 import UIKit
 
+private var taskHandle : UInt8 = 0
+private var filteredHandle : UInt8 = 0
+
 class AllTasksViewController : TaskDisplayViewController {
     
     // UI
     
-    var tasksLoaded = false
+    //var tasksLoaded = false
+    
+    // View Model
+    
+    let viewModel = AllTasksViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AllTasks = taskDTO.AllTasks
-        tasksLoaded = true
+        modelBond.bind(dynamic: viewModel.tasksToPopulate)
+        filterBond.bind(dynamic: viewModel.filteredTasks!)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !tasksLoaded {
-            AllTasks = taskDTO.AllTasks
-            tasksLoaded = true
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-        if categoryFilters != nil || timeCategoryFilters != nil {
-            applyFilter()
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        tasksLoaded = false
+    }
+    
+    // Binding
+    
+    var modelBond: Bond<[Dynamic<Task>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &taskHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Task>]>
+        } else {
+            let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                DispatchQueue.main.async {
+                    //print("Update all in view")
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &taskHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    var filterBond: Bond<[Dynamic<Task>]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &filteredHandle) as AnyObject? {
+            return b as! Bond<[Dynamic<Task>]>
+        } else {
+            let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                DispatchQueue.main.async {
+                    //print("Apply filter in view")
+                    self.tableView.reloadData()
+                }
+            }
+            objc_setAssociatedObject(self, &filteredHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
     }
     
     // Table View datasource
@@ -46,15 +74,12 @@ class AllTasksViewController : TaskDisplayViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let _ = AllTasks {
-            return AllTasks!.count
-        }
-        return 0
+        return viewModel.tasksToPopulate.value.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell : AllTasksTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_display_task_table_view_cell_id) as! AllTasksTableViewCell
-        let cellTask : Task = AllTasks![indexPath.row]
+        let cellTask : Task = viewModel.tasksToPopulate.value[indexPath.row].value
         cell.setTask(_task: cellTask)
         cell.name_lbl.text = cellTask.Name!
         if cellTask.isRepeatable() {
@@ -75,13 +100,14 @@ class AllTasksViewController : TaskDisplayViewController {
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
-            self.deleteTask(_task: self.AllTasks![index.row])
+            self.viewModel.deleteAt(index: indexPath.row)
         }
-        
         delete.backgroundColor = UIColor.red
-        
         let move = UITableViewRowAction(style: .normal, title: "Re-add") { action, index in
-            self.moveTaskToDayPlanner(_task: self.AllTasks![index.row])
+            self.viewModel.moveTaskToDayPlanner(index: indexPath.row)
+            DispatchQueue.main.async {
+                self.tabBarController?.selectedIndex = 0
+            }
         }
         move.backgroundColor = UIColor.green
         return [move, delete]
@@ -91,63 +117,10 @@ class AllTasksViewController : TaskDisplayViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let displayTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_all_tasks_individuAL_VC_ID) as! AllTasksIndividualTaskViewController
-        displayTaskVC.task = AllTasks![indexPath.row]
+        displayTaskVC.viewModel.setTask(newTask: viewModel.tasksToPopulate.value[indexPath.row].value) 
         self.navigationController?.pushViewController(displayTaskVC, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        /*if editingStyle == .delete {
-            if AllTasks!.count == taskDTO.AllTasks!.count {
-                taskDTO.AllTasks!.remove(at: indexPath.row)
-            }
-            let taskToDelete = AllTasks![indexPath.row]
-            AllTasks!.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            
-            
-        }*/
-    }
-    
-    // TaskDTODelegate
-    
-    override func handleModelUpdate() {
-        AllTasks = taskDTO.AllTasks!
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    override func taskDidUpdate(_task: Task) {
-        _ = taskDTO.updateTask(_task: _task)
-    }
-    
-    // Table view edit buttons
-    
-    func deleteTask(_task : Task) {
-        taskDTO.deleteTask(_task: _task)
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
-    }
-    
-    func moveTaskToDayPlanner(_task : Task) {
-        _task.inProgress = true
-        _task.StartTime = NSDate()
-        if taskDTO.updateTask(_task: _task) {
-            taskDTO.tasksToPopulate?.append(taskDTO.AllTasks![Int(taskDTO.AllTasks!.index(of: _task)!)])
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-                self.tabBarController?.selectedIndex = 0
-            }
-        }
-    }
-    
-    // Filtering
-    
-    func applyFilter() {
-        self.AllTasks = taskDTO.applyFilterToAllTasks(categories: categoryFilters, timeCategories: timeCategoryFilters)
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
     }
 }

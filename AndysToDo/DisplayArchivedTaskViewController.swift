@@ -8,9 +8,13 @@
 
 import UIKit
 
+private var taskHandle : UInt8 = 0
+
 class DisplayArchivedTaskViewController : UIViewController {
     
-    var task : Task?
+    // View Model
+    
+    let viewModel = DisplayArchivedTaskViewModel()
     
     // Outlets
     
@@ -22,6 +26,7 @@ class DisplayArchivedTaskViewController : UIViewController {
     @IBOutlet weak var timeBudgeted_txtField: UILabel!
     
     override func viewDidLoad() {
+    taskBond.bind(dynamic: viewModel.task!)
         populateTaskInfo()
     }
     
@@ -33,24 +38,35 @@ class DisplayArchivedTaskViewController : UIViewController {
         
     }
     
+    // Binding
+    
+    var taskBond: Bond<Task> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &taskHandle) as AnyObject? {
+            return b as! Bond<Task>
+        } else {
+            let b = Bond<Task>() { [unowned self] v in
+                //print("update task in view model")
+                self.populateTaskInfo()
+            }
+            objc_setAssociatedObject(self, &taskHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
     // Setup
     
     func populateTaskInfo() {
-        if task == nil {
-            print("No task")
-            return
-        }
-        name_lbl.text = task?.Name!
-        description_txtView.text = task?.Description
-        startTime_txtField.text = TimeConverter.dateToShortDateConverter(_time: (task?.StartTime!)!)
-        endTime_txtField.text = TimeConverter.dateToShortDateConverter(_time: (task?.FinishTime!)!)
-        let interval = task!.FinishTime!.timeIntervalSince(task!.StartTime! as Date)
+        name_lbl.text = viewModel.task?.value.Name!
+        description_txtView.text = viewModel.task?.value.Description
+        startTime_txtField.text = TimeConverter.dateToShortDateConverter(_time: (viewModel.task?.value.StartTime!)!)
+        endTime_txtField.text = TimeConverter.dateToShortDateConverter(_time: (viewModel.task?.value.FinishTime!)!)
+        let interval = viewModel.task!.value.FinishTime!.timeIntervalSince(viewModel.task!.value.StartTime! as Date)
         let componentAsString : String
-        if let _ = task?.expectedTimeRequirement {
-            let units : String = Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: task!.expectedTimeRequirement!.0)!]
-            let expectedTotal : String = String(task!.expectedTimeRequirement!.1)
+        if let _ = viewModel.task?.value.expectedTimeRequirement {
+            //let units : String = Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: viewModel.task!.value.expectedTimeRequirement!.0)!]
+            let expectedTotal : String = String(viewModel.task!.value.expectedTimeRequirement!.1)
             let total : String
-            switch task!.expectedTimeRequirement!.0 {
+            switch viewModel.task!.value.expectedTimeRequirement!.0 {
                 case .Day:
                     total = String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: .day))
                     componentAsString = "Day"
@@ -66,6 +82,10 @@ class DisplayArchivedTaskViewController : UIViewController {
                 case .Week:
                     total = String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: .day) / 7)
                     componentAsString = "Week"
+            case .Null:
+                print("WHAT WENT HERP WRONG?")
+                total = ""
+                componentAsString = ""
             }
             totalTime_txtField.text = "\(total) \(componentAsString)s"
             timeBudgeted_txtField.text = "\(expectedTotal) \(componentAsString)s"

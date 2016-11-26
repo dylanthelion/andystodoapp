@@ -10,10 +10,9 @@ import UIKit
 
 class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDelegate, UITextViewDelegate, DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate {
     
-    // DatePickerViewDelegateViewDelegate
+    // View Model
     
-    var startMonth: String?
-    var startDay: String?
+    let viewModel = CreateTaskViewModel()
     
     // Outlets
     
@@ -31,23 +30,16 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         setupPickerDelegation()
         setStartingDate()
         setupTextFieldInput()
-        loaded = true
+        populateTask()
+        //loaded = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if repeatableDetails == nil && CollectionHelper.IsNilOrEmpty(_coll: multipleRepeatables) {
-            repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
-            repeatable_btn.checked = false
-            repeatable = false
-        } else {
-            DispatchQueue.main.async {
-                self.startDateTextView.text = Constants.createRepeatableVC_repeatable
-                self.start_txtField.text = Constants.createRepeatableVC_repeatable
-                self.startDateTextView.isUserInteractionEnabled = false
-                self.start_txtField.isUserInteractionEnabled = false
-            }
+        if viewModel.RepeatableTask != nil || !CollectionHelper.IsNilOrEmpty(_coll: viewModel.multipleRepeatables) {
+            self.startDateTextView.text = Constants.createRepeatableVC_repeatable
+            self.start_txtField.text = Constants.createRepeatableVC_repeatable
         }
+        super.viewWillAppear(animated)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -56,9 +48,22 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     
     // View setup
     
+    func populateTask() {
+        if viewModel.RepeatableTask == nil && CollectionHelper.IsNilOrEmpty(_coll: viewModel.multipleRepeatables) {
+            repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
+            repeatable_btn.checked = false
+            viewModel.repeatable = false
+        } else {
+            self.startDateTextView.text = Constants.createRepeatableVC_repeatable
+            self.start_txtField.text = Constants.createRepeatableVC_repeatable
+            self.startDateTextView.isUserInteractionEnabled = false
+            self.start_txtField.isUserInteractionEnabled = false
+        }
+    }
+    
     func setupPickerDelegation() {
-        timeCatDelegate = TimecatPickerDelegate(_categories: allTimeCategories!, _delegate: self)
-        timeCatPickerDataSource = TimecatPickerDataSource(_categories: allTimeCategories!)
+        timeCatDelegate = TimecatPickerDelegate(_categories: viewModel.AllTimeCategories, _delegate: self)
+        timeCatPickerDataSource = TimecatPickerDataSource(_categories: viewModel.AllTimeCategories)
         timePickerDelegate = TimePickerViewDelegate(_delegate: self)
         expectedPickerDelegate = ExpectedUnitOfTimePickerDelegate(_delegate: self)
         expectedUnitOfTimePickerView.delegate = expectedPickerDelegate
@@ -77,8 +82,8 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         datePickerView.selectRow(date.0 - 1, inComponent: 0, animated: true)
         datePickerView.selectRow(date.1 - 1, inComponent: 1, animated: true)
         self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: NSDate())
-        self.startDay = Constants.all_days_as_strings[date.1 - 1]
-        self.startMonth = Constants.all_months_as_strings[date.0 - 1]
+        viewModel.startDay = Constants.all_days_as_strings[date.1 - 1]
+        viewModel.startMonth = Constants.all_months_as_strings[date.0 - 1]
     }
     
     func setupTextFieldInput() {
@@ -104,10 +109,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             self.expectedTotalUnits_txtField.text = ""
             self.setStartingDate()
         }
-        repeatable = false
-        repeatableDetails = nil
-        multipleRepeatables = nil
-        expectedUnitOfTime = nil
+        viewModel.resetModel()
     }
     
     // Text Delegate
@@ -118,6 +120,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        viewModel.Description = (textView.text as NSString).replacingCharacters(in: range, with: text)
         if(text == "\n") {
             textView.resignFirstResponder()
             return false
@@ -153,6 +156,35 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             print("Invalid text field tag")
             return false
         }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        textFieldSelected = textField.tag
+        switch textField.tag {
+        case 0:
+            viewModel.Name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+            return true
+        case 1:
+            return true
+        case 2:
+            return true
+        case 3:
+            return true
+        case 4:
+            if let check = Int((textField.text! as NSString).replacingCharacters(in: range, with: string)) {
+                viewModel.updateExpectedTimeRequirement(newUnitOfTime: nil, newValue: check)
+            } else {
+                viewModel.updateExpectedTimeRequirement(newUnitOfTime: nil, newValue: 0)
+            }
+            return true
+        case 5:
+            return true
+        default:
+            print("Invalid text field tag")
+            return false
+        }
+        
+        return true
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
@@ -199,6 +231,8 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
+        viewModel.startMonth = months
+        viewModel.startDay = days
         startDateTextView.text = fulldate
     }
     
@@ -206,19 +240,20 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     
     func handleDidSelect(hours: String, minutes: String, meridian: String, fullTime: String) {
         start_txtField.text = fullTime
-        startHours = fullTime
+        viewModel.startHours = fullTime
     }
     
     // TimecatPickerDelegateViewDelegate
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
+        viewModel.TimeCategory = timecat
         self.timeCat_txtField.text = name
     }
     
     // ExpectedUnitOfTimePickerDelegateViewDelegate
     
     func handleDidSelect(unit: UnitOfTime, text: String) {
-        self.expectedUnitOfTime = unit
+        viewModel.expectedTimeRequirement = (unit, viewModel.expectedTimeRequirement!.1)
         expectedUnitOfTime_txtField.text = text
     }
     
@@ -227,10 +262,10 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     
     @IBAction func toggleRepeatable(_ sender: AnyObject) {
         repeatable_btn.toggleChecked()
-        switch repeatable {
+        switch viewModel.repeatable {
         case true:
-            repeatableDetails = nil
-            repeatable = false
+            viewModel.RepeatableTask = nil
+            viewModel.repeatable = false
             DispatchQueue.main.async {
                 self.start_txtField.text = ""
                 self.startDateTextView.text = ""
@@ -238,13 +273,13 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         case false:
             let nextViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.create_repeatable_task_VC_id) as! CreateRepeatableTaskOccurrenceViewController
             self.navigationController?.pushViewController(nextViewController, animated: true)
-            repeatable = true
+            viewModel.repeatable = true
         }
     }
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
         let modifyVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_add_category_VC_id) as! AddCategoriesViewController
-        modifyVC.selectedCategories = self.allCategories
+        modifyVC.viewModel.selectedCategories = Dynamic(self.viewModel.Categories!.map({ Dynamic($0) }))
         modifyVC.taskDelegate = self
         self.navigationController?.pushViewController(modifyVC, animated: true)
     }
@@ -255,21 +290,13 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             return
         }
         
-        if repeatable {
-            if CollectionHelper.IsNilOrEmpty(_coll: self.multipleRepeatables) {
-                if !validateRepeatable(_repeatable: self.repeatableDetails!) {
-                    return
-                }
-            } else {
-                if !validateMultipleRepeatables(_repeatables: self.multipleRepeatables!) {
-                    return
-                }
-            }
-            
+        let check = viewModel.submit()
+        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        if !check.0 {
+            // handle failure
         } else {
-            if !validateNonRepeatableTask() {
-                return
-            }
+            resetAfterSuccessfulSubmit()
+            // handle success
         }
     }
     
@@ -278,24 +305,20 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
     func validateForSubmit() -> Bool {
         
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" && startDateTextView.text! == "" {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
+            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
             return false
         }
         
-        if !repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
+        if !viewModel.repeatable && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
+            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, actions: [Constants.standard_ok_alert_action])
             return false
         }
         return true
     }
     
-    func validateRepeatable(_repeatable : RepeatableTaskOccurrence) -> Bool {
-        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence! as NSDate? , _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
-        if taskDTO.createNewTask(_task: task) {
+    /*func validateRepeatable(_repeatable : RepeatableTaskOccurrence) -> Bool {
+        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence! as NSDate? , _finish: nil, _category: viewModel.AllCategories, _timeCategory: viewModel.TimeCategory, _repeatable: _repeatable, _dueDate: nil, _parent: nil, _expectedUnitOfTime: viewModel.expectedTimeRequirement!.0, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
+        if TaskDTO.globalManager.createNewTask(_task: task) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
@@ -313,7 +336,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         var newTasks = [Task]()
         var areValid = true
         for (index, _repeatable) in _repeatables.enumerated() {
-            let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence!, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: _repeatable, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
+            let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: _repeatable.FirstOccurrence!, _finish: nil, _category: viewModel.AllCategories, _timeCategory: viewModel.TimeCategory, _repeatable: _repeatable, _dueDate: nil, _parent: nil, _expectedUnitOfTime: viewModel.expectedTimeRequirement!.0, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
             if !task.isValidWithoutId() {
                 areValid = false
                 break
@@ -326,7 +349,7 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         
         if areValid {
             for _task in newTasks {
-                let _ = taskDTO.createNewTask(_task: _task)
+                let _ = TaskDTO.globalManager.createNewTask(_task: _task)
             }
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
@@ -345,11 +368,11 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
         let formatter = StandardDateFormatter()
         let df = DateFormatter()
         df.dateFormat = Constants.standard_month_format
-        let year : String = formatter.getNextMonthOccurrence(startMonth: startMonth!, startDay: startDay!)
-        //print("\(startMonth!) \(startDay!) \(startHours!) \(year)")
-        let date = formatter.date(from: "\(startMonth!) \(startDay!) \(startHours!) \(year)")! as NSDate
-        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: date, _finish: nil, _category: self.allCategories, _timeCategory: chosenTimeCategory, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedUnitOfTime, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
-        if taskDTO.createNewTask(_task: task) {
+        let year : String = formatter.getNextMonthOccurrence(startMonth: viewModel.startMonth!, startDay: viewModel.startDay!)
+        let date = formatter.date(from: "\(viewModel.startMonth!) \(viewModel.startDay!) \(viewModel.startHours!) \(year)")! as NSDate
+        let task = Task(_name: name_txtField.text!, _description: description_txtView.text, _start: date, _finish: nil, _category: viewModel.AllCategories, _timeCategory: viewModel.TimeCategory
+            , _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: viewModel.expectedTimeRequirement!.0, _expectedTotalUnits: Int(expectedTotalUnits_txtField.text!))
+        if TaskDTO.globalManager.createNewTask(_task: task) {
             let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createTaskVC_alert_success_message, preferredStyle: .alert)
             alertController.addAction(Constants.standard_ok_alert_action)
             self.present(alertController, animated: true, completion: nil)
@@ -361,6 +384,6 @@ class CreateTaskViewController: CreateTaskParentViewController, UITextFieldDeleg
             self.present(alertController, animated: true, completion: nil)
             return false
         }
-    }
+    }*/
     
 }

@@ -34,7 +34,7 @@ class Task : Equatable {
         Categories = _category
         TimeCategory = _timeCategory
         RepeatableTask = _repeatable
-        ID = TaskDTO.globalManager.getNextID()
+        ID = IDGenerator.shared.getNextID()
         siblingRepeatables = [Task]()
         timeOnTask = 0.0
     }
@@ -64,8 +64,8 @@ class Task : Equatable {
         return isValid() && RepeatableTask != nil
     }
     
-    static func == (lhs: Task, rhs: Task) -> Bool {
+    static func == (left: Task, right: Task) -> Bool {
         return
-            lhs.ID! == rhs.ID!
+            left.ID! == right.ID!
     }
 }

@@ -10,15 +10,19 @@ import UIKit
 
 // Shared parent for CreateTaskVC and AllTasksIndividualTaskVC
 
-class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
+class CreateTaskParentViewController : UIViewController {
     
     // UI
     
     var textFieldSelected = 0
     
+    // View Model
+    
+    
+    
     // Model values
     
-    var repeatableDetails : RepeatableTaskOccurrence?
+    /*var repeatableDetails : RepeatableTaskOccurrence?
     var multipleRepeatables : [RepeatableTaskOccurrence]?
     var startTime : NSDate?
     var expectedUnitOfTime : UnitOfTime?
@@ -30,7 +34,7 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     var chosenTimeCategory: TimeCategory? = nil
     var startHours : String?
     var repeatable : Bool = false
-    var loaded = false
+    var loaded = false*/
     
     // Picker views
     
@@ -48,33 +52,33 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     var expectedPickerDelegate : ExpectedUnitOfTimePickerDelegate?
     
     override func viewDidLoad() {
-        allTimeCategories = timecatDTO.AllTimeCategories
+        //allTimeCategories = timecatDTO.AllTimeCategories?.value.map({ $0.value })
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        taskDTO.delegate = self
+        /*taskDTO.delegate = self
         categoryDTO.delegate = self
         timecatDTO.delegate = self
         if !loaded {
-            self.timeCatPickerDataSource!.reloadTimecats(_categories: timecatDTO.AllTimeCategories!)
-            self.timeCatDelegate?.allTimeCategories = timecatDTO.AllTimeCategories!
+            self.timeCatPickerDataSource!.reloadTimecats(_categories: timecatDTO.AllTimeCategories!.value.map({ $0.value }))
+            self.timeCatDelegate?.allTimeCategories = timecatDTO.AllTimeCategories!.value.map({ $0.value })
             DispatchQueue.main.async {
                 self.timeCatPickerView.reloadAllComponents()
             }
             loaded = true
-        }
+        }*/
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        taskDTO.delegate = nil
+        /*taskDTO.delegate = nil
         categoryDTO.delegate = nil
         timecatDTO.delegate = nil
-        loaded = false
+        loaded = false*/
     }
     
     // Categories
     
-    func addCategory(_category : Category) {
+    /*func addCategory(_category : Category) {
         if let _ = self.allCategories {
             self.allCategories!.append(_category)
         } else {
@@ -85,20 +89,5 @@ class CreateTaskParentViewController : UIViewController, TaskDTODelegate {
     func removeCategory(_category : Category) {
         let indexOf = self.allCategories?.index(of: _category)
         self.allCategories?.remove(at: indexOf!)
-    }
-    
-    // TaskDTODelegate
-    
-    func handleModelUpdate() {
-        if let check = timeCatPickerView.dataSource! as? TimecatPickerDataSource {
-            check.reloadTimecats(_categories: allTimeCategories!)
-        }
-        DispatchQueue.main.async {
-            self.timeCatPickerView.reloadAllComponents()
-        }
-    }
-    
-    func taskDidUpdate(_task: Task) {
-        
-    }
+    }*/
 }
