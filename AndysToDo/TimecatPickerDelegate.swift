@@ -29,9 +29,5 @@ class TimecatPickerDelegate : NSObject, UIPickerViewDelegate {
 }
 
 protocol TimecatPickerDelegateViewDelegate {
-    
-    //var chosenTimeCategory : TimeCategory? { get set }
-    //var viewModel : CreateTaskViewModel { get set }
-    
     func handleDidSelect(timecat : TimeCategory, name : String)
 }

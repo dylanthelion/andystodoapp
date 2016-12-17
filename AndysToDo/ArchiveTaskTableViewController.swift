@@ -27,7 +27,7 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
         viewModel = ArchiveTaskViewModel()
         modelBond.bind(dynamic: (viewModel?.tasksToPopulate)!)
         filterBond.bind(dynamic: (viewModel?.filteredTasks!)!)
-        sort_btn.title = "DATE"
+        sort_btn.title = Constants.archivedTaskVC_sort_by_date_title
         setupTableView()
     }
     
@@ -43,9 +43,9 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
                     let archiveVM = self.viewModel! as! ArchiveTaskViewModel
                     switch archiveVM.sortParam {
                     case .Date :
-                        self.sort_btn.title = "DATE"
+                        self.sort_btn.title = Constants.archivedTaskVC_sort_by_date_title
                     case .Name:
-                        self.sort_btn.title = "NAME"
+                        self.sort_btn.title = Constants.archivedTaskVC_sort_by_name_title
                     }
                     self.tableView.reloadData()
                 }
@@ -65,9 +65,9 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
                     let archiveVM = self.viewModel! as! ArchiveTaskViewModel
                     switch archiveVM.sortParam {
                         case .Date :
-                            self.sort_btn.title = "DATE"
+                            self.sort_btn.title = Constants.archivedTaskVC_sort_by_date_title
                         case .Name:
-                            self.sort_btn.title = "NAME"
+                            self.sort_btn.title = Constants.archivedTaskVC_sort_by_name_title
                     }
                     self.tableView.reloadData()
                 }

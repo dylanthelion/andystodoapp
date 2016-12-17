@@ -40,13 +40,13 @@ class ArchivedTaskTableViewDelegate : NSObject, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
+        let delete = UITableViewRowAction(style: .normal, title: Constants.tableViewCell_delete_action_title) { action, index in
             self.viewModel?.deleteAt(index: indexPath.row)
         }
         
         delete.backgroundColor = UIColor.red
         
-        let move = UITableViewRowAction(style: .normal, title: "Re-add") { action, index in
+        let move = UITableViewRowAction(style: .normal, title: Constants.tableViewCell_readd_action_title) { action, index in
             self.viewModel!.deArchive(index: indexPath.row)
         }
         move.backgroundColor = UIColor.green

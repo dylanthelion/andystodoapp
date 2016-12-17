@@ -25,7 +25,7 @@ class ArchivedTaskChildTableViewDataSource : NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "archiveTasksChildTableViewCell", for: indexPath) as! ArchivedTasksChildTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_archived_task_child_table_view_cell_id, for: indexPath) as! ArchivedTasksChildTableViewCell
         cell.name_lbl.text = viewModel!.tasksToPopulate!.value[indexPath.row].value.Name!
         cell.time_lbl.text = TimeConverter.dateToShortDateConverter(_time: viewModel!.tasksToPopulate!.value[indexPath.row].value.FinishTime!)
         return cell

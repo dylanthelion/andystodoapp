@@ -60,7 +60,7 @@ class DisplayInactiveTaskViewModel : TaskCRUDViewModel {
             let timeToAdd : TimeInterval = Date().timeIntervalSince(task?.value.StartTime! as! Date)
             task!.value.timeOnTask! += timeToAdd
         }
-        task!.value.StartTime! = task!.value.StartTime!.addingTimeInterval(86400)
+        task!.value.StartTime! = task!.value.StartTime!.addingTimeInterval(TimeInterval(Constants.seconds_per_day))
         task?.value.inProgress = false
         if TaskDTO.globalManager.updateTask(_task: task!.value) {
             return true

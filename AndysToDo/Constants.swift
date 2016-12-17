@@ -52,6 +52,7 @@ struct Constants {
     static let meridian_pm = "PM"
     static let seconds_per_minute : Float = 60.0
     static let hours_per_meridian : Float = 12.0
+    static let hours_per_meridian_as_string = "12"
     static let standard_month_format = "MMM"
     static let standard_hours_and_minutes_format = "hh:mm"
     static let standard_full_date_format = "MMM dd hh:mm a yyyy"
@@ -181,6 +182,16 @@ struct Constants {
     static let allCategoriesVC_timecat_table_header = "Timecats"
     static let allCategoriesVC_create_table_header = "Create:"
     
+    // ArchivedTasksVC
+    
+    static let main_storyboard_archived_task_table_view_cell_id = "allTasksArchiveTableViewCell"
+    static let archivedTaskVC_sort_by_date_title = "DATE"
+    static let archivedTaskVC_sort_by_name_title = "NAME"
+    
+    // ArchivedTasksChildVC
+    
+    static let main_storyboard_archived_task_child_table_view_cell_id = "archiveTasksChildTableViewCell"
+    
     // DisplayArchivedTaskVC
     
     static let displayArchivedTaskVC_categories_lbls_top_y_coord : CGFloat = 499.0
@@ -188,6 +199,11 @@ struct Constants {
     static let displayArchivedTaskVC_hour = "Hour"
     static let displayArchivedTaskVC_month = "Month"
     static let displayArchivedTaskVC_minute = "Minute"
+    
+    // UITableViewCells
+    
+    static let tableViewCell_delete_action_title = "Delete"
+    static let tableViewCell_readd_action_title = "Re-add"
     
     // Helper views
     
@@ -209,6 +225,8 @@ struct Constants {
     static let colorPicker_units_in_margins : CGFloat = 3.0
     static let colorPicker_standard_view_padding : CGFloat = 10.0
     static let colorPicker_column_size : Int = 11
+    static let colorPicker_row_Size_Min = 10
+    static let colorPicker_row_Size_Max = 20
     
     // Time picker views
     

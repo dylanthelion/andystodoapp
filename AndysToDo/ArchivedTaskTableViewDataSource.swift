@@ -25,7 +25,7 @@ class ArchivedTaskTableViewDataSource : NSObject, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "allTasksArchiveTableViewCell", for: indexPath) as! ArchivedTasksTableViewCells
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_archived_task_table_view_cell_id, for: indexPath) as! ArchivedTasksTableViewCells
         cell.name_lbl.text = viewModel?.tasksToPopulate.value[indexPath.row].value.Name!
         cell.time_lbl.text = TimeConverter.dateToShortDateConverter(_time: (viewModel?.tasksToPopulate.value[indexPath.row].value.FinishTime!)!)
         if let _ = viewModel?.tasksToPopulate.value[indexPath.row].value.TimeCategory?.color {

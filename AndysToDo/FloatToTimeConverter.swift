@@ -19,7 +19,7 @@ class TimeConverter {
             hours = String(Int(floor(_time)))
         }
         if hours == "0" || hours == "00" {
-            hours = "12"
+            hours = Constants.hours_per_meridian_as_string
         }
         return "\(hours):\(minutes)"
     }
@@ -35,7 +35,7 @@ class TimeConverter {
             hours = String(Int(floor(_time)))
         }
         if hours == "0" || hours == "00" {
-            hours = "12"
+            hours = Constants.hours_per_meridian_as_string
         }
         return "\(hours):\(minutes) \(meridian)"
     }
@@ -100,7 +100,7 @@ class TimeConverter {
     
     class func hoursMinutesAndMeridianToTimeAsFloat(hours: String, minutes: String, meridian: String) -> Float {
         var time : Float = Float(hours)! + (Float(minutes)! / Constants.seconds_per_minute)
-        if meridian == Constants.meridian_pm && hours != "12" {
+        if meridian == Constants.meridian_pm && hours != Constants.hours_per_meridian_as_string {
             time += Constants.hours_per_meridian
         }
         return time

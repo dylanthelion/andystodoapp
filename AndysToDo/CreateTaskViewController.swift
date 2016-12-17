@@ -227,11 +227,8 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
         let createTaskVM = viewModel! as! CreateTaskViewModel
         let check = createTaskVM.submit()
         AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
-        if !check.0 {
-            // handle failure
-        } else {
+        if check.0 {
             resetAfterSuccessfulSubmit()
-            // handle success
         }
     }
     
