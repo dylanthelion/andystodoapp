@@ -12,8 +12,4 @@ class TimecatTableViewCell : UITableViewCell {
     
     @IBOutlet weak var name_lbl: UILabel!
     @IBOutlet weak var time_lbl: UILabel!
-    
-    override func awakeFromNib() {
-        
-    }
 }

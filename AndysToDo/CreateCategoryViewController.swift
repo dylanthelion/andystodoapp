@@ -8,14 +8,16 @@
 
 import UIKit
 
-class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFieldDelegate, UITextViewDelegate {
+class CreateCategoryViewController : UIViewController {
     
-    // UI
+    // View Model
     
-    // Model values
+    let viewModel = CreateCategoryViewModel()
     
-    let categoryDTO = CategoryDTO.shared
-    var category: Category?
+    // Text Fields
+    
+    var textFieldDelegate : CreateCategoryTextFieldDelegate?
+    var textViewDelegate : CreateCategoryTextViewDelegate?
     
     // Outlets
     
@@ -24,55 +26,32 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     override func viewDidLoad() {
         populateViews()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        categoryDTO.delegate = self
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        categoryDTO.delegate = nil
+        setupTextFields()
     }
     
     // View setup
     
     func populateViews() {
-        if let _ = category {
-            name_txtField.text = category!.Name!
-            description_txtView.text = category!.Description!
+        if let _ = viewModel.category {
+            name_txtField.text = viewModel.category!.Name!
+            description_txtView.text = viewModel.category!.Description!
         }
     }
+    
+    func setupTextFields() {
+        textFieldDelegate = CreateCategoryTextFieldDelegate(viewModel: viewModel)
+        name_txtField.delegate = textFieldDelegate
+        textViewDelegate = CreateCategoryTextViewDelegate(viewModel: viewModel)
+        description_txtView.delegate = textViewDelegate
+    }
+    
+    // Reset
     
     func resetAfterSuccessfulSubmit() {
         DispatchQueue.main.async {
             self.name_txtField.text = ""
             self.description_txtView.text = ""
         }
-    }
-    
-    // TaskDTODelegate
-    
-    func handleModelUpdate() {
-        
-    }
-    
-    func taskDidUpdate(_task: Task) {
-        
-    }
-    
-    // Text Delegate
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        if(text == "\n") {
-            textView.resignFirstResponder()
-            return false
-        }
-        return true
     }
     
     // IBActions
@@ -84,11 +63,8 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
         
         if !validateAndSubmitCategory() {
             return
-        } else {
-            if category == nil {
-                resetAfterSuccessfulSubmit()
-            }
-            return
+        } else if viewModel.category == nil {
+            resetAfterSuccessfulSubmit()
         }
     }
     
@@ -96,37 +72,18 @@ class CreateCategoryViewController : UIViewController, TaskDTODelegate, UITextFi
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_no_name_or_description_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
+            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_no_name_or_description_failure_message, actions: [Constants.standard_ok_alert_action])
             return false
         }
         return true
     }
     
     func validateAndSubmitCategory() -> Bool {
-        if let _ = category {
-            if categoryDTO.updateCategory(_oldCategory: category!, _category: Category(_name: self.name_txtField.text!, _description: self.description_txtView.text)) {
-                let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
-                alertController.addAction(Constants.standard_ok_alert_action)
-                self.present(alertController, animated: true, completion: nil)
-                return true
-            } else {
-                let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
-                alertController.addAction(Constants.standard_ok_alert_action)
-                self.present(alertController, animated: true, completion: nil)
-                return false
-            }
-        }
-        if categoryDTO.createNewCategory(_category: Category(_name: name_txtField.text!, _description: description_txtView.text)) {
-            let alertController = UIAlertController(title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
+        if viewModel.validateAndSubmitCategory() {
+            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, actions: [Constants.standard_ok_alert_action])
             return true
         } else {
-            let alertController = UIAlertController(title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, preferredStyle: .alert)
-            alertController.addAction(Constants.standard_ok_alert_action)
-            self.present(alertController, animated: true, completion: nil)
+            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, actions: [Constants.standard_ok_alert_action])
             return false
         }
     }

@@ -17,7 +17,7 @@ class ColorPickerHelper {
         var xCoord : CGFloat = 0.0
         var numberOfElementsPerRow : Int = 0
         var yCoord : CGFloat = 0.0
-        for i in 10...20 {
+        for i in Constants.colorPicker_row_Size_Min...Constants.colorPicker_row_Size_Max {
             if (Int(Float(viewWidth)) % i) == 0 {
                 buttonWidth = CGFloat(i)
                 marginWidth = CGFloat(i) * Constants.colorPicker_units_in_margins

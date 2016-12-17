@@ -23,4 +23,14 @@ enum DayOfWeek {
     case Thursday
     case Friday
     case Saturday
+    case Multiple
+}
+
+enum UnitOfTime {
+    case Minute
+    case Hour
+    case Day
+    case Week
+    case Month
+    case Null
 }

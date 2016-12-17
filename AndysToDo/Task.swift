@@ -24,8 +24,9 @@ class Task : Equatable {
     var parentID : Int?
     var timeOnTask : TimeInterval?
     var dueDate : NSDate?
+    var expectedTimeRequirement : ExpectedTimeRequirement
     
-    init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?) {
+    init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?, _dueDate : NSDate?, _parent: Int?, _expectedUnitOfTime : UnitOfTime?, _expectedTotalUnits : Int?) {
         Name = _name
         Description = _description
         StartTime = _start
@@ -33,15 +34,15 @@ class Task : Equatable {
         Categories = _category
         TimeCategory = _timeCategory
         RepeatableTask = _repeatable
-        ID = TaskDTO.globalManager.getNextID()
+        ID = IDGenerator.shared.getNextID()
         siblingRepeatables = [Task]()
         timeOnTask = 0.0
-    }
-    
-    convenience init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?, _dueDate : NSDate?, _parent: Int?) {
-        self.init(_name: _name, _description: _description, _start : _start, _finish : _finish, _category : _category, _timeCategory : _timeCategory, _repeatable : _repeatable)
+        expectedTimeRequirement = ExpectedTimeRequirement(_unit: .Null, _numberOfUnits: 0)
         dueDate = _dueDate
         parentID = _parent
+        if let _ = _expectedUnitOfTime, let _ = _expectedTotalUnits {
+            expectedTimeRequirement.update(newUnitOfTime: _expectedUnitOfTime!, newValue: _expectedTotalUnits!)
+        }
     }
     
     func isValid() -> Bool {
@@ -60,8 +61,8 @@ class Task : Equatable {
         return isValid() && RepeatableTask != nil
     }
     
-    static func == (lhs: Task, rhs: Task) -> Bool {
+    static func == (left: Task, right: Task) -> Bool {
         return
-            lhs.ID! == rhs.ID!
+            left.ID! == right.ID!
     }
 }

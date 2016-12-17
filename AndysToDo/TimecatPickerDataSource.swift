@@ -18,19 +18,10 @@ class TimecatPickerDataSource : NSObject, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if self.allTimeCategories == nil {
-            return 0
-        }
         return self.allTimeCategories!.count
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
-    }
-    
-    // Model update
-    
-    func reloadTimecats(_categories : [TimeCategory]) {
-        self.allTimeCategories = _categories
     }
 }

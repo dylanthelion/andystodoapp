@@ -44,6 +44,4 @@ class TimeCategory : Category {
     override func isValid() -> Bool {
         return Name != nil && Description != nil && StartOfTimeWindow != nil && EndOfTimeWindow != nil
     }
-    
-    
 }

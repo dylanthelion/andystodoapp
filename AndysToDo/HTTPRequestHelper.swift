@@ -17,7 +17,6 @@ class HTTPRequestHelper {
     class var sharedHelper : HTTPRequestHelper {
         return helper
     }
-    
 }
 
 protocol HTTPHelperDelegate {
