@@ -56,7 +56,7 @@ class TaskTableViewCell : UITableViewCell {
                 self.task?.inProgress = false
                 self.task?.FinishTime = nil
             }
-            let update = TaskDTO.globalManager.updateTask(_task: task!)
+            _ = TaskDTO.globalManager.updateTask(_task: task!)
         }
     }
     

@@ -48,6 +48,6 @@ struct ExpectedTimeRequirement {
     }
     
     func isValid() -> Bool {
-        return unit! != nil
+        return unit != nil
     }
 }

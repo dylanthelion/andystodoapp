@@ -133,7 +133,7 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
         timeInterval! *= Double(units)
         let df = StandardDateFormatter()
         let upperLimit = df.date(from: df.string(from: Date().addingTimeInterval(timeInterval!)))
-        var tempTasks = _tasksToPopulate
+        let tempTasks = _tasksToPopulate
         for _task in tempTasks!.value {
             if (_task.value.StartTime! as Date) > upperLimit! {
                 let indexOf = _tasksToPopulate!.value.index(of: _task)

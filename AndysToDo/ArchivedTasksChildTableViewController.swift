@@ -35,7 +35,7 @@ class ArchivedTasksChildTableViewController : UITableViewController {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
                 //print("Update tasks in view")
                 if self.viewModel.emptied {
-                    self.navigationController?.popViewController(animated: true)
+                    _ = self.navigationController?.popViewController(animated: true)
                 }
                 DispatchQueue.main.async {
                     self.tableView.reloadData()

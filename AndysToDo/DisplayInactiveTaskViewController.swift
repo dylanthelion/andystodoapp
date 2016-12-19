@@ -193,7 +193,7 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     @IBAction func postpone(_ sender: AnyObject) {
         let displayInactiveTaskVM = viewModel! as! DisplayInactiveTaskViewModel
         if displayInactiveTaskVM.postpone() {
-            self.navigationController?.popViewController(animated: true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     

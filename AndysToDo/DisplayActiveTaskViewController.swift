@@ -77,7 +77,7 @@ class DisplayActiveTaskViewController : UIViewController {
             self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.TimeCategory!.color!)
         }
         if !viewModel.task!.value.inProgress {
-            self.navigationController?.popViewController(animated: true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -99,7 +99,7 @@ class DisplayActiveTaskViewController : UIViewController {
     
     @IBAction func endTask(_ sender: AnyObject) {
         if viewModel.endTask() {
-            self.navigationController?.popViewController(animated: true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
