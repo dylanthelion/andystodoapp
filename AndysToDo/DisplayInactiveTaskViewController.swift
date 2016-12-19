@@ -93,7 +93,7 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     
     // Reset
     
-    func updateForSuccessfulSubmit() {
+    func resetForSuccessfulSubmit() {
         let closure = {
             if let _ = self.viewModel!.task!.value.TimeCategory?.color {
                 DispatchQueue.main.async {
@@ -187,6 +187,9 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
         let check = displayInactiveTaskVM.submit()
         let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
         self.present(alertController, animated: true, completion: nil)
+        if check.0 {
+            resetForSuccessfulSubmit()
+        }
     }
     
     
