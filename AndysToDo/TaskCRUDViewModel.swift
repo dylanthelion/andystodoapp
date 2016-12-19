@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TaskCRUDViewModel : LoadAllTasksViewModel, DatePickerViewModel, CategoryCRUDViewModel {
+class TaskCRUDViewModel : DatePickerViewModel, CategoryCRUDViewModel {
     
     // Model
     
@@ -37,9 +37,8 @@ class TaskCRUDViewModel : LoadAllTasksViewModel, DatePickerViewModel, CategoryCR
     
     // Date Picker
     
-    override init() {
+    init() {
         expectedTimeRequirement = ExpectedTimeRequirement(_unit: .Null, _numberOfUnits: 0)
-        super.init()
         updateCategories()
         updateTimecats()
     }

@@ -11,15 +11,14 @@ import Foundation
 private var catHandle: UInt8 = 0
 private var timecatHandle: UInt8 = 0
 
-class AllCategoriesViewModel : LoadAllTasksViewModel {
+class AllCategoriesViewModel {
     
     // Model
     
     var categories : Dynamic<[Dynamic<Category>]>?
     var timeCategories : Dynamic<[Dynamic<TimeCategory>]>?
     
-    override init() {
-        super.init()
+    init() {
         self.categories = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
         self.timeCategories = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0 }))
         self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.AllCategories!)

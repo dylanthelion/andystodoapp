@@ -12,7 +12,6 @@ import Foundation
 
 private var handle: UInt8 = 0
 
-
 class PopulatedTasksViewModel : TaskFilterableViewModel {
     
     

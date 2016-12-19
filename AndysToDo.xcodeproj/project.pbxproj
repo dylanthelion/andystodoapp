@@ -61,7 +61,6 @@
 		74792B731DFBBAEB00A5DB41 /* TaskFilterableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74792B721DFBBAEB00A5DB41 /* TaskFilterableViewController.swift */; };
 		74792B761DFBBC4B00A5DB41 /* TaskCRUDTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74792B751DFBBC4B00A5DB41 /* TaskCRUDTableViewModel.swift */; };
 		74792B781DFBBD5200A5DB41 /* RepeatableUnwrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74792B771DFBBD5200A5DB41 /* RepeatableUnwrapper.swift */; };
-		74792B7A1DFBC7B000A5DB41 /* LoadAllTasksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74792B791DFBC7B000A5DB41 /* LoadAllTasksViewModel.swift */; };
 		74792B7E1DFBDB1400A5DB41 /* TaskCRUDViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74792B7D1DFBDB1400A5DB41 /* TaskCRUDViewModel.swift */; };
 		74792B811DFBDFA700A5DB41 /* ExpectedTimeRequirement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74792B801DFBDFA700A5DB41 /* ExpectedTimeRequirement.swift */; };
 		747F166A1E03AD1D000108FF /* MainTasksTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747F16691E03AD1D000108FF /* MainTasksTableViewDataSource.swift */; };
@@ -216,7 +215,6 @@
 		74792B721DFBBAEB00A5DB41 /* TaskFilterableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskFilterableViewController.swift; sourceTree = "<group>"; };
 		74792B751DFBBC4B00A5DB41 /* TaskCRUDTableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCRUDTableViewModel.swift; sourceTree = "<group>"; };
 		74792B771DFBBD5200A5DB41 /* RepeatableUnwrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatableUnwrapper.swift; sourceTree = "<group>"; };
-		74792B791DFBC7B000A5DB41 /* LoadAllTasksViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadAllTasksViewModel.swift; sourceTree = "<group>"; };
 		74792B7D1DFBDB1400A5DB41 /* TaskCRUDViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCRUDViewModel.swift; sourceTree = "<group>"; };
 		74792B801DFBDFA700A5DB41 /* ExpectedTimeRequirement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpectedTimeRequirement.swift; sourceTree = "<group>"; };
 		747F16691E03AD1D000108FF /* MainTasksTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTasksTableViewDataSource.swift; sourceTree = "<group>"; };
@@ -453,10 +451,8 @@
 			isa = PBXGroup;
 			children = (
 				74792B701DFBB79800A5DB41 /* TaskFilterableViewModel.swift */,
-				74792B791DFBC7B000A5DB41 /* LoadAllTasksViewModel.swift */,
 				74792B7D1DFBDB1400A5DB41 /* TaskCRUDViewModel.swift */,
 				74A0E4B11DFD2B9A0010CB9D /* SingleTaskViewModel.swift */,
-				747F167C1E03BA50000108FF /* CategoryCRUDViewModel.swift */,
 			);
 			name = Parents;
 			sourceTree = "<group>";
@@ -464,6 +460,7 @@
 		74792B741DFBBC2E00A5DB41 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				747F167C1E03BA50000108FF /* CategoryCRUDViewModel.swift */,
 				74A0E4A91DFD1BCD0010CB9D /* DatePickerViewModel.swift */,
 				74792B751DFBBC4B00A5DB41 /* TaskCRUDTableViewModel.swift */,
 			);
@@ -1035,7 +1032,6 @@
 				747F16DC1E07B4C6000108FF /* AlertPresenter.swift in Sources */,
 				74792B681DFA73ED00A5DB41 /* AllCategoriesViewModel.swift in Sources */,
 				747F167D1E03BA50000108FF /* CategoryCRUDViewModel.swift in Sources */,
-				74792B7A1DFBC7B000A5DB41 /* LoadAllTasksViewModel.swift in Sources */,
 				747153941DF28AE2008BBF7C /* CreateCategoryViewModel.swift in Sources */,
 				74E69DC31E01563B0065B2E6 /* ArchivedTaskDTO.swift in Sources */,
 				74A0E4B21DFD2B9A0010CB9D /* SingleTaskViewModel.swift in Sources */,

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class CreateRepeatableTaskOccurrenceViewModel : LoadAllTasksViewModel, DatePickerViewModel {
+class CreateRepeatableTaskOccurrenceViewModel : DatePickerViewModel {
     
     // Model
     
@@ -24,8 +24,7 @@ class CreateRepeatableTaskOccurrenceViewModel : LoadAllTasksViewModel, DatePicke
     var unitOfTimeAsString : String?
     var multipleRepeatables : [RepeatableTaskOccurrence]? = [RepeatableTaskOccurrence]()
     
-    override init() {
-        super.init()
+    init() {
         daysOfWeek = [DayOfWeek]()
     }
     
