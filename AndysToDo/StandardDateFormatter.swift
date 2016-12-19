@@ -27,9 +27,9 @@ class StandardDateFormatter : DateFormatter {
         let year : String
         let currentMonth = Calendar.current.component(.month, from: Date())
         let scheduledMonth = Calendar.current.component(.month, from: df.date(from: startMonth)!)
-        if currentMonth < scheduledMonth {
+        if currentMonth < (scheduledMonth + 1) {
             year = String(Calendar.current.component(.year, from: Date()))
-        } else if currentMonth == scheduledMonth {
+        } else if currentMonth == (scheduledMonth + 1) {
             let currentDay = Calendar.current.component(.day, from: Date())
             let scheduledDay = Int(startDay)
             if currentDay <= scheduledDay! {

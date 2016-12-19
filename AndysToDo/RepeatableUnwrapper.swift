@@ -17,35 +17,19 @@ class RepeatableUnwrapper {
         if _task.unwrappedRepeatables!.filter({ $0.FinishTime == nil }).count >= toUnwrap {
             return _task.unwrappedRepeatables!.map({ Dynamic($0) })
         }
-        var startDate : NSDate? = nil
         var toReturn = [Dynamic<Task>]()
+        let component = getTimeInterval(_task.RepeatableTask!.UnitOfTime!)
+        let startDate = getStartingDate(_task, adding: (component * TimeInterval(_task.RepeatableTask!.UnitsPerTask!)))
         for i in 0..<toUnwrap {
-            let units = i
-            let component : TimeInterval
-            
-            if _task.RepeatableTask!.UnitOfTime! == .Daily {
-                component = TimeInterval(Constants.seconds_per_day)
-            } else if _task.RepeatableTask!.UnitOfTime! == .Hourly {
-                component = TimeInterval(Constants.seconds_per_hour)
-            } else {
-                component = TimeInterval(Constants.seconds_per_day * 7)
-            }
-            
-            if startDate == nil {
-                if !CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
-                    startDate = _task.unwrappedRepeatables!.last!.StartTime!.addingTimeInterval(TimeInterval(units))
-                } else {
-                    startDate = (_task.RepeatableTask?.FirstOccurrence!)!
-                }
-                let now = Date()
-                while startDate!.compare(now) == .orderedAscending {
-                    startDate = startDate?.addingTimeInterval(component)
-                }
-            }
-            let taskToAdd = Task(_name: "\(_task.Name!)\(i + _task.unwrappedRepeatables!.count)", _description: _task.Description!, _start: startDate!.addingTimeInterval(component * TimeInterval(units)), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil, _dueDate: nil, _parent: _task.ID!, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+            let taskToAdd = Task(_name: "\(_task.Name!)\(i + _task.unwrappedRepeatables!.count)", _description: _task.Description!, _start: startDate.addingTimeInterval(TimeInterval(i) * component), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil, _dueDate: nil, _parent: _task.ID!, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
             taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(taskToAdd.StartTime!.timeIntervalSince1970)
             toReturn.append(Dynamic(taskToAdd))
             _task.unwrappedRepeatables!.append(taskToAdd)
+        }
+        if _task.Name! == "a" {
+            for task in _task.unwrappedRepeatables! {
+                print("Task: \(task.Name!) \(task.StartTime!)")
+            }
         }
         return toReturn
     }
@@ -85,5 +69,32 @@ class RepeatableUnwrapper {
             }
         }
         return (allTasks.filter({ childTasks.index(of: $0) == nil }), childTasks)
+    }
+    
+    class func getStartingDate(_ task : Task, adding timeInterval : TimeInterval) -> NSDate {
+        var startDate : NSDate
+        if !CollectionHelper.IsNilOrEmpty(_coll: task.unwrappedRepeatables) {
+            startDate = task.unwrappedRepeatables!.last!.StartTime!.addingTimeInterval(timeInterval)
+        } else {
+            startDate = (task.RepeatableTask?.FirstOccurrence!)!
+            
+            let now = Date()
+            while (startDate as Date) < now {
+                startDate = startDate.addingTimeInterval(timeInterval)
+            }
+        }
+        return startDate
+    }
+    
+    class func getTimeInterval(_ unit : RepetitionTimeCategory) -> TimeInterval {
+        let component : TimeInterval
+        if unit == .Daily {
+            component = TimeInterval(Constants.seconds_per_day)
+        } else if unit == .Hourly {
+            component = TimeInterval(Constants.seconds_per_hour)
+        } else {
+            component = TimeInterval(Constants.seconds_per_day * 7)
+        }
+        return component
     }
 }
