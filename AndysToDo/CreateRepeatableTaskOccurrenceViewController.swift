@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DayOfWeekPickerDelegateViewDelegate, UnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate {
+class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DayOfWeekPickerDelegateViewDelegate, UnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
     
     // UI
     
@@ -39,6 +39,11 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     // Text Fields
     
     var textFieldDelegate : CreateRepeatableTaskOccurenceTextFieldDelegate?
+    
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
     
     // Outlets
     
@@ -206,6 +211,15 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         }
     }
     
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
+    }
+    
     // Day of week checkboxes
     
     func toggleDidSelectDate(sender: CheckboxButton) {
@@ -226,7 +240,8 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         }
         let check = viewModel.submit()
         if !check.0 {
-            AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
         } else {
             // handle success
             unwindToTaskCreate()
@@ -237,11 +252,13 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     func validateForSubmit() -> Bool {
         if unitOfTime_txtField.text == "" || unitsPerTask_txtField.text! == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_no_unitOfTime_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_no_unitOfTime_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         if(firstDate_txtField.text! == "" || firstTimeOfDay_txtField.text! == "" || (unitOfTime_txtField.text == Constants.timeOfDay_All_As_Strings[2] && dayOfWeek_txtField.text! == "")) {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_missing_data_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_missing_data_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true

@@ -26,11 +26,6 @@ class RepeatableUnwrapper {
             toReturn.append(Dynamic(taskToAdd))
             _task.unwrappedRepeatables!.append(taskToAdd)
         }
-        if _task.Name! == "a" {
-            for task in _task.unwrappedRepeatables! {
-                print("Task: \(task.Name!) \(task.StartTime!)")
-            }
-        }
         return toReturn
     }
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegate, TimePickerViewDelegateViewDelegate {
+class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegate, TimePickerViewDelegateViewDelegate, AlertPresenter {
     
     // UI
     
@@ -29,6 +29,11 @@ class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegat
     let pickerView = UIPickerView()
     var timePickerDelegate : TimePickerViewDelegate?
     let timePickerDataSource : TimePickerViewDataSource = TimePickerViewDataSource()
+    
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
     
     // Outlets
     
@@ -96,15 +101,22 @@ class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegat
     // Reset
     
     func resetAfterSuccessfulSubmit() {
-        DispatchQueue.main.async {
-            self.start_txtField.text = ""
-            self.end_txtField.text = ""
-            self.name_txtField.text = ""
-            self.description_txtView.text = ""
-            if let _ = self.lastColorSelected {
-                self.lastColorSelected!.deselect()
-                self.lastColorSelected = nil
+        let closure = {
+            DispatchQueue.main.async {
+                self.start_txtField.text = ""
+                self.end_txtField.text = ""
+                self.name_txtField.text = ""
+                self.description_txtView.text = ""
+                if let _ = self.lastColorSelected {
+                    self.lastColorSelected!.deselect()
+                    self.lastColorSelected = nil
+                }
             }
+        }
+        if alertIsVisible {
+            completionHandlers.append(closure)
+        } else {
+            closure()
         }
     }
     
@@ -156,6 +168,15 @@ class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegat
         }
     }
     
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
+    }
+    
     // IBActions
     
     @IBAction func submit(_ sender: AnyObject) {
@@ -178,7 +199,8 @@ class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegat
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text == "" || end_txtField.text == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.timecatVC_alert_no_name_description_or_window_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.timecatVC_alert_no_name_description_or_window_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true
@@ -186,10 +208,12 @@ class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegat
     
     func validateAndSubmitTimecat() -> Bool {
         if viewModel.validateAndSubmitCategory() {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return true
         } else {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
     }

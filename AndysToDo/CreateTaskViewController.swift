@@ -10,12 +10,17 @@ import UIKit
 
 private var repeatableHandle : UInt8 = 0
 
-class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate {
+class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
     
     // Text Fields
     
     var textFieldDelegate : CreateTaskTextFieldDelegate?
     var textViewDelegate : PickerViewDelegateTextViewDelegate?
+    
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
     
     // Outlets
     
@@ -46,19 +51,26 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
             return b as! Bond<Bool>
         } else {
             let b = Bond<Bool>() { [unowned self] v in
-                DispatchQueue.main.async {
-                    //print("Update all in view")
-                    if self.viewModel!.repeatableTask != nil || !CollectionHelper.IsNilOrEmpty(_coll: self.viewModel!.multipleRepeatables) {
-                        self.startDateTextView.text = Constants.createRepeatableVC_repeatable
-                        self.start_txtField.text = Constants.createRepeatableVC_repeatable
-                        self.startDateTextView.isUserInteractionEnabled = false
-                        self.start_txtField.isUserInteractionEnabled = false
-                    } else {
-                        self.datePickerDelegate!.setStartingDate(self.datePickerView)
-                        self.start_txtField.text = ""
-                        self.startDateTextView.isUserInteractionEnabled = true
-                        self.start_txtField.isUserInteractionEnabled = true
+                //print("Update all in view")
+                let closure =  {
+                    DispatchQueue.main.async {
+                        if self.viewModel!.repeatableTask != nil || !CollectionHelper.IsNilOrEmpty(_coll: self.viewModel!.multipleRepeatables) {
+                            self.startDateTextView.text = Constants.createRepeatableVC_repeatable
+                            self.start_txtField.text = Constants.createRepeatableVC_repeatable
+                            self.startDateTextView.isUserInteractionEnabled = false
+                            self.start_txtField.isUserInteractionEnabled = false
+                        } else {
+                            self.datePickerDelegate!.setStartingDate(self.datePickerView)
+                            self.start_txtField.text = ""
+                            self.startDateTextView.isUserInteractionEnabled = true
+                            self.start_txtField.isUserInteractionEnabled = true
+                        }
                     }
+                }
+                if self.alertIsVisible {
+                    self.completionHandlers.append(closure)
+                } else {
+                    closure()
                 }
             }
             objc_setAssociatedObject(self, &repeatableHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -119,20 +131,27 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
     // Reset
     
     func resetAfterSuccessfulSubmit() {
-        DispatchQueue.main.async {
-            if self.repeatable_btn.checked {
-                self.repeatable_btn.toggleChecked()
+        let closure = {
+            DispatchQueue.main.async {
+                if self.repeatable_btn.checked {
+                    self.repeatable_btn.toggleChecked()
+                }
+                self.start_txtField.isUserInteractionEnabled = true
+                self.startDateTextView.isUserInteractionEnabled = true
+                self.name_txtField.text = ""
+                self.start_txtField.text = ""
+                self.description_txtView.text = ""
+                self.timeCat_txtField.text = ""
+                self.startDateTextView.text = ""
+                self.expectedUnitOfTime_txtField.text = ""
+                self.expectedTotalUnits_txtField.text = ""
+                self.datePickerDelegate!.setStartingDate(self.datePickerView)
             }
-            self.start_txtField.isUserInteractionEnabled = true
-            self.startDateTextView.isUserInteractionEnabled = true
-            self.name_txtField.text = ""
-            self.start_txtField.text = ""
-            self.description_txtView.text = ""
-            self.timeCat_txtField.text = ""
-            self.startDateTextView.text = ""
-            self.expectedUnitOfTime_txtField.text = ""
-            self.expectedTotalUnits_txtField.text = ""
-            self.datePickerDelegate!.setStartingDate(self.datePickerView)
+        }
+        if alertIsVisible {
+            completionHandlers.append(closure)
+        } else {
+            closure()
         }
         viewModel?.resetModel()
     }
@@ -193,6 +212,15 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
         expectedUnitOfTime_txtField.text = text
     }
     
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
+    }
+    
     // IBActions
     
     @IBAction func toggleRepeatable(_ sender: AnyObject) {
@@ -226,7 +254,8 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
         }
         let createTaskVM = viewModel! as! CreateTaskViewModel
         let check = createTaskVM.submit()
-        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        self.present(alertController, animated: true, completion: nil)
         if check.0 {
             resetAfterSuccessfulSubmit()
         }
@@ -237,12 +266,14 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
     func validateForSubmit() -> Bool {
         
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" && startDateTextView.text! == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         
         if !viewModel!.repeatable.value && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true

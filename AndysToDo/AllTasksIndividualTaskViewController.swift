@@ -11,12 +11,17 @@ import UIKit
 private var taskHandle : UInt8 = 0
 private var timecatHandle : UInt8 = 0
 
-class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate {
+class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
     
     // Text Fields
     
     var textFieldDelegate : CreateTaskTextFieldDelegate?
     var textViewDelegate : PickerViewDelegateTextViewDelegate?
+    
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
     
     // Outlets
     
@@ -54,10 +59,16 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
         } else {
             let b = Bond<[TimeCategory]>() { [unowned self] v in
                 //print("Update timecats in view")
-                DispatchQueue.main.async {
-                    self.timeCatPickerView.reloadAllComponents()
+                let closure = {
+                    DispatchQueue.main.async {
+                        self.timeCatPickerView.reloadAllComponents()
+                    }
                 }
-                
+                if self.alertIsVisible {
+                    self.completionHandlers.append(closure)
+                } else {
+                    closure()
+                }
             }
             objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return b
@@ -70,8 +81,15 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
         } else {
             let b = Bond<Task>() { [unowned self] v in
                 //print("Update task in view")
-                DispatchQueue.main.async {
-                    self.populateTaskInfo()
+                let closure = {
+                    DispatchQueue.main.async {
+                        self.populateTaskInfo()
+                    }
+                }
+                if self.alertIsVisible {
+                    self.completionHandlers.append(closure)
+                } else {
+                    closure()
                 }
             }
             objc_setAssociatedObject(self, &taskHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -221,6 +239,15 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
         expectedUnitOfTime_txtField.text = text
     }
     
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
+    }
+    
     // IBActions
     
     @IBAction func toggleRepeatable(_ sender: AnyObject) {
@@ -243,7 +270,8 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
         }
         let allTasksIndividualVM = viewModel! as! AllTasksIndividualTaskViewModel
         let check = allTasksIndividualVM.submit()
-        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        self.present(alertController, animated: true, completion: nil)
         if check.0 {
             // handle success
             if viewModel!.task!.value.isRepeatable() {
@@ -261,7 +289,8 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
         }
         let allTasksIndividualVM = viewModel! as! AllTasksIndividualTaskViewModel
         let check = allTasksIndividualVM.generateNewTask()
-        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        self.present(alertController, animated: true, completion: nil)
         if check.0 {
             if viewModel!.task!.value.isRepeatable() {
                 resetRepeatableTextFields()
@@ -274,12 +303,14 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
     func validateForSubmit() -> Bool {
         
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" || startDateTextView.text! == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         
         if !(viewModel?.task!.value.isRepeatable())! && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true
@@ -287,7 +318,8 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
     
     func validateRepeatableChildforSubmit() -> Bool {
         if (startDateTextView.text! == Constants.createTaskVC_repeatable || startDateTextView.text! == "" || start_txtField.text! == Constants.createTaskVC_repeatable || start_txtField.text! == "") {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.allTasksIndividualTaskVC_alert_message_missing_child_details, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.allTasksIndividualTaskVC_alert_message_missing_child_details, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true

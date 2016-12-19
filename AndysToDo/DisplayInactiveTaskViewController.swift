@@ -10,12 +10,17 @@ import UIKit
 
 private var taskHandle : UInt8 = 0
 
-class DisplayInactiveTaskViewController : CreateTaskParentViewController, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate, PickerViewViewDelegate {
+class DisplayInactiveTaskViewController : CreateTaskParentViewController, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
     
     // Text Fields
     
     var textFieldDelegate : DisplayInactiveTaskTextFieldDelegate?
     var textViewDelegate : PickerViewDelegateTextViewDelegate?
+    
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
     
     // Outlets
     
@@ -89,14 +94,21 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     // Reset
     
     func updateForSuccessfulSubmit() {
-        if let _ = viewModel!.task!.value.TimeCategory?.color {
-            DispatchQueue.main.async {
-                self.view.backgroundColor = UIColor(cgColor: self.viewModel!.task!.value.TimeCategory!.color!)
+        let closure = {
+            if let _ = self.viewModel!.task!.value.TimeCategory?.color {
+                DispatchQueue.main.async {
+                    self.view.backgroundColor = UIColor(cgColor: self.viewModel!.task!.value.TimeCategory!.color!)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.backgroundColor = UIColor.white
+                }
             }
+        }
+        if alertIsVisible {
+            completionHandlers.append(closure)
         } else {
-            DispatchQueue.main.async {
-                self.view.backgroundColor = UIColor.white
-            }
+            closure()
         }
     }
     
@@ -149,6 +161,15 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
         self.viewModel!.timeCategory = timecat
     }
     
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
+    }
+    
     // IBActions
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
@@ -164,7 +185,8 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
         }
         let displayInactiveTaskVM = viewModel! as! DisplayInactiveTaskViewModel
         let check = displayInactiveTaskVM.submit()
-        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        self.present(alertController, animated: true, completion: nil)
     }
     
     
@@ -179,7 +201,8 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" && startDateTextView.text! == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true
