@@ -33,7 +33,7 @@ class FilterViewController : UIViewController {
         addTimecatFilterViews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? TaskFilterableViewController {
             rootVC.viewModel?.clearFilter()
         }
