@@ -18,11 +18,19 @@ class AllCategoriesViewModel {
     var categories : Dynamic<[Dynamic<Category>]>?
     var timeCategories : Dynamic<[Dynamic<TimeCategory>]>?
     
+    // Local model. These classes are used to prevent excessive view updates, caused by frequent model changes
+    
+    var localCats : Dynamic<[Dynamic<Category>]>?
+    var localTimecats : Dynamic<[Dynamic<TimeCategory>]>?
+    
     init() {
         self.categories = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
         self.timeCategories = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0 }))
+        localCats = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
+        localTimecats = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0 }))
         self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.AllCategories!)
         self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.AllTimeCategories!)
+        sort()
     }
     
     // Binding
@@ -56,12 +64,27 @@ class AllCategoriesViewModel {
     // Updates
     
     func updateCategories() {
-        categories!.value.removeAll()
-        categories!.value.append(contentsOf: CategoryDTO.shared.AllCategories!.value)
+        localCats!.value.removeAll()
+        localCats!.value.append(contentsOf: CategoryDTO.shared.AllCategories!.value)
+        sort()
     }
     
     func updateTimecats() {
-        timeCategories!.value.removeAll()
-        timeCategories!.value.append(contentsOf: TimeCategoryDTO.shared.AllTimeCategories!.value)
+        localTimecats!.value.removeAll()
+        localTimecats!.value.append(contentsOf: TimeCategoryDTO.shared.AllTimeCategories!.value)
+        sort()
+    }
+    
+    // Sorting
+    
+    func sort() {
+        localCats!.value.sort(by: {
+            return $0.value.Name! < $1.value.Name!
+        })
+        localTimecats!.value.sort(by: {
+            return $0.value.Name! < $1.value.Name!
+        })
+        categories!.value = localCats!.value
+        timeCategories!.value = localTimecats!.value
     }
 }

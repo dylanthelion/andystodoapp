@@ -9,6 +9,7 @@
 import UIKit
 
 private var repeatableHandle : UInt8 = 0
+private var timecatHandle : UInt8 = 0
 
 class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, TimecatPickerDelegateViewDelegate, ExpectedUnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
     
@@ -37,6 +38,7 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
         super.viewDidLoad()
         viewModel = CreateTaskViewModel()
         repeatableBond.bind(dynamic: viewModel!.repeatable)
+        timecatDTOBond.bind(dynamic: (viewModel!.allTimeCategories!))
         setupPickerDelegation()
         setupTextFieldInput()
         datePickerDelegate!.setStartingDate(datePickerView)
@@ -74,6 +76,29 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
                 }
             }
             objc_setAssociatedObject(self, &repeatableHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    var timecatDTOBond: Bond<[TimeCategory]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &timecatHandle) as AnyObject? {
+            return b as! Bond<[TimeCategory]>
+        } else {
+            let b = Bond<[TimeCategory]>() { [unowned self] v in
+                let closure = {
+                    DispatchQueue.main.async {
+                        self.timeCatPickerDataSource!.allTimeCategories = self.viewModel!.allTimeCategories!.value
+                        self.timeCatDelegate!.allTimeCategories = self.viewModel!.allTimeCategories!.value
+                        self.timeCatPickerView.reloadAllComponents()
+                    }
+                }
+                if self.alertIsVisible {
+                    self.completionHandlers.append(closure)
+                } else {
+                    closure()
+                }
+            }
+            objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return b
         }
     }

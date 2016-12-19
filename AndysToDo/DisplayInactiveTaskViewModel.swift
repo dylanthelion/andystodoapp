@@ -26,6 +26,7 @@ class DisplayInactiveTaskViewModel : TaskCRUDViewModel {
             return b as! Bond<[Dynamic<TimeCategory>]>
         } else {
             let b = Bond<[Dynamic<TimeCategory>]>() { [unowned self] v in
+                //print("Update timecats in view model")
                 self.updateTimecats()
             }
             objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -38,6 +39,7 @@ class DisplayInactiveTaskViewModel : TaskCRUDViewModel {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
+                //print("Update task in view model")
                 self.updateTask()
             }
             objc_setAssociatedObject(self, &taskHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)

@@ -61,6 +61,8 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
                 //print("Update timecats in view")
                 let closure = {
                     DispatchQueue.main.async {
+                        self.timeCatPickerDataSource!.allTimeCategories = self.viewModel!.allTimeCategories!.value
+                        self.timeCatDelegate!.allTimeCategories = self.viewModel!.allTimeCategories!.value
                         self.timeCatPickerView.reloadAllComponents()
                     }
                 }

@@ -27,6 +27,11 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
         }
     }
     
+    // Local model. These classes are used to prevent excessive view updates, caused by frequent model changes
+    
+    var localTasks : Dynamic<[Dynamic<Task>]>?
+    var localFilteredTasks : Dynamic<[Dynamic<Task>]>?
+    
     // Filters
     
     var categoryFilters : [Category]?
@@ -50,9 +55,9 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
             clearFilter()
             return
         }
-        filteredTasks!.value.removeAll()
+        localFilteredTasks!.value.removeAll()
         filterActive = false
-        for _task in tasksToPopulate.value {
+        for _task in localTasks!.value {
             var addToFilter : Bool = false
             if _task.value.Categories != nil && !CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) {
                 for _category in _task.value.Categories! {
@@ -75,10 +80,11 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
             }
             
             if(addToFilter) {
-                filteredTasks!.value.append(_task)
+                localFilteredTasks!.value.append(_task)
                 addToFilter = false
             }
         }
+        filteredTasks!.value = localFilteredTasks!.value
         filterActive = true
     }
     
@@ -118,6 +124,7 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
     func clearFilter() {
         //print("Clear filter")
         filterActive = false
+        localFilteredTasks!.value.removeAll()
         filteredTasks!.value.removeAll()
     }
     
@@ -133,27 +140,29 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
         timeInterval! *= Double(units)
         let df = StandardDateFormatter()
         let upperLimit = df.date(from: df.string(from: Date().addingTimeInterval(timeInterval!)))
-        let tempTasks = _tasksToPopulate
+        let tempTasks = localTasks
         for _task in tempTasks!.value {
             if (_task.value.StartTime! as Date) > upperLimit! {
-                let indexOf = _tasksToPopulate!.value.index(of: _task)
-                _tasksToPopulate!.value.remove(at: indexOf!)
+                let indexOf = localTasks!.value.index(of: _task)
+                localTasks!.value.remove(at: indexOf!)
             }
         }
         sortDisplayedTasks()
     }
     
     func sortDisplayedTasks() {
-        _tasksToPopulate!.value.sort(by: {
+        localTasks!.value.sort(by: {
             return ($0.value.StartTime! as Date) < ($1.value.StartTime! as Date)
         })
+        _tasksToPopulate!.value = localTasks!.value
     }
     
     // Task CRUDs
     
     func deleteAt(index : Int) {
-        if let _ =  _tasksToPopulate!.value[index].value.parentID {
-            _tasksToPopulate!.value.remove(at: index)
+        if let _ =  localTasks!.value[index].value.parentID {
+            localTasks!.value.remove(at: index)
+            sortDisplayedTasks()
         } else {
             TaskDTO.globalManager.deleteTask(_task: _tasksToPopulate!.value[index].value)
         }

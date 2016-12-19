@@ -39,7 +39,7 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
                 DispatchQueue.main.async {
-                    //print("Apply filter in view")
+                    //print("Update all in view")
                     let archiveVM = self.viewModel! as! ArchiveTaskViewModel
                     switch archiveVM.sortParam {
                     case .Date :
@@ -61,7 +61,7 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
                 DispatchQueue.main.async {
-                    //print("Apply filter in view")
+                    print("Apply filter in view")
                     let archiveVM = self.viewModel! as! ArchiveTaskViewModel
                     switch archiveVM.sortParam {
                         case .Date :

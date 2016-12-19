@@ -28,6 +28,7 @@ class AddCategoriesViewController: UIViewController {
     
     override func viewDidLoad() {
         top_y_coord = Constants.addCatVC_starting_y_coord
+        categoryModelBond.bind(dynamic: viewModel.categories!)
         addCategoryButtons()
     }
     
@@ -84,7 +85,7 @@ class AddCategoriesViewController: UIViewController {
             chkbx.removeFromSuperview()
         }
         self.visibleButtons.removeAll()
-        self.top_y_coord = Constants.filterVC_starting_y_coord
+        self.top_y_coord = Constants.addCatVC_starting_y_coord
     }
     
     func refreshLabelsAndButtons(checkboxesAndLabels : ([CheckboxButton], [UILabel])) {

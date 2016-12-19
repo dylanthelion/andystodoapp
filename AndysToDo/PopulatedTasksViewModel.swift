@@ -19,6 +19,8 @@ class PopulatedTasksViewModel : TaskFilterableViewModel {
         super.init()
         tasksToPopulate = Dynamic(TaskDTO.globalManager.AllTasks!.value.map({ $0 }))
         filteredTasks = Dynamic([Dynamic<Task>]())
+        localTasks = Dynamic(TaskDTO.globalManager.AllTasks!.value.map({ $0 }))
+        localFilteredTasks = Dynamic([Dynamic<Task>]())
         populateNonRepeatables()
         populateRepeatables()
         taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
@@ -43,8 +45,8 @@ class PopulatedTasksViewModel : TaskFilterableViewModel {
     // Model setup
     
     func setup() {
-        tasksToPopulate.value.removeAll()
-        tasksToPopulate.value.append(contentsOf: TaskDTO.globalManager.AllTasks!.value)
+        localTasks!.value.removeAll()
+        localTasks!.value.append(contentsOf: TaskDTO.globalManager.AllTasks!.value)
         populateNonRepeatables()
         populateRepeatables()
         sortDisplayedTasks(forWindow: Constants.mainTaskVC_upper_limit_calendar_unit, units: Constants.mainTaskVC_upper_limit_number_of_units)
@@ -54,18 +56,18 @@ class PopulatedTasksViewModel : TaskFilterableViewModel {
     
     func populateNonRepeatables() {
         for _task in TaskDTO.globalManager.AllTasks!.value {
-            if !_task.value.isRepeatable() && _tasksToPopulate!.value.index(of: _task) == nil {
-                _tasksToPopulate!.value.append(_task)
+            if !_task.value.isRepeatable() && localTasks!.value.index(of: _task) == nil {
+                localTasks!.value.append(_task)
             }
         }
     }
     
     func populateRepeatables() {
-        let tempTasks = _tasksToPopulate
+        let tempTasks = localTasks
         for _task in tempTasks!.value {
             if _task.value.isRepeatable() {
-                _tasksToPopulate!.value.append(contentsOf: RepeatableUnwrapper.unwrapRepeatables(_task: _task.value, toUnwrap: 3))
-                _tasksToPopulate!.value.remove(at: _tasksToPopulate!.value.index(of: _task)!)
+                localTasks!.value.append(contentsOf: RepeatableUnwrapper.unwrapRepeatables(_task: _task.value, toUnwrap: 3))
+                localTasks!.value.remove(at: localTasks!.value.index(of: _task)!)
             }
         }
     }
@@ -73,21 +75,21 @@ class PopulatedTasksViewModel : TaskFilterableViewModel {
     // on update
     
     override func removeDeletedTasks() {
-        let tempTasks = tasksToPopulate
+        let tempTasks = localTasks!
         for _task in tempTasks.value {
             if _task.value.parentID == nil && TaskDTO.globalManager.AllTasks!.value.index(of: _task) == nil {
-                _tasksToPopulate!.value.remove(at: _tasksToPopulate!.value.index(of: _task)!)
+                localTasks!.value.remove(at: localTasks!.value.index(of: _task)!)
             }
         }
     }
     
     override func addNewTasks() {
         for _task in TaskDTO.globalManager.AllTasks!.value {
-            if !_task.value.isRepeatable() && _tasksToPopulate!.value.index(of: _task) == nil && _task.value.StartTime!.timeIntervalSince(Date()) <= Constants.mainTaskVC_upper_limit_time_interval && _task.value.FinishTime == nil {
-                _tasksToPopulate!.value.append(_task)
-            } else if _task.value.isRepeatable() && CollectionHelper.containsNoChildren(children: _tasksToPopulate!.value, ofParents: [_task]) && _task.value.FinishTime == nil  {
+            if !_task.value.isRepeatable() && localTasks!.value.index(of: _task) == nil && _task.value.StartTime!.timeIntervalSince(Date()) <= Constants.mainTaskVC_upper_limit_time_interval && _task.value.FinishTime == nil {
+                localTasks!.value.append(_task)
+            } else if _task.value.isRepeatable() && CollectionHelper.containsNoChildren(children: localTasks!.value, ofParents: [_task]) && _task.value.FinishTime == nil  {
                 if _task.value.RepeatableTask!.FirstOccurrence!.timeIntervalSince(Date()) <= Constants.mainTaskVC_upper_limit_time_interval {
-                    _tasksToPopulate!.value.append(contentsOf: RepeatableUnwrapper.unwrapRepeatables(_task: _task.value, toUnwrap: 3))
+                    localTasks!.value.append(contentsOf: RepeatableUnwrapper.unwrapRepeatables(_task: _task.value, toUnwrap: 3))
                 }
             }
         }

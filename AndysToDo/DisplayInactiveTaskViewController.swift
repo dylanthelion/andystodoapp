@@ -9,6 +9,7 @@
 import UIKit
 
 private var taskHandle : UInt8 = 0
+private var timecatHandle : UInt8 = 0
 
 class DisplayInactiveTaskViewController : CreateTaskParentViewController, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
     
@@ -34,6 +35,7 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         viewModel = DisplayInactiveTaskViewModel()
+        timecatDTOBond.bind(dynamic: (viewModel! as! DisplayInactiveTaskViewModel).allTimeCategories!)
     }
     
     override func viewDidLoad() {
@@ -57,6 +59,34 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
         datePickerView.delegate = datePickerDelegate
         datePickerView.dataSource = datePickerDataSource
     }
+    
+    // Binding
+    
+    var timecatDTOBond: Bond<[TimeCategory]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &timecatHandle) as AnyObject? {
+            return b as! Bond<[TimeCategory]>
+        } else {
+            let b = Bond<[TimeCategory]>() { [unowned self] v in
+                //print("Update timecats in view")
+                let closure = {
+                    DispatchQueue.main.async {
+                        self.timeCatPickerDataSource!.allTimeCategories = self.viewModel!.allTimeCategories!.value
+                        self.timeCatDelegate!.allTimeCategories = self.viewModel!.allTimeCategories!.value
+                        self.timeCatPickerView.reloadAllComponents()
+                    }
+                }
+                if self.alertIsVisible {
+                    self.completionHandlers.append(closure)
+                } else {
+                    closure()
+                }
+            }
+            objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    // Setup
     
     func setupTextFieldInput() {
         start_txtField.inputView = pickerView

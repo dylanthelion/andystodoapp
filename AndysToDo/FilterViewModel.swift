@@ -13,6 +13,11 @@ private var timecatHandle: UInt8 = 0
 
 class FilterViewModel {
     
+    // Local model. These classes are used to prevent excessive view updates, caused by frequent model changes
+    
+    private var localCats : Dynamic<[Dynamic<Category>]>?
+    private var localTimecats : Dynamic<[Dynamic<TimeCategory>]>?
+    
     // Model
     
     var categories : Dynamic<[Dynamic<Category>]>?
@@ -21,6 +26,8 @@ class FilterViewModel {
     init() {
         self.categories = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
         self.timeCategories = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0 }))
+        localCats = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
+        localTimecats = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0 }))
         self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.AllCategories!)
         self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.AllTimeCategories!)
     }
@@ -54,12 +61,14 @@ class FilterViewModel {
     }
     
     func updateCategories() {
-        categories!.value.removeAll()
-        categories!.value.append(contentsOf: CategoryDTO.shared.AllCategories!.value)
+        localCats!.value.removeAll()
+        localCats!.value.append(contentsOf: CategoryDTO.shared.AllCategories!.value)
+        categories!.value = localCats!.value
     }
     
     func updateTimecats() {
-        timeCategories!.value.removeAll()
-        timeCategories!.value.append(contentsOf: TimeCategoryDTO.shared.AllTimeCategories!.value)
+        localTimecats!.value.removeAll()
+        localTimecats!.value.append(contentsOf: TimeCategoryDTO.shared.AllTimeCategories!.value)
+        timeCategories!.value = localTimecats!.value
     }
 }
