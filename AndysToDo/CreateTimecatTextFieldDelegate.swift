@@ -58,7 +58,9 @@ class CreateTimecatTextFieldDelegate : NSObject, UITextFieldDelegate {
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        viewDelegate!.removePickerViewDoneButton()
+        if ![1,2].contains(viewDelegate!.textFieldSelected) {
+            viewDelegate!.removePickerViewDoneButton()
+        }
         return true
     }
 }
