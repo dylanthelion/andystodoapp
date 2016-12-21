@@ -90,6 +90,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         unitOfTime_txtField.inputView = unitOfTimePickerView
         firstTimeOfDay_txtField.inputView = timeOfDayPickerView
         firstDate_txtField.inputView = datePickerView
+        unitsPerTask_txtField.keyboardType = .numberPad
     }
     
     func addDayOfWeekCheckBoxes() {

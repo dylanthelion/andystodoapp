@@ -56,11 +56,7 @@ class CreateRepeatableTaskOccurenceTextFieldDelegate : NSObject, UITextFieldDele
         case 0,2,3,4,5:
             return true
         case 1:
-            if let check = Int((textField.text! as NSString).replacingCharacters(in: range, with: string)) {
-                viewModel!.numberOfUnits = check
-            } else {
-                viewModel!.numberOfUnits = 0
-            }
+            viewModel!.numberOfUnits = Int((textField.text! as NSString).replacingCharacters(in: range, with: string))!
             return true
         default:
             print("Invalid text field tag")
