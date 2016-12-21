@@ -30,7 +30,6 @@ class TimeCategoryDTO {
         if AllTimeCategories == nil {
             AllTimeCategories = Dynamic(loadFakeTimeCategories())
         }
-        
     }
     
     func loadFakeTimeCategories() -> [Dynamic<TimeCategory>] {

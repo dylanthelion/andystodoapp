@@ -71,6 +71,10 @@ struct Constants {
     static let all_days_as_strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     static let all_hours_as_ints = [1,2,3,4,5,6,7,8,9,10,11,12]
     
+    // Model defaults
+    
+    static let timecat_none = TimeCategory(_name: "None", _description: "", _start: 0.0, _end: 0.0, _color: nil)
+    
     
     // Login provider IDs
     

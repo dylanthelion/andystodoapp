@@ -139,6 +139,7 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
         timeCat_txtField.inputView = timeCatPickerView
         startDateTextView.inputView = datePickerView
         expectedUnitOfTime_txtField.inputView = expectedUnitOfTimePickerView
+        expectedTotalUnits_txtField.keyboardType = .numberPad
     }
     
     func setupTextFields() {

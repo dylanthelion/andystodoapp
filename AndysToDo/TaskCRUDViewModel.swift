@@ -40,7 +40,9 @@ class TaskCRUDViewModel : DatePickerViewModel, CategoryCRUDViewModel {
     init() {
         expectedTimeRequirement = ExpectedTimeRequirement(_unit: .Null, _numberOfUnits: 0)
         allCategories = CategoryDTO.shared.AllCategories!.value.map({ $0.value })
-        allTimeCategories = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0.value }))
+        var allTimecats : [TimeCategory] = TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0.value })
+        allTimecats.append(Constants.timecat_none)
+        allTimeCategories = Dynamic(allTimecats)
     }
     
     // Update
@@ -86,7 +88,10 @@ class TaskCRUDViewModel : DatePickerViewModel, CategoryCRUDViewModel {
     }
     
     func updateTimecats() {
-        allTimeCategories!.value = TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0.value })
+        var allTimecats : [TimeCategory] = TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0.value })
+        allTimecats.append(Constants.timecat_none)
+        allTimeCategories = Dynamic(allTimecats)
+        allTimeCategories!.value = allTimecats
     }
     
     func updateCategories() {
