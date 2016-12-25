@@ -55,17 +55,17 @@ class DisplayActiveTaskViewController : UIViewController {
     // UI setup
     
     func populateLabels() {
-        if let _ = viewModel.task?.value.StartTime {
+        if let _ = viewModel.task!.value.StartTime {
             startTime_lbl.text = TimeConverter.dateToTimeConverter(_time: viewModel.task!.value.StartTime!)
         }
         
-        if let _ = viewModel.task?.value.Description {
+        if let _ = viewModel.task!.value.Description {
             description_txtView.text = viewModel.task!.value.Description!
         }
     }
     
     func setupTimer() {
-        if (viewModel.task?.value.inProgress)! {
+        if viewModel.task!.value.inProgress {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         } else {
             timer?.invalidate()
@@ -73,7 +73,7 @@ class DisplayActiveTaskViewController : UIViewController {
     }
     
     func checkTask() {
-        if let _ = viewModel.task?.value.TimeCategory?.color {
+        if let _ = viewModel.task!.value.TimeCategory?.color {
             self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.TimeCategory!.color!)
         }
         if !viewModel.task!.value.inProgress {

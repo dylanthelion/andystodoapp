@@ -98,15 +98,12 @@ class AddCategoriesViewController: UIViewController {
     // Handle checkboxes
     
     func toggle_category(sender : CheckboxButton) {
-        if let rootVC = taskDelegate! as? CreateTaskParentViewController {
-            if sender.checked {
-                rootVC.viewModel?.removeCategory(_category: viewModel.categories!.value[sender.tag].value)
-            } else {
-                rootVC.viewModel?.addCategory(_category: viewModel.categories!.value[sender.tag].value)
-            }
-            sender.toggleChecked()
-        }  else {
-            print("Problem casting parent view controller")
+        let rootVC = taskDelegate! as! CreateTaskParentViewController
+        if sender.checked {
+            rootVC.viewModel?.removeCategory(_category: viewModel.categories!.value[sender.tag].value)
+        } else {
+            rootVC.viewModel?.addCategory(_category: viewModel.categories!.value[sender.tag].value)
         }
+        sender.toggleChecked()
     }
 }

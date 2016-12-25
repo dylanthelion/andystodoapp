@@ -34,10 +34,6 @@ class TaskTableViewCell : UITableViewCell {
     @IBOutlet weak var taskTitleLabel: UILabel!
     @IBOutlet weak var onItButton: UIButton!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
     func setTask(_task : Task) {
         if _task.isValid() {
             task = _task

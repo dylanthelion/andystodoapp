@@ -74,27 +74,4 @@ class PopulatedTasksViewModel : TaskFilterableViewModel {
             }
         }
     }
-    
-    // on update
-    
-    override func removeDeletedTasks() {
-        let tempTasks = localTasks!
-        for _task in tempTasks.value {
-            if _task.value.parentID == nil && TaskDTO.globalManager.AllTasks!.value.index(of: _task) == nil {
-                localTasks!.value.remove(at: localTasks!.value.index(of: _task)!)
-            }
-        }
-    }
-    
-    override func addNewTasks() {
-        for _task in TaskDTO.globalManager.AllTasks!.value {
-            if !_task.value.isRepeatable() && localTasks!.value.index(of: _task) == nil && _task.value.StartTime!.timeIntervalSince(Date()) <= Constants.mainTaskVC_upper_limit_time_interval && _task.value.FinishTime == nil {
-                localTasks!.value.append(_task)
-            } else if _task.value.isRepeatable() && CollectionHelper.containsNoChildren(children: localTasks!.value, ofParents: [_task]) && _task.value.FinishTime == nil  {
-                if _task.value.RepeatableTask!.FirstOccurrence!.timeIntervalSince(Date()) <= Constants.mainTaskVC_upper_limit_time_interval {
-                    localTasks!.value.append(contentsOf: RepeatableUnwrapper.unwrapRepeatables(_task: _task.value, toUnwrap: 3))
-                }
-            }
-        }
-    }
 }

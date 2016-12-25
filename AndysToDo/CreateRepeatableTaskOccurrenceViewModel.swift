@@ -68,13 +68,11 @@ class CreateRepeatableTaskOccurrenceViewModel : DatePickerViewModel {
         let unitOfTime : RepetitionTimeCategory? = EnumConverter.timeOfDayConvertStringToValue(_timeOfDay : unitOfTimeAsString!)
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
         self.date = date
-        if let _ = dayOfWeek {
-            if dayOfWeek! == DayOfWeek.Multiple {
-                return buildMultipleRepeatablesFrom(unitOfTime: unitOfTime!, date: date)
-            } else {
-                return [buildRepeatableFrom(unitOfTime: unitOfTime!, date: date)]
-            }
-        
+        guard let check = dayOfWeek else {
+            return [buildRepeatableFrom(unitOfTime: unitOfTime!, date: date)]
+        }
+        if check == DayOfWeek.Multiple {
+            return buildMultipleRepeatablesFrom(unitOfTime: unitOfTime!, date: date)
         } else {
             return [buildRepeatableFrom(unitOfTime: unitOfTime!, date: date)]
         }

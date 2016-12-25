@@ -29,6 +29,4 @@ class UnitOfTimePickerDelegate : NSObject, UIPickerViewDelegate {
     
 }
 
-protocol UnitOfTimePickerDelegateViewDelegate {
-    func handleDidSelect(unit : String)
-}
+

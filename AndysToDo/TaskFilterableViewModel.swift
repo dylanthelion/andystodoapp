@@ -169,12 +169,4 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
             TaskDTO.globalManager.deleteTask(_task: _tasksToPopulate!.value[index].value)
         }
     }
-    
-    func addNewTasks() {
-        // Currently no shared or default behavior
-    }
-    
-    func removeDeletedTasks() {
-        // Currently no shared or default behavior
-    }
 }

@@ -26,10 +26,6 @@ class MainTasksTableViewDataSource : NSObject, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        /*if indexPath.row == viewModel!.tasksToPopulate.value.count {
-            // Until I find a good GCD solution to KVO-cuased race conditions, return an empty cell as a safe out
-            return UITableViewCell()
-        }*/
         let cell : TaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.task_table_view_cell_id) as! TaskTableViewCell
         let cellTask : Task = viewModel!.tasksToPopulate.value[indexPath.row].value
         cell.setTask(_task: cellTask)

@@ -46,12 +46,11 @@ class CreateCategoryViewModel : CategoryCRUDViewModel {
     }
     
     func updateCategory() {
-        if category == nil {
-            return
-        }
-        for cat in CategoryDTO.shared.AllCategories!.value {
-            if cat.value == category! {
-                category = cat.value
+        if let _ = category {
+            for cat in CategoryDTO.shared.AllCategories!.value {
+                if cat.value == category! {
+                    category = cat.value
+                }
             }
         }
     }

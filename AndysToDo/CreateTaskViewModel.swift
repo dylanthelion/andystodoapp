@@ -85,16 +85,17 @@ class CreateTaskViewModel : TaskCRUDViewModel {
     
     func validateMultipleRepeatables(_repeatables : [RepeatableTaskOccurrence]) -> (Bool, String) {
         task = Dynamic(Task(_name: name!, _description: description!, _start: startTime, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: repeatableTask, _dueDate: dueDate, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement._numberOfUnits))
-        if let newTasks = RepeatableUnwrapper.generateRepeatablesFrom(repeatables: _repeatables, ofParent: Task(_name: name!, _description: description!, _start: startTime, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: repeatableTask, _dueDate: dueDate, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement._numberOfUnits), withID: task!.value.ID!) {
-            if !TaskDTO.globalManager.createNewTask(_task: task!.value) {
-                return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
-            }
-            for _task in newTasks {
-                let _ = TaskDTO.globalManager.createNewTask(_task: _task)
-            }
-            return (true, Constants.createTaskVC_alert_success_message)
+        guard let newTasks = RepeatableUnwrapper.generateRepeatablesFrom(repeatables: _repeatables, ofParent: Task(_name: name!, _description: description!, _start: startTime, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: repeatableTask, _dueDate: dueDate, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement._numberOfUnits), withID: task!.value.ID!) else  {
+            return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
         }
-        return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
+        if !TaskDTO.globalManager.createNewTask(_task: task!.value) {
+            return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
+        }
+        for _task in newTasks {
+            let _ = TaskDTO.globalManager.createNewTask(_task: _task)
+        }
+        return (true, Constants.createTaskVC_alert_success_message)
+        
     }
     
     func validateNonRepeatableTask() -> (Bool, String) {

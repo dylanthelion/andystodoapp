@@ -81,7 +81,6 @@ class CreateCategoryViewController : UIViewController, AlertPresenter {
         if !validateForSubmit() {
             return
         }
-        
         if !validateAndSubmitCategory() {
             return
         } else if viewModel.category == nil {

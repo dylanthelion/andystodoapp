@@ -126,7 +126,7 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
     
     func setupRepeatable() {
         self.repeatable_btn.isUserInteractionEnabled = false
-        if (viewModel?.task!.value.isRepeatable())! {
+        if viewModel!.task!.value.isRepeatable() {
             resetRepeatableTextFields()
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_child_task, for: .normal)
             self.repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
@@ -137,15 +137,15 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
             self.repeatable_btn.isHidden = true
             self.generateNewTask_btn.setTitle(Constants.allTasksIndividualTaskVC_btn_title_temp_copy, for: .normal)
         }
-        if let _ = viewModel?.task!.value.TimeCategory {
+        if let _ = viewModel!.task!.value.TimeCategory {
             self.timeCat_txtField.text = viewModel?.task!.value.TimeCategory!.Name!
         } else {
             self.timeCat_txtField.text = ""
         }
-        if viewModel?.task!.value.expectedTimeRequirement.unit == nil {
+        guard let check = viewModel!.task!.value.expectedTimeRequirement.unit else {
             return
         }
-        self.expectedUnitOfTime_txtField.text = "\(Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: viewModel!.task!.value.expectedTimeRequirement.unit!)!])"
+        self.expectedUnitOfTime_txtField.text = "\(Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: check)!])"
         self.expectedTotalUnits_txtField.text = String(viewModel!.task!.value.expectedTimeRequirement.numberOfUnits!)
     }
     
@@ -156,9 +156,9 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
     
     func populateNonRepeatableData() {
         self.name_txtField.text = viewModel?.task!.value.Name!
-        self.description_txtView.text = viewModel?.task!.value.Description!
-        if let _ = viewModel?.task?.value.TimeCategory?.color {
-            self.view.backgroundColor = UIColor(cgColor: (viewModel?.task!.value.TimeCategory!.color!)!)
+        self.description_txtView.text = viewModel!.task!.value.Description!
+        if let _ = viewModel!.task!.value.TimeCategory?.color {
+            self.view.backgroundColor = UIColor(cgColor: (viewModel!.task!.value.TimeCategory!.color!))
         } else {
             self.view.backgroundColor = UIColor.white
         }
@@ -215,8 +215,8 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
     // DatePickerViewDelegateViewDelegate
     
     func handleDidSelect(months: String, days: String, fulldate: String) {
-        viewModel?.startMonth = months
-        viewModel?.startDay = days
+        viewModel!.startMonth = months
+        viewModel!.startDay = days
         startDateTextView.text = fulldate
     }
     
@@ -230,14 +230,14 @@ class AllTasksIndividualTaskViewController : CreateTaskParentViewController,  Da
     // TimecatPickerDelegateViewDelegate
     
     func handleDidSelect(timecat : TimeCategory, name : String) {
-        viewModel?.timeCategory = timecat
+        viewModel!.timeCategory = timecat
         self.timeCat_txtField.text = name
     }
     
     // ExpectedUnitOfTimePickerDelegateViewDelegate
     
     func handleDidSelect(unit: UnitOfTime, text: String) {
-        viewModel?.expectedTimeRequirement.update(newUnitOfTime: unit, newValue: viewModel?.expectedTimeRequirement.numberOfUnits)
+        viewModel!.expectedTimeRequirement.update(newUnitOfTime: unit, newValue: viewModel!.expectedTimeRequirement.numberOfUnits)
         expectedUnitOfTime_txtField.text = text
     }
     

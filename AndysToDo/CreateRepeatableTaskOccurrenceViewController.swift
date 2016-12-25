@@ -62,10 +62,9 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     override func viewWillDisappear(_ animated: Bool) {
         if !viewModel.validRepeatableSubmitted {
-            if let rootVC = self.navigationController?.viewControllers[0] as? CreateTaskViewController {
-                rootVC.viewModel?.resetModel()
-                rootVC.repeatable_btn.toggleChecked()
-            }
+            let rootVC = self.navigationController?.viewControllers[0] as! CreateTaskViewController
+            rootVC.viewModel?.resetModel()
+            rootVC.repeatable_btn.toggleChecked()
         }
     }
     

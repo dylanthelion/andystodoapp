@@ -151,31 +151,27 @@ class FilterViewController : UIViewController {
     
     func toggleFilter(sender : CheckboxButton) {
         
-        if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? TaskFilterableViewController {
-            if !CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
-                if sender.tag > (viewModel.categories!.value.count - 1) {
-                    if sender.checked {
-                        rootVC.viewModel?.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
-                    } else {
-                        rootVC.viewModel?.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
-                    }
-                    
+        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as! TaskFilterableViewController
+        if !CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
+            if sender.tag > (viewModel.categories!.value.count - 1) {
+                if sender.checked {
+                    rootVC.viewModel?.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
                 } else {
-                    if sender.checked {
-                        rootVC.viewModel?.removeCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
-                    } else {
-                        rootVC.viewModel?.addCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
-                    }
-                    
+                    rootVC.viewModel?.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
                 }
             } else {
-                if(sender.checked) {
-                    rootVC.viewModel?.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                if sender.checked {
+                    rootVC.viewModel?.removeCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
                 } else {
-                    rootVC.viewModel?.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                    rootVC.viewModel?.addCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
                 }
-                
             }
+        } else {
+            if(sender.checked) {
+                rootVC.viewModel?.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+            } else {
+                rootVC.viewModel?.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+            }    
         }
         sender.toggleChecked()
     }

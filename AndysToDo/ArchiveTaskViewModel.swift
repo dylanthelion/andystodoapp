@@ -62,29 +62,7 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     
     func deArchive(index : Int) {
         let _task = localTasks!.value[index].value
-        if ArchivedTaskDTO.shared.deArchive(_task: _task) {
-            // handle success
-        }
-        // handle failure
-    }
-    
-    // on update
-    
-    override func removeDeletedTasks() {
-        let tempTasks = localTasks!
-        for _task in tempTasks.value {
-            if _task.value.parentID == nil && ArchivedTaskDTO.shared.archivedTasks!.value.index(of: _task) == nil {
-                localTasks!.value.remove(at: localTasks!.value.index(of: _task)!)
-            }
-        }
-    }
-    
-    override func addNewTasks() {
-        for _task in ArchivedTaskDTO.shared.archivedTasks!.value {
-            if localTasks!.value.index(of: _task) == nil {
-                localTasks!.value.append(_task)
-            }
-        }
+        let _ = ArchivedTaskDTO.shared.deArchive(_task: _task)
     }
     
     // CRUD

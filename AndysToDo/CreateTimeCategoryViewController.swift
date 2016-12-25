@@ -183,7 +183,6 @@ class CreateTimeCategoryViewController : UIViewController, PickerViewViewDelegat
         if !validateForSubmit() {
             return
         }
-        
         if !validateAndSubmitTimecat() {
             return
         } else if viewModel.timeCategory == nil {

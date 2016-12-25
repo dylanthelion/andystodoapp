@@ -52,12 +52,11 @@ class CreateTimeCategoryViewModel : CategoryCRUDViewModel {
     }
     
     func updateCategory() {
-        if timeCategory == nil {
-            return
-        }
-        for cat in TimeCategoryDTO.shared.AllTimeCategories!.value {
-            if cat.value == timeCategory! {
-                timeCategory = cat.value
+        if let _ = timeCategory {
+            for cat in TimeCategoryDTO.shared.AllTimeCategories!.value {
+                if cat.value == timeCategory! {
+                    timeCategory = cat.value
+                }
             }
         }
     }

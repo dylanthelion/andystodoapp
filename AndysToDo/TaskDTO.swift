@@ -98,7 +98,7 @@ class TaskDTO {
                 deleteTask(_task: task)
             }
         }
-        if let checkIndex = AllTasks?.value.index(of: Dynamic(_task)) {
+        if let checkIndex = AllTasks!.value.index(of: Dynamic(_task)) {
             AllTasks!.value.remove(at: checkIndex)
         }
     }

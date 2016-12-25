@@ -64,7 +64,6 @@ class ArchivedTaskDTO {
     
     func deleteArchivedTask(_task: Task) {
         if let checkIndex = archivedTasks?.value.index(of: Dynamic(_task)) {
-            print("delete successful")
             archivedTasks!.value.remove(at: checkIndex)
         }
     }

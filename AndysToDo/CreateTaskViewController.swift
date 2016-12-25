@@ -274,7 +274,6 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
     }
     
     @IBAction func submit(_ sender: AnyObject) {
-        
         if !validateForSubmit() {
             return
         }

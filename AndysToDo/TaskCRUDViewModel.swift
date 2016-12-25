@@ -51,7 +51,7 @@ class TaskCRUDViewModel : DatePickerViewModel, CategoryCRUDViewModel {
         if task == nil {
             task = Dynamic(newTask)
         } else {
-            task?.value = newTask
+            task!.value = newTask
         }
         name = newTask.Name
         description = newTask.Description
@@ -77,12 +77,11 @@ class TaskCRUDViewModel : DatePickerViewModel, CategoryCRUDViewModel {
     }
     
     func updateTask() {
-        if task == nil {
-            return
-        }
-        for t in TaskDTO.globalManager.AllTasks!.value {
-            if t.value == task!.value {
-                task!.value = t.value
+        if let _ = task {
+            for t in TaskDTO.globalManager.AllTasks!.value {
+                if t.value == task!.value {
+                    task!.value = t.value
+                }
             }
         }
     }

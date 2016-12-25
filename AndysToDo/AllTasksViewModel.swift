@@ -56,23 +56,4 @@ class AllTasksViewModel : TaskFilterableViewModel {
             // handle success
         }
     }
-    
-    // on update
-    
-    override func removeDeletedTasks() {
-        let tempTasks = localTasks!
-        for _task in tempTasks.value {
-            if _task.value.parentID == nil && TaskDTO.globalManager.AllTasks!.value.index(of: _task) == nil {
-                localTasks!.value.remove(at: localTasks!.value.index(of: _task)!)
-            }
-        }
-    }
-    
-    override func addNewTasks() {
-        for _task in TaskDTO.globalManager.AllTasks!.value {
-            if localTasks!.value.index(of: _task) == nil {
-                localTasks!.value.append(_task)
-            }
-        }
-    }
 }
