@@ -154,7 +154,9 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
         localTasks!.value.sort(by: {
             return ($0.value.StartTime! as Date) < ($1.value.StartTime! as Date)
         })
-        _tasksToPopulate!.value = localTasks!.value
+        Constants.mainTaskQueue.async {
+            self._tasksToPopulate!.value = self.localTasks!.value
+        }
     }
     
     // Task CRUDs

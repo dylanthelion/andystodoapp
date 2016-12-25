@@ -34,8 +34,11 @@ class PopulatedTasksViewModel : TaskFilterableViewModel {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
-                //print("Update in view model")
-                self.setup()
+                Constants.mainTaskQueue.sync {
+                    //print("Update in view model")
+                    self.setup()
+                }
+                
             }
             objc_setAssociatedObject(self, &handle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return b

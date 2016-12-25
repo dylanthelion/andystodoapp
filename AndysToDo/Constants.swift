@@ -30,6 +30,10 @@ struct Constants {
     
     static let standard_ok_alert_action : UIAlertAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
     
+    // Queues
+    
+    static let mainTaskQueue = DispatchQueue(label: "mainTask")
+    
     // Storyboard
     
     static let main_storyboard_id = "Main"

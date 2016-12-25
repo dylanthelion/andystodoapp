@@ -37,11 +37,13 @@ class MainTasksViewController : TaskFilterableViewController {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
-                
-                //print("Update all in view")
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                Constants.mainTaskQueue.async {
+                    //print("Update all in view")
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }
+                
             }
             objc_setAssociatedObject(self, &handle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return b
@@ -53,9 +55,11 @@ class MainTasksViewController : TaskFilterableViewController {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
-                //print("Apply filter in view")
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                Constants.mainTaskQueue.async {
+                    //print("Apply filter in view")
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }
             }
             objc_setAssociatedObject(self, &filteredHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
