@@ -117,6 +117,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         firstTimeOfDay_txtField.delegate = textFieldDelegate
         firstDate_txtField.delegate = textFieldDelegate
         dayOfWeek_txtField.delegate = textFieldDelegate
+        self.datePickerDelegate!.setStartingDate(self.datePickerView)
     }
     
     // View reset
