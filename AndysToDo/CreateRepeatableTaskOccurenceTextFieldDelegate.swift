@@ -31,10 +31,10 @@ class CreateRepeatableTaskOccurenceTextFieldDelegate : NSObject, UITextFieldDele
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0,2,3,4:
+        case _ where Constants.createRepeatableVC_picker_view_txtfield_tags.contains(textField.tag):
             viewDelegate!.addPickerViewDoneButton()
             return true
-        case 1:
+        case _ where Constants.createRepeatableVC_normal_txtfield_tags.contains(textField.tag):
             viewDelegate!.removePickerViewDoneButton()
             return true
         default:
@@ -53,9 +53,9 @@ class CreateRepeatableTaskOccurenceTextFieldDelegate : NSObject, UITextFieldDele
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0,2,3,4,5:
+        case _ where Constants.createRepeatableVC_picker_view_txtfield_tags.contains(textField.tag):
             return true
-        case 1:
+        case Constants.createRepeatableVC_unitsOfTime_txtfield_tag:
             viewModel!.numberOfUnits = Int((textField.text! as NSString).replacingCharacters(in: range, with: string))!
             return true
         default:

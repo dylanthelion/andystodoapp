@@ -31,10 +31,10 @@ class DisplayInactiveTaskTextFieldDelegate : NSObject, UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0:
+        case _ where Constants.displayInactiveTaskVC_normal_txtfield_tags.contains(textField.tag):
             viewDelegate!.removePickerViewDoneButton()
             return true
-        case 1,2,3:
+        case _ where Constants.displayInactiveTaskVC_picker_view_txtfield_tags.contains(textField.tag):
             viewDelegate!.addPickerViewDoneButton()
             return true
         default:
@@ -54,11 +54,10 @@ class DisplayInactiveTaskTextFieldDelegate : NSObject, UITextFieldDelegate {
         print("Should change")
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0:
+        case Constants.displayInactiveTaskVC_name_txtField_tag:
             viewModel!.name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
-            print(viewModel!.name!)
             return true
-        case 1,2,3,4,5:
+        case _ where Constants.displayInactiveTaskVC_picker_view_txtfield_tags.contains(textField.tag):
             return true
         default:
             print("Invalid text field tag")

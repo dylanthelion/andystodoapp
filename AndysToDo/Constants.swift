@@ -121,15 +121,26 @@ struct Constants {
     static let filterVC_header_text_color : UIColor = UIColor.green
     static let filterVC_timecat_header_text = "Time Categories"
     
+    // All Categories VC
+    
+    static let allcatVC_categories_section = 0
+    static let allcatVC_timecats_section = 1
+    static let allcatVC_create_section = 2
+    static let allcatVC_category_row = 0
+    static let allcatVC_timecat_row = 1
+    static let main_storyboard_category_table_view_cell_id = "categoryTableViewCell"
+    static let main_storyboard_timecat_table_view_cell_id = "timecatTableViewCell"
+    static let allCategoriesVC_category_cell_title = "Category"
+    static let allCategoriesVC_timecat_cell_title = "Timecat"
+    static let allCategoriesVC_category_table_header = "Categories"
+    static let allCategoriesVC_timecat_table_header = "Timecats"
+    static let allCategoriesVC_create_table_header = "Create:"
+    
     // CreateCategoryVC
     
     static let createCatVC_alert_success_message = "Category created"
     static let createCatVC_alert_no_name_or_description_failure_message = "Please include a name and description"
     static let createCatVC_alert_name_uniqueness_failure_message = "That name is already taken"
-    
-    // MainCreateVC
-    
-    static let mainCreateVC_title = "Create Tasks"
     
     // CreateTimecatVC
     
@@ -141,6 +152,9 @@ struct Constants {
     static let timecatVC_color_picker_deselected_border_width : CGFloat = 0.0
     static let timecatVC_color_picker_selected_border_color : CGColor = UIColor.black.cgColor
     static let timecatVC_color_picker_deselected_border_color : CGColor = UIColor.clear.cgColor
+    static let timecatVC_name_txtField_tag = 0
+    static let timecatVC_picker_view_txtfield_tags = [1,2]
+    static let timecatVC_normal_txtfield_tags = [timecatVC_name_txtField_tag]
     
     // CreatTaskVC
     
@@ -151,6 +165,10 @@ struct Constants {
     static let createTaskVC_alert_invalid_repeatable_information_failure_message = "Your repeatable information is invalid. Something went wrong."
     static let createTaskVC_alert_invalid_nonrepeatable_failure_message =
         "Your normal information is invalid. Something went wrong."
+    static let createTaskVC_name_txtfield_tag = 0
+    static let createTaskVC_unitsOfTime_txtfield_tag = 4
+    static let createTaskVC_picker_view_txtfield_tags = [1,2,3,5]
+    static let createTaskVC_normal_txtfield_tags = [createTaskVC_name_txtfield_tag, createTaskVC_unitsOfTime_txtfield_tag]
     
     // AddCategoriesVC
     
@@ -175,6 +193,9 @@ struct Constants {
     static let createRepeatableVC_lbl_left_padding : CGFloat = 10.0
     static let createRepeatableVC_checkbox_width : CGFloat = 30.0
     static let createRepeatableVC_checkbox_row_height : CGFloat = 50.0
+    static let createRepeatableVC_unitsOfTime_txtfield_tag = 1
+    static let createRepeatableVC_picker_view_txtfield_tags = [0,2,3,4]
+    static let createRepeatableVC_normal_txtfield_tags = [createRepeatableVC_unitsOfTime_txtfield_tag]
     
     // DisplayAllTasksVC
     
@@ -187,16 +208,6 @@ struct Constants {
     static let allTasksIndividualTaskVC_btn_title_child_task = "child task"
     static let allTasksIndividualTaskVC_btn_title_temp_copy = "temp copy task"
     static let allTasksIndividualTaskVC_alert_message_missing_child_details = "Please include a start time for your child task"
-    
-    // AllCategoriesTableVC
-    
-    static let main_storyboard_category_table_view_cell_id = "categoryTableViewCell"
-    static let main_storyboard_timecat_table_view_cell_id = "timecatTableViewCell"
-    static let allCategoriesVC_category_cell_title = "Category"
-    static let allCategoriesVC_timecat_cell_title = "Timecat"
-    static let allCategoriesVC_category_table_header = "Categories"
-    static let allCategoriesVC_timecat_table_header = "Timecats"
-    static let allCategoriesVC_create_table_header = "Create:"
     
     // ArchivedTasksVC
     
@@ -215,6 +226,12 @@ struct Constants {
     static let displayArchivedTaskVC_hour = "Hour"
     static let displayArchivedTaskVC_month = "Month"
     static let displayArchivedTaskVC_minute = "Minute"
+    
+    // DisplayInactiveTaskVC
+    
+    static let displayInactiveTaskVC_name_txtField_tag = 0
+    static let displayInactiveTaskVC_picker_view_txtfield_tags = [1,2,3]
+    static let displayInactiveTaskVC_normal_txtfield_tags = [displayInactiveTaskVC_name_txtField_tag]
     
     // UITableViewCells
     

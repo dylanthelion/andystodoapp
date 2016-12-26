@@ -31,10 +31,10 @@ class CreateTaskTextFieldDelegate : NSObject, UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0,4:
+        case _ where Constants.createTaskVC_normal_txtfield_tags.contains(textField.tag):
             viewDelegate!.removePickerViewDoneButton()
             return true
-        case 1,2,3,5:
+        case _ where Constants.createTaskVC_picker_view_txtfield_tags.contains(textField.tag):
             viewDelegate!.addPickerViewDoneButton()
             return true
         default:
@@ -46,12 +46,12 @@ class CreateTaskTextFieldDelegate : NSObject, UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0:
+        case Constants.createTaskVC_name_txtfield_tag:
             viewModel?.name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
             return true
-        case 1,2,3,5:
+        case _ where Constants.createTaskVC_picker_view_txtfield_tags.contains(textField.tag):
             return true
-        case 4:
+        case Constants.createTaskVC_unitsOfTime_txtfield_tag:
             if let check = Int((textField.text! as NSString).replacingCharacters(in: range, with: string)) {
                 viewModel?.expectedTimeRequirement.update(newUnitOfTime: nil, newValue: check)
             } else {
@@ -65,7 +65,7 @@ class CreateTaskTextFieldDelegate : NSObject, UITextFieldDelegate {
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        if [0,4].contains(viewDelegate!.textFieldSelected) {
+        if Constants.createTaskVC_normal_txtfield_tags.contains(viewDelegate!.textFieldSelected) {
             viewDelegate!.removePickerViewDoneButton()
         }
         return true

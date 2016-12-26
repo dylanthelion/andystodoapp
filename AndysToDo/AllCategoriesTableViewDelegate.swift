@@ -25,15 +25,15 @@ class AllCategoriesTableViewDelegate : NSObject, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
-        case 0:
+        case Constants.allcatVC_categories_section:
             viewDelegate?.pushCategoryEditView(at: indexPath.row)
-        case 1:
+        case Constants.allcatVC_timecats_section:
             viewDelegate?.pushTimecatEdit(at: indexPath.row)
-        case 2:
+        case Constants.allcatVC_create_section:
             switch indexPath.row {
-            case 0:
+            case Constants.allcatVC_category_row:
                 viewDelegate?.pushCreateCategory()
-            case 1:
+            case Constants.allcatVC_timecat_row:
                 viewDelegate?.pushCreateTimecat()
             default:
                 print("Something went wrong in did select")
