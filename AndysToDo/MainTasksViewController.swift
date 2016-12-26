@@ -11,7 +11,11 @@ import UIKit
 private var handle: UInt8 = 0
 private var filteredHandle : UInt8 = 0
 
-class MainTasksViewController : TaskFilterableViewController {
+class MainTasksViewController : UITableViewController, TaskFilterableViewController {
+    
+    // View Model
+    
+    var viewModel : TaskFilterableViewModel?
     
     // Table view
     

@@ -8,13 +8,9 @@
 
 import UIKit
 
-class TaskFilterableViewController : UITableViewController {
+protocol TaskFilterableViewController {
     
     // View Model
     
-    var viewModel : TaskFilterableViewModel?
-    
-    override func viewDidLoad() {
-        
-    }
+    var viewModel : TaskFilterableViewModel? { get set }
 }

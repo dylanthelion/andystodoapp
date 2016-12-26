@@ -11,7 +11,30 @@ import UIKit
 private var taskHandle : UInt8 = 0
 private var timecatHandle : UInt8 = 0
 
-class DisplayInactiveTaskViewController : CreateTaskParentViewController, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
+class DisplayInactiveTaskViewController : UIViewController, CreateTaskParentViewController, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
+    
+    // UI
+    
+    var textFieldSelected = 0
+    
+    // View Model
+    
+    var viewModel : TaskCRUDViewModel?
+    
+    // Picker views
+    
+    var pickerView = UIPickerView()
+    var timeCatPickerView = UIPickerView()
+    var datePickerView = UIPickerView()
+    var expectedUnitOfTimePickerView = UIPickerView()
+    var timePickerDelegate : TimePickerViewDelegate?
+    var timePickerDataSource = TimePickerViewDataSource()
+    var timeCatPickerDataSource : TimecatPickerDataSource?
+    var timeCatDelegate : TimecatPickerDelegate?
+    var datePickerDelegate : DatePickerViewDelegate?
+    var datePickerDataSource = DatePickerDataSource()
+    var expectedPickerDataSource = ExpectedUnitOfTimePickerDataSource()
+    var expectedPickerDelegate : ExpectedUnitOfTimePickerDelegate?
     
     // Text Fields
     

@@ -602,6 +602,8 @@
 		747F16DA1E07B4B6000108FF /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				740CB4751DCC951B00ABF0BD /* CreateTaskParentViewController.swift */,
+				74792B721DFBBAEB00A5DB41 /* TaskFilterableViewController.swift */,
 				747F16DB1E07B4C6000108FF /* AlertPresenter.swift */,
 			);
 			name = Protocols;
@@ -610,8 +612,6 @@
 		74B410471DD0596B003B07BA /* Parents */ = {
 			isa = PBXGroup;
 			children = (
-				740CB4751DCC951B00ABF0BD /* CreateTaskParentViewController.swift */,
-				74792B721DFBBAEB00A5DB41 /* TaskFilterableViewController.swift */,
 			);
 			name = Parents;
 			sourceTree = "<group>";

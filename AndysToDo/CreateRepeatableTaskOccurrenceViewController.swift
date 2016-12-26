@@ -277,7 +277,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
             }
             rootVC.viewModel?.repeatable.value = true
             rootVC.viewModel?.startTime = viewModel.date
-            _ = self.navigationController?.popToViewController(rootVC, animated: true)
+            _ = self.navigationController?.popToViewController(rootVC as! UIViewController, animated: true)
         }
     }
 }

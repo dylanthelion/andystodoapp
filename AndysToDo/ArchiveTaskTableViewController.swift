@@ -11,7 +11,11 @@ import UIKit
 private var taskHandle : UInt8 = 0
 private var filteredHandle : UInt8 = 0
 
-class ArchiveTaskTableViewController : TaskFilterableViewController {
+class ArchiveTaskTableViewController : UITableViewController, TaskFilterableViewController {
+    
+    // View Model
+    
+    var viewModel : TaskFilterableViewModel?
     
     // Table view
     
