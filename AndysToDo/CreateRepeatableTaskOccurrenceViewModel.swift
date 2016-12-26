@@ -35,13 +35,12 @@ class CreateRepeatableTaskOccurrenceViewModel : DatePickerViewModel {
             return (false, Constants.standard_alert_error_title, Constants.createRepeatableVC_alert_invalid_failure_message)
         }
         multipleRepeatables = createRepeatable()
-        if CollectionHelper.IsNilOrEmpty(_coll: multipleRepeatables) {
+        if CollectionHelper.IsNilOrEmpty(multipleRepeatables) {
             return (false, Constants.standard_alert_error_title, Constants.createRepeatableVC_alert_invalid_failure_message)
         }
         var areValid = true
         for repeatable in multipleRepeatables! {
             if(!repeatable.isValid()) {
-                print(repeatable.UnitsPerTask)
                 areValid = false
                 break
             }
@@ -65,7 +64,7 @@ class CreateRepeatableTaskOccurrenceViewModel : DatePickerViewModel {
     // Create
     
     func createRepeatable() -> [RepeatableTaskOccurrence]? {
-        let unitOfTime : RepetitionTimeCategory? = EnumConverter.timeOfDayConvertStringToValue(_timeOfDay : unitOfTimeAsString!)
+        let unitOfTime : RepetitionTimeCategory? = EnumConverter.timeOfDayConvertStringToValue(unitOfTimeAsString!)
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
         self.date = date
         guard let check = dayOfWeek else {
@@ -82,7 +81,7 @@ class CreateRepeatableTaskOccurrenceViewModel : DatePickerViewModel {
     // Build repeatables
     
     func buildRepeatableFrom(unitOfTime : RepetitionTimeCategory, date : NSDate) -> RepeatableTaskOccurrence {
-        return RepeatableTaskOccurrence(_unit: unitOfTime, _unitCount: numberOfUnits, _time: timeOfDay, _firstOccurrence: date, _dayOfWeek: dayOfWeek)
+        return RepeatableTaskOccurrence(unit: unitOfTime, unitCount: numberOfUnits, time: timeOfDay, firstOccurrence: date, dayOfWeek: dayOfWeek)
     }
     
     func buildMultipleRepeatablesFrom(unitOfTime : RepetitionTimeCategory, date : NSDate) -> [RepeatableTaskOccurrence] {
@@ -93,7 +92,7 @@ class CreateRepeatableTaskOccurrenceViewModel : DatePickerViewModel {
             if self.date == nil {
                 self.date = date.addingTimeInterval(TimeInterval(daysToAdd))
             }
-            let newRepeatable = RepeatableTaskOccurrence(_unit: unitOfTime, _unitCount: numberOfUnits, _time: timeOfDay, _firstOccurrence: date.addingTimeInterval(TimeInterval(daysToAdd)), _dayOfWeek: day)
+            let newRepeatable = RepeatableTaskOccurrence(unit: unitOfTime, unitCount: numberOfUnits, time: timeOfDay, firstOccurrence: date.addingTimeInterval(TimeInterval(daysToAdd)), dayOfWeek: day)
             repeatablesToReturn.append(newRepeatable)
         }
         return repeatablesToReturn

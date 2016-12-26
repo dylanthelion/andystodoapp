@@ -48,10 +48,10 @@ class DisplayArchivedTaskViewController : UIViewController {
     // Setup
     
     func populateTaskInfo() {
-        name_lbl.text = viewModel.task?.value.Name!
-        description_txtView.text = viewModel.task?.value.Description
-        startTime_txtField.text = TimeConverter.dateToShortDateConverter(_time: (viewModel.task?.value.StartTime!)!)
-        endTime_txtField.text = TimeConverter.dateToShortDateConverter(_time: (viewModel.task?.value.FinishTime!)!)
+        name_lbl.text = viewModel.task?.value.name!
+        description_txtView.text = viewModel.task?.value.description
+        startTime_txtField.text = TimeConverter.dateToShortDateConverter((viewModel.task?.value.startTime!)!)
+        endTime_txtField.text = TimeConverter.dateToShortDateConverter((viewModel.task?.value.finishTime!)!)
         if let _ = viewModel.task?.value.expectedTimeRequirement.numberOfUnits {
             setTimeOnTaskWithBudget()
         } else {
@@ -60,21 +60,21 @@ class DisplayArchivedTaskViewController : UIViewController {
     }
     
     func setTimeOnTaskWithBudget() {
-        let interval = viewModel.task!.value.FinishTime!.timeIntervalSince(viewModel.task!.value.StartTime! as Date)
+        let interval = viewModel.task!.value.finishTime!.timeIntervalSince(viewModel.task!.value.startTime! as Date)
         let expectedTotal : String = String(viewModel.task!.value.expectedTimeRequirement.numberOfUnits!)
         let total : String
         let componentAsString = Constants.expectedUnitsOfTimeAsString[Constants.expectedUnitOfTime_All.index(of: viewModel.task!.value.expectedTimeRequirement._unit)!]
         switch viewModel.task!.value.expectedTimeRequirement.unit! {
         case .Day:
-            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: .day))
+            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(interval: interval, units: .day))
         case.Hour:
-            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: .hour))
+            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(interval: interval, units: .hour))
         case .Minute:
-            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: .minute))
+            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(interval: interval, units: .minute))
         case.Month:
-            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: .month))
+            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(interval: interval, units: .month))
         case .Week:
-            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: .day) / 7)
+            total = String(TimeConverter.convertTimeIntervalToCalendarUnits(interval: interval, units: .day) / 7)
         case .Null:
             print("WHAT WENT HERP WRONG?")
             total = ""
@@ -84,7 +84,7 @@ class DisplayArchivedTaskViewController : UIViewController {
     }
     
     func setTimeOnTaskWithoutBudget() {
-        let interval = viewModel.task!.value.FinishTime!.timeIntervalSince(viewModel.task!.value.StartTime! as Date)
+        let interval = viewModel.task!.value.finishTime!.timeIntervalSince(viewModel.task!.value.startTime! as Date)
         let component : Calendar.Component
         let componentAsString : String
         if Int(interval) > Constants.seconds_per_day {
@@ -100,6 +100,6 @@ class DisplayArchivedTaskViewController : UIViewController {
             component = .minute
             componentAsString = Constants.displayArchivedTaskVC_minute
         }
-        totalTime_txtField.text = "\(String(TimeConverter.convertTimeIntervalToCalendarUnits(_interval: interval, _units: component))) \(componentAsString)s"
+        totalTime_txtField.text = "\(String(TimeConverter.convertTimeIntervalToCalendarUnits(interval: interval, units: component))) \(componentAsString)s"
     }
 }

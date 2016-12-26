@@ -20,7 +20,7 @@ class AllTasksTableViewDelegate : NSObject, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .normal, title: Constants.tableViewCell_delete_action_title) { action, index in
-            self.viewModel?.deleteAt(index: indexPath.row)
+            self.viewModel?.deleteAt(indexPath.row)
         }
         delete.backgroundColor = UIColor.red
         let move = UITableViewRowAction(style: .normal, title: Constants.tableViewCell_readd_action_title) { action, index in

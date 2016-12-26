@@ -17,7 +17,7 @@ class SingleTaskViewModel {
     // Updates
     
     func updateTask() {
-        for checkTask in TaskDTO.globalManager.AllTasks!.value {
+        for checkTask in TaskDTO.globalManager.allTasks!.value {
             if task!.value == checkTask.value {
                 task!.value = checkTask.value
                 break

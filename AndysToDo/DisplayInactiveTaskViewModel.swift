@@ -15,8 +15,8 @@ class DisplayInactiveTaskViewModel : TaskCRUDViewModel {
     
     override init() {
         super.init()
-        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.AllTimeCategories!)
-        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
+        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.allTimeCategories!)
+        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.allTasks!)
     }
     
     // Binding
@@ -58,13 +58,13 @@ class DisplayInactiveTaskViewModel : TaskCRUDViewModel {
     }
     
     func postpone() -> Bool {
-        if !NumberHelper.isNilOrZero(num: task?.value.timeOnTask) && task!.value.inProgress {
-            let timeToAdd : TimeInterval = Date().timeIntervalSince(task!.value.StartTime! as Date)
+        if !NumberHelper.isNilOrZero(task?.value.timeOnTask) && task!.value.inProgress {
+            let timeToAdd : TimeInterval = Date().timeIntervalSince(task!.value.startTime! as Date)
             task!.value.timeOnTask! += timeToAdd
         }
-        task!.value.StartTime! = task!.value.StartTime!.addingTimeInterval(TimeInterval(Constants.seconds_per_day))
+        task!.value.startTime! = task!.value.startTime!.addingTimeInterval(TimeInterval(Constants.seconds_per_day))
         task!.value.inProgress = false
-        if TaskDTO.globalManager.updateTask(_task: task!.value) {
+        if TaskDTO.globalManager.updateTask(task!.value) {
             return true
         }
         return false
@@ -75,9 +75,9 @@ class DisplayInactiveTaskViewModel : TaskCRUDViewModel {
     func validateNonRepeatableTask() -> (Bool, String) {
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
         //print(date)
-        let newTask = Task(_name: name!, _description: description!, _start: date, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: nil, _dueDate: dueDate, _parent: task?.value.parentID, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
+        let newTask = Task(name: name!, description: description!, start: date, finish: finishTime, category: categories, timeCategory: timeCategory, repeatable: nil, dueDate: dueDate, parent: task?.value.parentID, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
         newTask.ID = task!.value.ID
-        if TaskDTO.globalManager.updateTask(_task: newTask) {
+        if TaskDTO.globalManager.updateTask(newTask) {
             return (true, Constants.createTaskVC_alert_success_message)
         } else {
             return (false, Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message)

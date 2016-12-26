@@ -53,7 +53,7 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     // Filter children from model
     
     func removeChildren() {
-        let unwrappedTasks = RepeatableUnwrapper.removeChildren(allTasks: localTasks!.value.map({ $0.value }))
+        let unwrappedTasks = RepeatableUnwrapper.removeChildren(localTasks!.value.map({ $0.value }))
         localTasks!.value = unwrappedTasks.0.map({ Dynamic($0) })
         childTasks = unwrappedTasks.1
     }
@@ -61,18 +61,18 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     // Table view actions
     
     func deArchive(index : Int) {
-        let _task = localTasks!.value[index].value
-        let _ = ArchivedTaskDTO.shared.deArchive(_task: _task)
+        let task = localTasks!.value[index].value
+        let _ = ArchivedTaskDTO.shared.deArchive(task)
     }
     
     // CRUD
     
-    override func deleteAt(index: Int) {
+    override func deleteAt(_ index: Int) {
         if let _ =  localTasks!.value[index].value.parentID {
             localTasks!.value.remove(at: index)
             sortDisplayedTasks()
         } else {
-            ArchivedTaskDTO.shared.deleteArchivedTask(_task: _tasksToPopulate!.value[index].value)
+            ArchivedTaskDTO.shared.deleteArchivedTask(_tasksToPopulate!.value[index].value)
         }
     }
     
@@ -84,11 +84,11 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
             sortParam = .Name
             if filterActive {
                 localFilteredTasks!.value.sort(by: {
-                    return $0.value.Name! < $1.value.Name!
+                    return $0.value.name! < $1.value.name!
                 })
             } else {
                 localTasks!.value.sort(by: {
-                    return $0.value.Name! < $1.value.Name!
+                    return $0.value.name! < $1.value.name!
                 })
             }
             
@@ -96,11 +96,11 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
             sortParam = .Date
             if filterActive {
                 localFilteredTasks!.value.sort(by: {
-                    return ($0.value.FinishTime! as Date) < ($1.value.FinishTime! as Date)
+                    return ($0.value.finishTime! as Date) < ($1.value.finishTime! as Date)
                 })
             } else {
                 localTasks!.value.sort(by: {
-                    return ($0.value.FinishTime! as Date) < ($1.value.FinishTime! as Date)
+                    return ($0.value.finishTime! as Date) < ($1.value.finishTime! as Date)
                 })
             }
         }

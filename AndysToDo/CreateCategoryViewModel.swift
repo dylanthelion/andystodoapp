@@ -19,7 +19,7 @@ class CreateCategoryViewModel : CategoryCRUDViewModel {
     var description : String?
     
     init() {
-        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.AllCategories!)
+        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.allCategories!)
     }
     
     // Binding
@@ -41,13 +41,13 @@ class CreateCategoryViewModel : CategoryCRUDViewModel {
     
     func setCategory(cat: Category) {
         category = cat
-        name = cat.Name!
-        description = cat.Description!
+        name = cat.name!
+        description = cat.description!
     }
     
     func updateCategory() {
         if let _ = category {
-            for cat in CategoryDTO.shared.AllCategories!.value {
+            for cat in CategoryDTO.shared.allCategories!.value {
                 if cat.value == category! {
                     category = cat.value
                 }
@@ -59,13 +59,13 @@ class CreateCategoryViewModel : CategoryCRUDViewModel {
     
     func validateAndSubmitCategory() -> Bool {
         if let _ = category {
-            if CategoryDTO.shared.updateCategory(_oldCategory: category!, _category: Category(_name: name!, _description: description!)) {
+            if CategoryDTO.shared.updateCategory(oldCategory: category!, newCategory: Category(name: name!, description: description!)) {
                 return true
             } else {
                 return false
             }
         }
-        if CategoryDTO.shared.createNewCategory(_category: Category(_name: name!, _description: description!)) {
+        if CategoryDTO.shared.createNewCategory(Category(name: name!, description: description!)) {
             return true
         } else {
             return false

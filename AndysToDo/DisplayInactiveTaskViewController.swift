@@ -118,14 +118,14 @@ class DisplayInactiveTaskViewController : UIViewController, CreateTaskParentView
     }
     
     func populateTaskInfo() {
-        self.name_txtField.text = viewModel!.task!.value.Name!
-        self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(_time: viewModel!.task!.value.StartTime!)
-        self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: viewModel!.task!.value.StartTime!)
-        self.description_txtView.text = viewModel!.task!.value.Description!
-        if let _ = viewModel!.task!.value.TimeCategory {
-            self.timeCat_txtField.text = viewModel!.task!.value.TimeCategory!.Name!
-            if let _ = viewModel!.task!.value.TimeCategory?.color {
-                self.view.backgroundColor = UIColor(cgColor: viewModel!.task!.value.TimeCategory!.color!)
+        self.name_txtField.text = viewModel!.task!.value.name!
+        self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(viewModel!.task!.value.startTime!)
+        self.startDateTextView.text = TimeConverter.dateToShortDateConverter(viewModel!.task!.value.startTime!)
+        self.description_txtView.text = viewModel!.task!.value.description!
+        if let _ = viewModel!.task!.value.timeCategory {
+            self.timeCat_txtField.text = viewModel!.task!.value.timeCategory!.name!
+            if let _ = viewModel!.task!.value.timeCategory?.color {
+                self.view.backgroundColor = UIColor(cgColor: viewModel!.task!.value.timeCategory!.color!)
             }
         }
         if viewModel!.task!.value.expectedTimeRequirement.unit == nil {
@@ -148,9 +148,9 @@ class DisplayInactiveTaskViewController : UIViewController, CreateTaskParentView
     
     func resetForSuccessfulSubmit() {
         let closure = {
-            if let _ = self.viewModel!.task!.value.TimeCategory?.color {
+            if let _ = self.viewModel!.task!.value.timeCategory?.color {
                 DispatchQueue.main.async {
-                    self.view.backgroundColor = UIColor(cgColor: self.viewModel!.task!.value.TimeCategory!.color!)
+                    self.view.backgroundColor = UIColor(cgColor: self.viewModel!.task!.value.timeCategory!.color!)
                 }
             } else {
                 DispatchQueue.main.async {
@@ -238,7 +238,7 @@ class DisplayInactiveTaskViewController : UIViewController, CreateTaskParentView
         }
         let displayInactiveTaskVM = viewModel! as! DisplayInactiveTaskViewModel
         let check = displayInactiveTaskVM.submit()
-        let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        let alertController = AlertHelper.presentAlertController(self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
         self.present(alertController, animated: true, completion: nil)
         if check.0 {
             resetForSuccessfulSubmit()
@@ -257,7 +257,7 @@ class DisplayInactiveTaskViewController : UIViewController, CreateTaskParentView
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" && startDateTextView.text! == "" {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return false
         }

@@ -10,21 +10,21 @@ import Foundation
 
 class RepeatableUnwrapper {
     
-    class func unwrapRepeatables(_task : Task, toUnwrap : Int) -> [Dynamic<Task>] {
-        if CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
-            _task.unwrappedRepeatables = [Task]()
+    class func unwrapRepeatables(_ task : Task, toUnwrap : Int) -> [Dynamic<Task>] {
+        if CollectionHelper.IsNilOrEmpty(task.unwrappedRepeatables) {
+            task.unwrappedRepeatables = [Task]()
         }
-        if _task.unwrappedRepeatables!.filter({ $0.FinishTime == nil }).count >= toUnwrap {
-            return _task.unwrappedRepeatables!.map({ Dynamic($0) })
+        if task.unwrappedRepeatables!.filter({ $0.finishTime == nil }).count >= toUnwrap {
+            return task.unwrappedRepeatables!.map({ Dynamic($0) })
         }
         var toReturn = [Dynamic<Task>]()
-        let component = getTimeInterval(_task.RepeatableTask!.UnitOfTime!)
-        let startDate = getStartingDate(_task, adding: (component * TimeInterval(_task.RepeatableTask!.UnitsPerTask!)))
+        let component = getTimeInterval(task.repeatableTask!.unitOfTime!)
+        let startDate = getStartingDate(task, adding: (component * TimeInterval(task.repeatableTask!.unitsPerTask!)))
         for i in 0..<toUnwrap {
-            let taskToAdd = Task(_name: "\(_task.Name!)\(i + _task.unwrappedRepeatables!.count)", _description: _task.Description!, _start: startDate.addingTimeInterval(TimeInterval(i) * component), _finish: nil, _category: _task.Categories, _timeCategory: _task.TimeCategory, _repeatable: nil, _dueDate: nil, _parent: _task.ID!, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
-            taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(taskToAdd.StartTime!.timeIntervalSince1970)
+            let taskToAdd = Task(name: "\(task.name!)\(i + task.unwrappedRepeatables!.count)", description: task.description!, start: startDate.addingTimeInterval(TimeInterval(i) * component), finish: nil, category: task.categories, timeCategory: task.timeCategory, repeatable: nil, dueDate: nil, parent: task.ID!, expectedUnitOfTime: nil, expectedTotalUnits: nil)
+            taskToAdd.ID = Int(NSDate().timeIntervalSince1970) + Int(taskToAdd.startTime!.timeIntervalSince1970)
             toReturn.append(Dynamic(taskToAdd))
-            _task.unwrappedRepeatables!.append(taskToAdd)
+            task.unwrappedRepeatables!.append(taskToAdd)
         }
         return toReturn
     }
@@ -33,7 +33,7 @@ class RepeatableUnwrapper {
         var newTasks = [Task]()
         var areValid = true
         for index in 0..<repeatables.count {
-            let task = Task(_name: ofParent.Name!, _description: ofParent.Description!, _start: ofParent.StartTime, _finish: ofParent.FinishTime, _category: ofParent.Categories, _timeCategory: ofParent.TimeCategory, _repeatable: ofParent.RepeatableTask, _dueDate: ofParent.dueDate, _parent: withID, _expectedUnitOfTime: ofParent.expectedTimeRequirement.unit, _expectedTotalUnits: ofParent.expectedTimeRequirement.numberOfUnits)
+            let task = Task(name: ofParent.name!, description: ofParent.description!, start: ofParent.startTime, finish: ofParent.finishTime, category: ofParent.categories, timeCategory: ofParent.timeCategory, repeatable: ofParent.repeatableTask, dueDate: ofParent.dueDate, parent: withID, expectedUnitOfTime: ofParent.expectedTimeRequirement.unit, expectedTotalUnits: ofParent.expectedTimeRequirement.numberOfUnits)
             if !task.isValidWithoutId() {
                 areValid = false
                 break
@@ -51,15 +51,15 @@ class RepeatableUnwrapper {
         }
     }
     
-    class func removeChildren(allTasks : [Task]) -> ([Task], [Task]) {
+    class func removeChildren(_ allTasks : [Task]) -> ([Task], [Task]) {
         var childTasks = [Task]()
-        for _parent in allTasks {
-            for _child in allTasks {
-                if _child.parentID == nil {
+        for parent in allTasks {
+            for child in allTasks {
+                if child.parentID == nil {
                     continue
                 }
-                if _parent.ID! == _child.parentID! && childTasks.index(of: _child) == nil {
-                    childTasks.append(_child)
+                if parent.ID! == child.parentID! && childTasks.index(of: child) == nil {
+                    childTasks.append(child)
                 }
             }
         }
@@ -68,10 +68,10 @@ class RepeatableUnwrapper {
     
     class func getStartingDate(_ task : Task, adding timeInterval : TimeInterval) -> NSDate {
         var startDate : NSDate
-        if !CollectionHelper.IsNilOrEmpty(_coll: task.unwrappedRepeatables) {
-            startDate = task.unwrappedRepeatables!.last!.StartTime!.addingTimeInterval(timeInterval)
+        if !CollectionHelper.IsNilOrEmpty(task.unwrappedRepeatables) {
+            startDate = task.unwrappedRepeatables!.last!.startTime!.addingTimeInterval(timeInterval)
         } else {
-            startDate = (task.RepeatableTask?.FirstOccurrence!)!
+            startDate = (task.repeatableTask?.firstOccurrence!)!
             
             let now = Date()
             while (startDate as Date) < now {

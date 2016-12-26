@@ -22,9 +22,9 @@ class AddCategoriesViewModel {
     private var localCats : Dynamic<[Dynamic<Category>]>?
     
     init() {
-        self.localCats = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
+        self.localCats = Dynamic(CategoryDTO.shared.allCategories!.value.map({ $0 }))
         sort()
-        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.AllCategories!)
+        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.allCategories!)
     }
     
     // Binding
@@ -46,7 +46,7 @@ class AddCategoriesViewModel {
     
     func updateCategories() {
         localCats!.value.removeAll()
-        localCats!.value.append(contentsOf: CategoryDTO.shared.AllCategories!.value)
+        localCats!.value.append(contentsOf: CategoryDTO.shared.allCategories!.value)
         sort()
     }
     
@@ -54,7 +54,7 @@ class AddCategoriesViewModel {
     
     func sort() {
         localCats!.value.sort(by: {
-            return ($0.value.Name! < $1.value.Name!)
+            return ($0.value.name! < $1.value.name!)
         })
         if let _ = categories {
             categories!.value = localCats!.value

@@ -20,9 +20,9 @@ class MainTasksTableViewDelegate : NSObject, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (viewModel?.tasksToPopulate.value[indexPath.row].value.inProgress)! {
-            viewDelegate!.presentActiveTaskController(_task: (viewModel?.tasksToPopulate.value[indexPath.row].value)!)
+            viewDelegate!.presentActiveTaskController((viewModel?.tasksToPopulate.value[indexPath.row].value)!)
         } else {
-            viewDelegate!.presentInactiveTaskController(_task: (viewModel?.tasksToPopulate.value[indexPath.row].value)!)
+            viewDelegate!.presentInactiveTaskController((viewModel?.tasksToPopulate.value[indexPath.row].value)!)
         }
     }
 }

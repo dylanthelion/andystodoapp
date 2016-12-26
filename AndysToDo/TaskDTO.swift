@@ -8,11 +8,11 @@
 
 import UIKit
 
-private let allTasks = TaskDTO()
+private let sharedTasks = TaskDTO()
 
 class TaskDTO {
     
-    var AllTasks : Dynamic<[Dynamic<Task>]>?
+    var allTasks : Dynamic<[Dynamic<Task>]>?
     
     init() {
         CategoryDTO.shared.loadCategories()
@@ -21,35 +21,35 @@ class TaskDTO {
     }
     
     class var globalManager : TaskDTO {
-        return allTasks
+        return sharedTasks
     }
     
     func loadTasks() {
-        if let _ = AllTasks {
+        if let _ = allTasks {
             // Don't load fake tasks more than once
             return
         }
-        AllTasks = loadFakeTasks()
+        allTasks = loadFakeTasks()
     }
     
     func loadFakeTasks() -> Dynamic<[Dynamic<Task>]> {
-        let task1 = Task(_name: "Task 1", _description: "Fake task", _start: Date().addingTimeInterval(5400) as NSDate?, _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+        let task1 = Task(name: "Task 1", description: "Fake task", start: Date().addingTimeInterval(5400) as NSDate?, finish: nil, category: nil, timeCategory: nil, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: nil, expectedTotalUnits: nil)
         task1.ID = IDGenerator.shared.nextTaskID
-        let task2 = Task(_name: "Task 2", _description: "Fake task with a fake category", _start: Date().addingTimeInterval(720000) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories!.value[0].value], _timeCategory: nil, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+        let task2 = Task(name: "Task 2", description: "Fake task with a fake category", start: Date().addingTimeInterval(720000) as NSDate?, finish: nil, category: [CategoryDTO.shared.allCategories!.value[0].value], timeCategory: nil, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: nil, expectedTotalUnits: nil)
         task2.ID = IDGenerator.shared.nextTaskID
-        let task3 = Task(_name: "Task 3", _description: "Fake task with multiple fake categories", _start: Date().addingTimeInterval(3600) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories!.value[1].value, CategoryDTO.shared.AllCategories!.value[0].value, CategoryDTO.shared.AllCategories!.value[2].value], _timeCategory: nil, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+        let task3 = Task(name: "Task 3", description: "Fake task with multiple fake categories", start: Date().addingTimeInterval(3600) as NSDate?, finish: nil, category: [CategoryDTO.shared.allCategories!.value[1].value, CategoryDTO.shared.allCategories!.value[0].value, CategoryDTO.shared.allCategories!.value[2].value], timeCategory: nil, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: nil, expectedTotalUnits: nil)
         task3.ID = IDGenerator.shared.nextTaskID
-        let task4 = Task(_name: "Task 4", _description: "Fake task with a fake time category", _start: Date().addingTimeInterval(14400) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories!.value[1].value], _timeCategory: TimeCategoryDTO.shared.AllTimeCategories!.value[2].value, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+        let task4 = Task(name: "Task 4", description: "Fake task with a fake time category", start: Date().addingTimeInterval(14400) as NSDate?, finish: nil, category: [CategoryDTO.shared.allCategories!.value[1].value], timeCategory: TimeCategoryDTO.shared.allTimeCategories!.value[2].value, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: nil, expectedTotalUnits: nil)
         task4.ID = IDGenerator.shared.nextTaskID
-        let repeatable1 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Daily, _unitCount: 2, _time: 13.5, _firstOccurrence: Date().addingTimeInterval(4000) as NSDate?, _dayOfWeek: nil)
-        let task5 = Task(_name: "Task 5", _description: "Fake task with daily repetition", _start: Date().addingTimeInterval(4000) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories!.value[2].value], _timeCategory: TimeCategoryDTO.shared.AllTimeCategories!.value[2].value, _repeatable: repeatable1, _dueDate: nil, _parent: nil, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+        let repeatable1 = RepeatableTaskOccurrence(unit: RepetitionTimeCategory.Daily, unitCount: 2, time: 13.5, firstOccurrence: Date().addingTimeInterval(4000) as NSDate?, dayOfWeek: nil)
+        let task5 = Task(name: "Task 5", description: "Fake task with daily repetition", start: Date().addingTimeInterval(4000) as NSDate?, finish: nil, category: [CategoryDTO.shared.allCategories!.value[2].value], timeCategory: TimeCategoryDTO.shared.allTimeCategories!.value[2].value, repeatable: repeatable1, dueDate: nil, parent: nil, expectedUnitOfTime: nil, expectedTotalUnits: nil)
         task5.ID = IDGenerator.shared.nextTaskID
         task5.inProgress = true
-        let repeatble2 = RepeatableTaskOccurrence(_unit: RepetitionTimeCategory.Weekly, _unitCount: 1, _time: 12.0, _firstOccurrence: Date().addingTimeInterval(400000) as NSDate?, _dayOfWeek: DayOfWeek.Monday)
-        let task6 = Task(_name: "Task 6", _description: "Fake task with weekly repetition", _start: Date().addingTimeInterval(400000) as NSDate?, _finish: nil, _category: [CategoryDTO.shared.AllCategories!.value[2].value, CategoryDTO.shared.AllCategories!.value[0].value], _timeCategory: TimeCategoryDTO.shared.AllTimeCategories!.value[1].value, _repeatable: repeatble2, _dueDate: nil, _parent: nil, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+        let repeatble2 = RepeatableTaskOccurrence(unit: RepetitionTimeCategory.Weekly, unitCount: 1, time: 12.0, firstOccurrence: Date().addingTimeInterval(400000) as NSDate?, dayOfWeek: DayOfWeek.Monday)
+        let task6 = Task(name: "Task 6", description: "Fake task with weekly repetition", start: Date().addingTimeInterval(400000) as NSDate?, finish: nil, category: [CategoryDTO.shared.allCategories!.value[2].value, CategoryDTO.shared.allCategories!.value[0].value], timeCategory: TimeCategoryDTO.shared.allTimeCategories!.value[1].value, repeatable: repeatble2, dueDate: nil, parent: nil, expectedUnitOfTime: nil, expectedTotalUnits: nil)
         task6.ID = IDGenerator.shared.nextTaskID
-        let taskToDelete = Task(_name: "Task to delete", _description: "Shouldn't show", _start: Date()
-            .addingTimeInterval(4000) as NSDate?, _finish: nil, _category: nil, _timeCategory: nil, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: nil, _expectedTotalUnits: nil)
+        let taskToDelete = Task(name: "Task to delete", description: "Shouldn't show", start: Date()
+            .addingTimeInterval(4000) as NSDate?, finish: nil, category: nil, timeCategory: nil, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: nil, expectedTotalUnits: nil)
         taskToDelete.ID = IDGenerator.shared.nextTaskID
         return Dynamic([Dynamic(task1), Dynamic(task2), Dynamic(task3), Dynamic(task4), Dynamic(task5), Dynamic(task6), Dynamic(taskToDelete)])
     }
@@ -58,73 +58,73 @@ class TaskDTO {
     
     // CRUD
     
-    func createNewTask(_task : Task) -> Bool {
-        if _task.isValid()  && !AllTasks!.value.map({ $0.value.Name! }).contains(where: { $0 == _task.Name! }) {
-            AllTasks!.value.append(Dynamic(_task))
+    func createNewTask(_ task : Task) -> Bool {
+        if task.isValid()  && !allTasks!.value.map({ $0.value.name! }).contains(where: { $0 == task.name! }) {
+            allTasks!.value.append(Dynamic(task))
             return true
         }
         return false
     }
     
-    func getTaskByID(_id : Int) -> Task? {
-        for task in AllTasks!.value {
-            if task.value.ID! == _id {
+    func getTaskByID(_ id : Int) -> Task? {
+        for task in allTasks!.value {
+            if task.value.ID! == id {
                 return task.value
             }
         }
         return nil
     }
     
-    func updateTask(_task : Task) -> Bool {
-        for task in AllTasks!.value {
-            if task.value.ID! == _task.ID && _task.isValid() {
-                editTask(_task: _task, indexOf: AllTasks!.value.index(of: task)!, _populated: false)
+    func updateTask(_ task : Task) -> Bool {
+        for checkTask in allTasks!.value {
+            if checkTask.value.ID! == task.ID && task.isValid() {
+                editTask(checkTask.value, indexOf: allTasks!.value.index(of: checkTask)!, populated: false)
                 return true
             }
         }
         return false
     }
     
-    func editTask(_task : Task, indexOf: Int, _populated : Bool) {
-        AllTasks!.value[indexOf] = Dynamic(_task)
-        if _task.FinishTime != nil && !NumberHelper.isNilOrZero(num: _task.timeOnTask) && !_task.inProgress {
-            let _ = archiveTask(_task: _task)
+    func editTask(_ task : Task, indexOf: Int, populated : Bool) {
+        allTasks!.value[indexOf] = Dynamic(task)
+        if task.finishTime != nil && !NumberHelper.isNilOrZero(task.timeOnTask) && !task.inProgress {
+            let _ = archiveTask(task)
         }
     }
     
-    func deleteTask(_task : Task) {
-        if !CollectionHelper.IsNilOrEmpty(_coll: _task.unwrappedRepeatables) {
-            for task in _task.unwrappedRepeatables! {
-                deleteTask(_task: task)
+    func deleteTask(_ task : Task) {
+        if !CollectionHelper.IsNilOrEmpty(task.unwrappedRepeatables) {
+            for task in task.unwrappedRepeatables! {
+                deleteTask(task)
             }
         }
-        if let checkIndex = AllTasks!.value.index(of: Dynamic(_task)) {
-            AllTasks!.value.remove(at: checkIndex)
+        if let checkIndex = allTasks!.value.index(of: Dynamic(task)) {
+            allTasks!.value.remove(at: checkIndex)
         }
     }
     
     // Temporary tasks
     
-    func createNewTempRepeatableTask(_task : Task) -> Bool {
-        if _task.isValid() {
-            AllTasks!.value.append(Dynamic(_task))
+    func createNewTempRepeatableTask(_ task : Task) -> Bool {
+        if task.isValid() {
+            allTasks!.value.append(Dynamic(task))
             return true
         }
         return false
     }
     
     
-    func archiveTask(_task: Task) -> Bool {
-        let index = AllTasks!.value.index(of: Dynamic(_task))
+    func archiveTask(_ task: Task) -> Bool {
+        let index = allTasks!.value.index(of: Dynamic(task))
         if let _ = index {
-            AllTasks!.value.remove(at: index!)
-            ArchivedTaskDTO.shared.addToArchive(_task: _task)
+            allTasks!.value.remove(at: index!)
+            ArchivedTaskDTO.shared.addToArchive(task)
             return true
         }
         return false
     }
     
-    func deArchive(task : Task) {
-        AllTasks!.value.append(Dynamic(task))
+    func deArchive(_ task : Task) {
+        allTasks!.value.append(Dynamic(task))
     }
 }

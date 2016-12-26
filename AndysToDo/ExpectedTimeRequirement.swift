@@ -38,7 +38,7 @@ struct ExpectedTimeRequirement {
         }
     }
     
-    mutating func update(newUnitOfTime : UnitOfTime?, newValue: Int?) {
+    mutating func update(_ newUnitOfTime : UnitOfTime?, _ newValue: Int?) {
         if let _ = newUnitOfTime {
             unit = newUnitOfTime!
         }

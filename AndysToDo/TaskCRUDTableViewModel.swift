@@ -9,7 +9,5 @@
 import Foundation
 
 protocol TaskCRUDTableViewModel {
-    func deleteAt(index : Int)
-    /*func addNewTasks()
-    func removeDeletedTasks()*/
+    func deleteAt(_ index : Int)
 }

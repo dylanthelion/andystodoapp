@@ -24,12 +24,12 @@ class AllCategoriesViewModel {
     var localTimecats : Dynamic<[Dynamic<TimeCategory>]>?
     
     init() {
-        self.categories = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
-        self.timeCategories = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0 }))
-        localCats = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
-        localTimecats = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0 }))
-        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.AllCategories!)
-        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.AllTimeCategories!)
+        self.categories = Dynamic(CategoryDTO.shared.allCategories!.value.map({ $0 }))
+        self.timeCategories = Dynamic(TimeCategoryDTO.shared.allTimeCategories!.value.map({ $0 }))
+        localCats = Dynamic(CategoryDTO.shared.allCategories!.value.map({ $0 }))
+        localTimecats = Dynamic(TimeCategoryDTO.shared.allTimeCategories!.value.map({ $0 }))
+        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.allCategories!)
+        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.allTimeCategories!)
         sort()
     }
     
@@ -65,13 +65,13 @@ class AllCategoriesViewModel {
     
     func updateCategories() {
         localCats!.value.removeAll()
-        localCats!.value.append(contentsOf: CategoryDTO.shared.AllCategories!.value)
+        localCats!.value.append(contentsOf: CategoryDTO.shared.allCategories!.value)
         sort()
     }
     
     func updateTimecats() {
         localTimecats!.value.removeAll()
-        localTimecats!.value.append(contentsOf: TimeCategoryDTO.shared.AllTimeCategories!.value)
+        localTimecats!.value.append(contentsOf: TimeCategoryDTO.shared.allTimeCategories!.value)
         sort()
     }
     
@@ -79,10 +79,10 @@ class AllCategoriesViewModel {
     
     func sort() {
         localCats!.value.sort(by: {
-            return $0.value.Name! < $1.value.Name!
+            return $0.value.name! < $1.value.name!
         })
         localTimecats!.value.sort(by: {
-            return $0.value.Name! < $1.value.Name!
+            return $0.value.name! < $1.value.name!
         })
         categories!.value = localCats!.value
         timeCategories!.value = localTimecats!.value

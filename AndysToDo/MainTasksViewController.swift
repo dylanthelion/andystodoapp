@@ -28,7 +28,7 @@ class MainTasksViewController : UITableViewController, TaskFilterableViewControl
         setupTableView()
         for _task in (viewModel?.tasksToPopulate.value)! {
             if _task.value.inProgress {
-                self.presentActiveTaskController(_task: _task.value)
+                self.presentActiveTaskController(_task.value)
                 break
             }
         }
@@ -88,14 +88,14 @@ class MainTasksViewController : UITableViewController, TaskFilterableViewControl
     
     // Present task
     
-    func presentActiveTaskController(_task : Task) {
+    func presentActiveTaskController(_ task : Task) {
         let displayActiveTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
-        displayActiveTaskVC.viewModel.task = Dynamic(_task)
+        displayActiveTaskVC.viewModel.task = Dynamic(task)
         self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
     }
     
-    func presentInactiveTaskController(_task : Task) {
+    func presentInactiveTaskController(_ task : Task) {
         let displayInactiveTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
-        displayInactiveTaskVC.viewModel!.setTask(newTask: _task)
+        displayInactiveTaskVC.viewModel!.setTask(task)
         self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
     }}

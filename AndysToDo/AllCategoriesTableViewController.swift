@@ -79,7 +79,7 @@ class AllCategoriesTableViewController : UITableViewController {
     
     func pushTimecatEdit(at index : Int) {
         let createTimecatVC = Constants.category_cruds_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
-        createTimecatVC.viewModel.setCategory(timecat: viewModel.timeCategories!.value[index].value)
+        createTimecatVC.viewModel.setCategory(viewModel.timeCategories!.value[index].value)
         self.navigationController?.pushViewController(createTimecatVC, animated: true)
     }
     

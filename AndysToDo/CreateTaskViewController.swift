@@ -79,7 +79,7 @@ class CreateTaskViewController: UIViewController, CreateTaskParentViewController
                 //print("Update all in view")
                 let closure =  {
                     DispatchQueue.main.async {
-                        if self.viewModel!.repeatableTask != nil || !CollectionHelper.IsNilOrEmpty(_coll: self.viewModel!.multipleRepeatables) {
+                        if self.viewModel!.repeatableTask != nil || !CollectionHelper.IsNilOrEmpty(self.viewModel!.multipleRepeatables) {
                             self.startDateTextView.text = Constants.createRepeatableVC_repeatable
                             self.start_txtField.text = Constants.createRepeatableVC_repeatable
                             self.startDateTextView.isUserInteractionEnabled = false
@@ -129,7 +129,7 @@ class CreateTaskViewController: UIViewController, CreateTaskParentViewController
     // Setup
     
     func populateTask() {
-        if viewModel?.repeatableTask == nil && CollectionHelper.IsNilOrEmpty(_coll: viewModel?.multipleRepeatables) {
+        if viewModel?.repeatableTask == nil && CollectionHelper.IsNilOrEmpty(viewModel?.multipleRepeatables) {
             repeatable_btn.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
             repeatable_btn.checked = false
             viewModel!.repeatable.value = false
@@ -257,7 +257,7 @@ class CreateTaskViewController: UIViewController, CreateTaskParentViewController
     // ExpectedUnitOfTimePickerDelegateViewDelegate
     
     func handleDidSelect(unit: UnitOfTime, text: String) {
-        viewModel?.expectedTimeRequirement.update(newUnitOfTime: unit, newValue: viewModel?.expectedTimeRequirement.numberOfUnits)
+        viewModel?.expectedTimeRequirement.update(unit, viewModel?.expectedTimeRequirement.numberOfUnits)
         expectedUnitOfTime_txtField.text = text
     }
     
@@ -302,7 +302,7 @@ class CreateTaskViewController: UIViewController, CreateTaskParentViewController
         }
         let createTaskVM = viewModel! as! CreateTaskViewModel
         let check = createTaskVM.submit()
-        let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        let alertController = AlertHelper.presentAlertController(self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
         self.present(alertController, animated: true, completion: nil)
         if check.0 {
             resetAfterSuccessfulSubmit()
@@ -314,13 +314,13 @@ class CreateTaskViewController: UIViewController, CreateTaskParentViewController
     func validateForSubmit() -> Bool {
         
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" && startDateTextView.text! == "" {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return false
         }
         
         if !viewModel!.repeatable.value && (startDateTextView.text! == Constants.createTaskVC_repeatable || start_txtField.text! == Constants.createTaskVC_repeatable) {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_invalid_repeatables_failure_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return false
         }

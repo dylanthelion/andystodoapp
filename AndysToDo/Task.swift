@@ -11,14 +11,14 @@ import Foundation
 class Task : Equatable {
     
     var ID : Int?
-    var Name : String?
-    var Description : String?
-    var StartTime : NSDate?
-    var FinishTime : NSDate?
+    var name : String?
+    var description : String?
+    var startTime : NSDate?
+    var finishTime : NSDate?
     var inProgress : Bool = false
-    var Categories : [Category]?
-    var TimeCategory : TimeCategory?
-    var RepeatableTask : RepeatableTaskOccurrence?
+    var categories : [Category]?
+    var timeCategory : TimeCategory?
+    var repeatableTask : RepeatableTaskOccurrence?
     var unwrappedRepeatables : [Task]?
     var siblingRepeatables : [Task]?
     var parentID : Int?
@@ -26,22 +26,22 @@ class Task : Equatable {
     var dueDate : NSDate?
     var expectedTimeRequirement : ExpectedTimeRequirement
     
-    init(_name: String, _description: String, _start : NSDate?, _finish : NSDate?, _category : [Category]?, _timeCategory : TimeCategory?, _repeatable : RepeatableTaskOccurrence?, _dueDate : NSDate?, _parent: Int?, _expectedUnitOfTime : UnitOfTime?, _expectedTotalUnits : Int?) {
-        Name = _name
-        Description = _description
-        StartTime = _start
-        FinishTime = _finish
-        Categories = _category
-        TimeCategory = _timeCategory
-        RepeatableTask = _repeatable
+    init(name: String, description: String, start : NSDate?, finish : NSDate?, category : [Category]?, timeCategory : TimeCategory?, repeatable : RepeatableTaskOccurrence?, dueDate : NSDate?, parent: Int?, expectedUnitOfTime : UnitOfTime?, expectedTotalUnits : Int?) {
+        self.name = name
+        self.description = description
+        startTime = start
+        finishTime = finish
+        categories = category
+        self.timeCategory = timeCategory
+        repeatableTask = repeatable
         ID = IDGenerator.shared.getNextID()
         siblingRepeatables = [Task]()
         timeOnTask = 0.0
         expectedTimeRequirement = ExpectedTimeRequirement(_unit: .Null, _numberOfUnits: 0)
-        dueDate = _dueDate
-        parentID = _parent
-        if let _ = _expectedUnitOfTime, let _ = _expectedTotalUnits {
-            expectedTimeRequirement.update(newUnitOfTime: _expectedUnitOfTime!, newValue: _expectedTotalUnits!)
+        self.dueDate = dueDate
+        parentID = parent
+        if let _ = expectedUnitOfTime, let _ = expectedTotalUnits {
+            expectedTimeRequirement.update(expectedUnitOfTime!, expectedTotalUnits!)
         }
     }
     
@@ -50,15 +50,15 @@ class Task : Equatable {
     }
     
     func isValidWithoutId() -> Bool {
-        if let _ = self.RepeatableTask {
-            return Name != nil && Description != nil && RepeatableTask!.isValid() && StartTime != nil
+        if let _ = repeatableTask {
+            return name != nil && description != nil && repeatableTask!.isValid() && startTime != nil
         } else {
-            return Name != nil && Description != nil && StartTime != nil
+            return name != nil && description != nil && startTime != nil
         }
     }
     
     func isRepeatable() -> Bool {
-        return isValid() && RepeatableTask != nil
+        return isValid() && repeatableTask != nil
     }
     
     static func == (left: Task, right: Task) -> Bool {

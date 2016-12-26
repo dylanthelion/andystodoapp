@@ -75,7 +75,7 @@ class AllTasksViewController : UITableViewController, TaskFilterableViewControll
     
     func pushDisplayTask(at index : Int) {
         let displayTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_all_tasks_individuAL_VC_ID) as! AllTasksIndividualTaskViewController
-        displayTaskVC.viewModel!.setTask(newTask: (viewModel?.tasksToPopulate.value[index].value)!)
+        displayTaskVC.viewModel!.setTask((viewModel?.tasksToPopulate.value[index].value)!)
         self.navigationController?.pushViewController(displayTaskVC, animated: true)
     }
 }

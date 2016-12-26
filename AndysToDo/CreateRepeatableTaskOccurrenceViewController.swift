@@ -96,7 +96,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     func addDayOfWeekCheckBoxes() {
         let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: Array(Constants.days_of_week_as_strings.prefix(7)), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord)
         for checkbox in checkboxesAndLabels.0 {
-            checkbox.addTarget(self, action: #selector(toggleDidSelectDate(sender:)), for: .touchUpInside)
+            checkbox.addTarget(self, action: #selector(toggleDidSelectDate), for: .touchUpInside)
             checkboxesToAdd.append(checkbox)
             DispatchQueue.main.async {
                 self.view.addSubview(checkbox)
@@ -124,11 +124,11 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     func removeCheckboxesFromView() {
         DispatchQueue.main.async {
-            for _label in self.labelsToAdd {
-                _label.removeFromSuperview()
+            for label in self.labelsToAdd {
+                label.removeFromSuperview()
             }
-            for _checkbox in self.checkboxesToAdd {
-                _checkbox.removeFromSuperview()
+            for checkbox in self.checkboxesToAdd {
+                checkbox.removeFromSuperview()
             }
         }
     }
@@ -188,7 +188,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         self.dayOfWeek_txtField.text = day
         viewModel.dayOfWeek = enumValue
         if enumValue! != DayOfWeek.Multiple {
-            if !CollectionHelper.IsNilOrEmpty(_coll: labelsToAdd) {
+            if !CollectionHelper.IsNilOrEmpty(labelsToAdd) {
                 removeCheckboxesFromView()
                 viewModel.daysOfWeek?.removeAll()
             }
@@ -224,7 +224,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     // Day of week checkboxes
     
-    func toggleDidSelectDate(sender: CheckboxButton) {
+    func toggleDidSelectDate(_ sender: CheckboxButton) {
         if sender.checked {
             let index = viewModel.daysOfWeek!.index(of: Constants.dayOfWeek_all[sender.tag])!
             viewModel.daysOfWeek!.remove(at: index)
@@ -242,7 +242,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         }
         let check = viewModel.submit()
         if !check.0 {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
         } else {
             // handle success
@@ -254,12 +254,12 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     func validateForSubmit() -> Bool {
         if unitOfTime_txtField.text == "" || unitsPerTask_txtField.text! == "" {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_no_unitOfTime_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_no_unitOfTime_failure_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return false
         }
         if(firstDate_txtField.text! == "" || firstTimeOfDay_txtField.text! == "" || (unitOfTime_txtField.text == Constants.timeOfDay_All_As_Strings[2] && dayOfWeek_txtField.text! == "")) {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_missing_data_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_missing_data_failure_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return false
         }

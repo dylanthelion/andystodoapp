@@ -53,9 +53,9 @@ class CreateTaskTextFieldDelegate : NSObject, UITextFieldDelegate {
             return true
         case Constants.createTaskVC_unitsOfTime_txtfield_tag:
             if let check = Int((textField.text! as NSString).replacingCharacters(in: range, with: string)) {
-                viewModel?.expectedTimeRequirement.update(newUnitOfTime: nil, newValue: check)
+                viewModel?.expectedTimeRequirement.update(nil, check)
             } else {
-                viewModel?.expectedTimeRequirement.update(newUnitOfTime: nil, newValue: 0)
+                viewModel?.expectedTimeRequirement.update(nil, 0)
             }
             return true
         default:

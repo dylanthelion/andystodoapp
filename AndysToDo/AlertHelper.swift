@@ -10,11 +10,11 @@ import UIKit
 
 class AlertHelper {
     
-    class func PresentAlertController( sender : AlertPresenter, title: String, message: String, actions: [UIAlertAction]) -> UIAlertController {
-        var sender = sender
+    class func presentAlertController(_ sender : AlertPresenter, title: String, message: String, actions: [UIAlertAction]) -> UIAlertController {
+        var senderVC = sender
         let alertController = NotifyingAlertController(title: title, message: message, preferredStyle: .alert)
             alertController.delegate = sender
-            sender.alertIsVisible = true
+            senderVC.alertIsVisible = true
         for action in actions {
             alertController.addAction(action)
         }

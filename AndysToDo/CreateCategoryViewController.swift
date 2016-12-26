@@ -38,8 +38,8 @@ class CreateCategoryViewController : UIViewController, AlertPresenter {
     
     func populateViews() {
         if let _ = viewModel.category {
-            name_txtField.text = viewModel.category!.Name!
-            description_txtView.text = viewModel.category!.Description!
+            name_txtField.text = viewModel.category!.name!
+            description_txtView.text = viewModel.category!.description!
         }
     }
     
@@ -92,7 +92,7 @@ class CreateCategoryViewController : UIViewController, AlertPresenter {
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_no_name_or_description_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_no_name_or_description_failure_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return false
         }
@@ -101,11 +101,11 @@ class CreateCategoryViewController : UIViewController, AlertPresenter {
     
     func validateAndSubmitCategory() -> Bool {
         if viewModel.validateAndSubmitCategory() {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return true
         } else {
-            let alertController = AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, actions: [Constants.standard_ok_alert_action])
             self.present(alertController, animated: true, completion: nil)
             return false
         }

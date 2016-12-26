@@ -10,7 +10,7 @@ import Foundation
 
 class NumberHelper {
     
-    class func isNilOrZero(num : Int?) -> Bool {
+    class func isNilOrZero(_ num : Int?) -> Bool {
         if num == nil {
             return true
         }
@@ -20,7 +20,7 @@ class NumberHelper {
         return false
     }
     
-    class func isNilOrZero(num : TimeInterval?) -> Bool {
+    class func isNilOrZero(_ num : TimeInterval?) -> Bool {
         if num == nil {
             return true
         }

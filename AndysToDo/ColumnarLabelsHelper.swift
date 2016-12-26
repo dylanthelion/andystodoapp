@@ -14,10 +14,10 @@ class ColumnarLabelsHelper {
         var labels = [UILabel]()
         var top_y_coord = top_y_coord
         let label_width : CGFloat = ((viewWidth / CGFloat(cols)) - (Constants.labelHelper_label_margin * CGFloat(cols + 1)))
-        for(index, _title) in titles.enumerated() {
+        for(index, title) in titles.enumerated() {
             let index_offset : CGFloat = CGFloat(index % cols)
             let label = UILabel(frame: CGRect(x: Constants.labelHelper_label_margin + (index_offset * (label_width + Constants.labelHelper_label_margin)), y: top_y_coord, width: label_width, height: Constants.labelHelper_lblHeight))
-            label.text = _title
+            label.text = title
             if index % cols == (cols - 1) {
                 top_y_coord += Constants.labelHelper_full_row_offset
             }

@@ -99,15 +99,15 @@ class ArchiveTaskTableViewController : UITableViewController, TaskFilterableView
     
     // Present didselect view
     
-    func pushChildrenTableView(_tasks : [Task]) {
+    func pushChildrenTableView(_ tasks : [Task]) {
         let childVC : ArchivedTasksChildTableViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "archivedTasksChildVC") as! ArchivedTasksChildTableViewController
-        childVC.viewModel.setTasks(tasks: Dynamic.wrapArray(array: _tasks))
+        childVC.viewModel.setTasks(Dynamic.wrapArray(array: tasks))
         self.navigationController?.pushViewController(childVC, animated: true)
     }
     
-    func pushTaskInfoView(_task : Task) {
+    func pushTaskInfoView(_ task : Task) {
         let taskVC : DisplayArchivedTaskViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
-        taskVC.viewModel.setTask(newTask: _task)
+        taskVC.viewModel.setTask(task)
         self.navigationController?.pushViewController(taskVC, animated: true)
     }
 }

@@ -15,11 +15,11 @@ class AllTasksViewModel : TaskFilterableViewModel {
     
     override init() {
         super.init()
-        self.tasksToPopulate = Dynamic(TaskDTO.globalManager.AllTasks!.value.map({ $0 }))
+        self.tasksToPopulate = Dynamic(TaskDTO.globalManager.allTasks!.value.map({ $0 }))
         filteredTasks = Dynamic([Dynamic<Task>]())
-        localTasks = Dynamic(TaskDTO.globalManager.AllTasks!.value.map({ $0 }))
+        localTasks = Dynamic(TaskDTO.globalManager.allTasks!.value.map({ $0 }))
         localFilteredTasks = Dynamic([Dynamic<Task>]())
-        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
+        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.allTasks!)
         sortDisplayedTasks()
     }
     
@@ -42,18 +42,16 @@ class AllTasksViewModel : TaskFilterableViewModel {
     
     func setup() {
         localTasks!.value.removeAll()
-        localTasks!.value.append(contentsOf: TaskDTO.globalManager.AllTasks!.value)
+        localTasks!.value.append(contentsOf: TaskDTO.globalManager.allTasks!.value)
         sortDisplayedTasks()
     }
     
     // Table view actions
     
     func moveTaskToDayPlanner(index : Int) {
-        let _task = localTasks!.value[index].value
-        _task.inProgress = true
-        _task.StartTime = NSDate()
-        if TaskDTO.globalManager.updateTask(_task: _task) {
-            // handle success
-        }
+        let task = localTasks!.value[index].value
+        task.inProgress = true
+        task.startTime = NSDate()
+        let _ = TaskDTO.globalManager.updateTask(task)
     }
 }

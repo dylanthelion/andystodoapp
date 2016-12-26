@@ -395,7 +395,6 @@
 			isa = PBXGroup;
 			children = (
 				747F16DA1E07B4B6000108FF /* Protocols */,
-				74B410471DD0596B003B07BA /* Parents */,
 				74C500031DAFE0B300CF7421 /* MainLoginViewController.swift */,
 				741DF0361DB43EE400E9B785 /* MainTasksViewController.swift */,
 				741DF0801DBB133200E9B785 /* FilterViewController.swift */,
@@ -622,13 +621,6 @@
 				747F16DB1E07B4C6000108FF /* AlertPresenter.swift */,
 			);
 			name = Protocols;
-			sourceTree = "<group>";
-		};
-		74B410471DD0596B003B07BA /* Parents */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Parents;
 			sourceTree = "<group>";
 		};
 		74C2BD971DAEA5C1006D683D = {

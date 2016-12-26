@@ -1,3 +1,4 @@
+
 //
 //  DisplayActiveTaskViewController.swift
 //  AndysToDo
@@ -55,12 +56,12 @@ class DisplayActiveTaskViewController : UIViewController {
     // UI setup
     
     func populateLabels() {
-        if let _ = viewModel.task!.value.StartTime {
-            startTime_lbl.text = TimeConverter.dateToTimeConverter(_time: viewModel.task!.value.StartTime!)
+        if let _ = viewModel.task!.value.startTime {
+            startTime_lbl.text = TimeConverter.dateToTimeConverter(viewModel.task!.value.startTime!)
         }
         
-        if let _ = viewModel.task!.value.Description {
-            description_txtView.text = viewModel.task!.value.Description!
+        if let _ = viewModel.task!.value.description {
+            description_txtView.text = viewModel.task!.value.description!
         }
     }
     
@@ -73,8 +74,8 @@ class DisplayActiveTaskViewController : UIViewController {
     }
     
     func checkTask() {
-        if let _ = viewModel.task!.value.TimeCategory?.color {
-            self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.TimeCategory!.color!)
+        if let _ = viewModel.task!.value.timeCategory?.color {
+            self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.timeCategory!.color!)
         }
         if !viewModel.task!.value.inProgress {
             _ = self.navigationController?.popViewController(animated: true)
@@ -105,7 +106,7 @@ class DisplayActiveTaskViewController : UIViewController {
     
     @IBAction func goToEdit(_ sender: AnyObject) {
         let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
-        displayInactiveTaskVC.viewModel!.setTask(newTask: viewModel.task!.value)
+        displayInactiveTaskVC.viewModel!.setTask(viewModel.task!.value)
         self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
     }
 }

@@ -10,9 +10,9 @@ import Foundation
 
 class CollectionHelper {
     
-    class func IsNilOrEmpty<T: Collection>(_coll : T?) -> Bool {
-        if let _ = _coll {
-            if(_coll!.count > 0) {
+    class func IsNilOrEmpty<T: Collection>(_ coll : T?) -> Bool {
+        if let _ = coll {
+            if(coll!.count > 0) {
                 return false
             }
         }

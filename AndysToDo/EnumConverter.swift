@@ -10,17 +10,17 @@ import Foundation
 
 class EnumConverter {
     
-    class func timeOfDayConvertValueToString(_timeOfDay: RepetitionTimeCategory?) -> String? {
-        if _timeOfDay == nil {
+    class func timeOfDayConvertValueToString(_ timeOfDay: RepetitionTimeCategory?) -> String? {
+        if timeOfDay == nil {
             return nil
         }
-        return Constants.timeOfDay_All_As_Strings[Constants.timeOfDay_All.index(of: _timeOfDay!)!]
+        return Constants.timeOfDay_All_As_Strings[Constants.timeOfDay_All.index(of: timeOfDay!)!]
     }
     
-    class func timeOfDayConvertStringToValue(_timeOfDay : String) -> RepetitionTimeCategory? {
-        if Constants.timeOfDay_All_As_Strings.index(of: _timeOfDay) == nil {
+    class func timeOfDayConvertStringToValue(_ timeOfDay : String) -> RepetitionTimeCategory? {
+        if Constants.timeOfDay_All_As_Strings.index(of: timeOfDay) == nil {
             return nil
         }
-        return Constants.timeOfDay_All[Constants.timeOfDay_All_As_Strings.index(of: _timeOfDay)!]
+        return Constants.timeOfDay_All[Constants.timeOfDay_All_As_Strings.index(of: timeOfDay)!]
     }
 }

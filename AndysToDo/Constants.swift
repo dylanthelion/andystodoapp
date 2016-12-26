@@ -85,7 +85,7 @@ struct Constants {
     
     // Model defaults
     
-    static let timecat_none = TimeCategory(_name: "None", _description: "", _start: 0.0, _end: 0.0, _color: nil)
+    static let timecat_none = TimeCategory(name: "None", description: "", start: 0.0, end: 0.0, color: nil)
     
     
     // Login provider IDs

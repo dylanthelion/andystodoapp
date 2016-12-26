@@ -36,7 +36,7 @@ class ArchivedTaskChildrenViewModel {
     
     // Model setup
     
-    func setTasks(tasks : [Dynamic<Task>]) {
+    func setTasks(_ tasks : [Dynamic<Task>]) {
         if tasksToPopulate == nil {
             tasksToPopulate = Dynamic([Dynamic<Task>]())
         }
@@ -65,7 +65,7 @@ class ArchivedTaskChildrenViewModel {
     
     func sortDisplayedTasks() {
         tasksToPopulate!.value.sort(by: {
-            return ($0.value.StartTime! as Date) < ($1.value.StartTime! as Date)
+            return ($0.value.startTime! as Date) < ($1.value.startTime! as Date)
         })
     }
 }

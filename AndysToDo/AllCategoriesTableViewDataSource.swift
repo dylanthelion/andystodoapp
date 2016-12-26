@@ -41,12 +41,12 @@ class AllCategoriesTableViewDataSource : NSObject, UITableViewDataSource {
         switch indexPath.section {
         case Constants.allcatVC_categories_section:
             let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_category_table_view_cell_id, for: indexPath) as! CategoryTableViewCell
-            cell.textLabel?.text = viewModel!.categories!.value[indexPath.row].value.Name!
+            cell.textLabel?.text = viewModel!.categories!.value[indexPath.row].value.name!
             return cell
         case Constants.allcatVC_timecats_section:
             let cell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_timecat_table_view_cell_id, for: indexPath) as! TimecatTableViewCell
-            cell.name_lbl.text = viewModel!.timeCategories!.value[indexPath.row].value.Name!
-            cell.time_lbl.text = "\(TimeConverter.convertFloatToTimeString(_time: viewModel!.timeCategories!.value[indexPath.row].value.StartOfTimeWindow!))-\(TimeConverter.convertFloatToTimeStringWithMeridian(_time: viewModel!.timeCategories!.value[indexPath.row].value.EndOfTimeWindow!))"
+            cell.name_lbl.text = viewModel!.timeCategories!.value[indexPath.row].value.name!
+            cell.time_lbl.text = "\(TimeConverter.convertFloatToTimeString(viewModel!.timeCategories!.value[indexPath.row].value.startOfTimeWindow!))-\(TimeConverter.convertFloatToTimeStringWithMeridian(viewModel!.timeCategories!.value[indexPath.row].value.endOfTimeWindow!))"
             if let _ = viewModel!.timeCategories!.value[indexPath.row].value.color {
                 cell.backgroundColor = UIColor(cgColor: viewModel!.timeCategories!.value[indexPath.row].value.color!)
             }

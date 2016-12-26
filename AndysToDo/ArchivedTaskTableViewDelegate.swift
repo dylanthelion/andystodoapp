@@ -20,8 +20,8 @@ class ArchivedTaskTableViewDelegate : NSObject, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chosenTask = viewModel?.tasksToPopulate.value[indexPath.row]
-        if CollectionHelper.IsNilOrEmpty(_coll: chosenTask?.value.unwrappedRepeatables) {
-            viewDelegate?.pushTaskInfoView(_task: (chosenTask?.value)!)
+        if CollectionHelper.IsNilOrEmpty(chosenTask?.value.unwrappedRepeatables) {
+            viewDelegate?.pushTaskInfoView((chosenTask?.value)!)
             return
         }
         var childTasksToDisplay = [Task]()
@@ -31,17 +31,17 @@ class ArchivedTaskTableViewDelegate : NSObject, UITableViewDelegate {
             }
         }
         if childTasksToDisplay.count > 0 {
-            viewDelegate?.pushChildrenTableView(_tasks: childTasksToDisplay)
+            viewDelegate?.pushChildrenTableView(childTasksToDisplay)
             return
         } else {
-            viewDelegate?.pushTaskInfoView(_task: (chosenTask?.value)!)
+            viewDelegate?.pushTaskInfoView((chosenTask?.value)!)
             return
         }
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let delete = UITableViewRowAction(style: .normal, title: Constants.tableViewCell_delete_action_title) { action, index in
-            self.viewModel!.deleteAt(index: indexPath.row)
+            self.viewModel!.deleteAt(indexPath.row)
         }
         
         delete.backgroundColor = UIColor.red

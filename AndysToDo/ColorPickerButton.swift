@@ -14,11 +14,11 @@ class ColorPickerButton : UIButton {
     var g_value : Float?
     var b_value : Float?
     
-    init(frame: CGRect, _r: Float, _g: Float, _b: Float) {
+    init(frame: CGRect, r: Float, g: Float, b: Float) {
         super.init(frame: frame)
-        r_value = _r
-        g_value = _g
-        b_value = _b
+        r_value = r
+        g_value = g
+        b_value = b
         self.backgroundColor = UIColor(colorLiteralRed: r_value!, green: g_value!, blue: b_value!, alpha: 1.0)
     }
     

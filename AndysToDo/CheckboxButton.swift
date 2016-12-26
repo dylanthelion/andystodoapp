@@ -10,26 +10,40 @@ import UIKit
 
 class CheckboxButton : UIButton {
     
-    var checked = false
-    
-    func toggleChecked() {
-        switch checked {
-        case false :
-            checked = true
-            DispatchQueue.main.async {
-                self.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
-            }
-        case true :
-            checked = false
-            DispatchQueue.main.async {
-                self.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
+    var _checked : Bool
+    var checked : Bool {
+        get {
+            return _checked
+        }
+        set {
+            if (newValue && !self._checked) || (!newValue && self._checked) {
+                self.toggleChecked()
             }
         }
     }
     
-    func setChecked(_checked : Bool) {
-        if (_checked && !self.checked) || (!_checked && self.checked) {
-            self.toggleChecked()
+    override init(frame: CGRect) {
+        _checked = false
+        super.init(frame: frame)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        _checked = false
+        super.init(coder: aDecoder)
+    }
+    
+    func toggleChecked() {
+        switch _checked {
+        case false :
+            _checked = true
+            DispatchQueue.main.async {
+                self.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
+            }
+        case true :
+            _checked = false
+            DispatchQueue.main.async {
+                self.setImage(UIImage(named: Constants.img_checkbox_unchecked), for: .normal)
+            }
         }
     }
 }
