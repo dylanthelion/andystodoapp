@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol UnitOfTimePickerDelegateViewDelegate {
-    func handleDidSelect(unit : String)
+protocol ExpectedUnitOfTimePickerDelegateViewDelegate {
+    func handleDidSelect(unit : UnitOfTime, text: String)
 }

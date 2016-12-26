@@ -25,9 +25,4 @@ class ExpectedUnitOfTimePickerDelegate : NSObject, UIPickerViewDelegate {
         viewDelegate?.handleDidSelect(unit: Constants.expectedUnitOfTime_All[row], text: Constants.expectedUnitsOfTimeAsString[row])
         
     }
-    
-}
-
-protocol ExpectedUnitOfTimePickerDelegateViewDelegate {
-    func handleDidSelect(unit : UnitOfTime, text: String)
 }

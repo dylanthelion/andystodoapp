@@ -39,8 +39,3 @@ class TimePickerViewDelegate : NSObject, UIPickerViewDelegate {
     }
     
 }
-
-protocol TimePickerViewDelegateViewDelegate {
-    
-    func handleDidSelect(hours : String, minutes : String, meridian : String, fullTime : String)
-}

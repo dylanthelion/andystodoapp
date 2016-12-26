@@ -48,6 +48,11 @@
 		746CE9AB1E115D3F00743775 /* Archives.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746CE9AA1E115D3F00743775 /* Archives.storyboard */; };
 		746CE9AD1E115E0800743775 /* TaskCRUDs.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746CE9AC1E115E0800743775 /* TaskCRUDs.storyboard */; };
 		746CE9AF1E115EAA00743775 /* CategoryCRUDs.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 746CE9AE1E115EAA00743775 /* CategoryCRUDs.storyboard */; };
+		746CE9B11E11B02A00743775 /* UnitOfTimePickerDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B01E11B02A00743775 /* UnitOfTimePickerDelegateViewDelegate.swift */; };
+		746CE9B31E11B0A600743775 /* DatePickerViewDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B21E11B0A600743775 /* DatePickerViewDelegateViewDelegate.swift */; };
+		746CE9B51E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B41E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift */; };
+		746CE9B71E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B61E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift */; };
+		746CE9B91E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B81E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift */; };
 		747153941DF28AE2008BBF7C /* CreateCategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747153931DF28AE2008BBF7C /* CreateCategoryViewModel.swift */; };
 		747153961DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747153951DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift */; };
 		747153981DF2A9D7008BBF7C /* CreateTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747153971DF2A9D7008BBF7C /* CreateTaskViewModel.swift */; };
@@ -208,6 +213,11 @@
 		746CE9AA1E115D3F00743775 /* Archives.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Archives.storyboard; sourceTree = "<group>"; };
 		746CE9AC1E115E0800743775 /* TaskCRUDs.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TaskCRUDs.storyboard; sourceTree = "<group>"; };
 		746CE9AE1E115EAA00743775 /* CategoryCRUDs.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CategoryCRUDs.storyboard; sourceTree = "<group>"; };
+		746CE9B01E11B02A00743775 /* UnitOfTimePickerDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitOfTimePickerDelegateViewDelegate.swift; sourceTree = "<group>"; };
+		746CE9B21E11B0A600743775 /* DatePickerViewDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatePickerViewDelegateViewDelegate.swift; sourceTree = "<group>"; };
+		746CE9B41E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePickerViewDelegateViewDelegate.swift; sourceTree = "<group>"; };
+		746CE9B61E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimecatPickerDelegateViewDelegate.swift; sourceTree = "<group>"; };
+		746CE9B81E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayOfWeekPickerDelegateViewDelegate.swift; sourceTree = "<group>"; };
 		747153931DF28AE2008BBF7C /* CreateCategoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateCategoryViewModel.swift; sourceTree = "<group>"; };
 		747153951DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTimeCategoryViewModel.swift; sourceTree = "<group>"; };
 		747153971DF2A9D7008BBF7C /* CreateTaskViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTaskViewModel.swift; sourceTree = "<group>"; };
@@ -357,6 +367,11 @@
 			children = (
 				747F167E1E03BBD6000108FF /* PickerViewViewDelegate.swift */,
 				747F16E41E0FA4D0000108FF /* ExpectedUnitOfTimePickerDelegateViewDelegate.swift */,
+				746CE9B01E11B02A00743775 /* UnitOfTimePickerDelegateViewDelegate.swift */,
+				746CE9B21E11B0A600743775 /* DatePickerViewDelegateViewDelegate.swift */,
+				746CE9B41E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift */,
+				746CE9B61E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift */,
+				746CE9B81E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -985,6 +1000,7 @@
 				747F16851E03CD53000108FF /* PickerViewDelegateTextViewDelegate.swift in Sources */,
 				740CB4761DCC951B00ABF0BD /* CreateTaskParentViewController.swift in Sources */,
 				74EBE3971DEA9354005736B0 /* PopulatedTasksViewModel.swift in Sources */,
+				746CE9B31E11B0A600743775 /* DatePickerViewDelegateViewDelegate.swift in Sources */,
 				747F166C1E03AEE9000108FF /* MainTasksTableViewDelegate.swift in Sources */,
 				74EBE3941DEA7D6E005736B0 /* DynamicArray.swift in Sources */,
 				7471539B1DF51EE3008BBF7C /* AlertHelper.swift in Sources */,
@@ -1013,6 +1029,7 @@
 				741DF03A1DB43F5000E9B785 /* TaskDTO.swift in Sources */,
 				74EBE3761DE0CDC7005736B0 /* DisplayArchivedTaskViewController.swift in Sources */,
 				741DEF801DB34E1F00E9B785 /* ModelEnums.swift in Sources */,
+				746CE9B51E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift in Sources */,
 				741DF07F1DBAF18700E9B785 /* CollectionHelper.swift in Sources */,
 				74792B621DF8DDC300A5DB41 /* DisplayInactiveTaskViewModel.swift in Sources */,
 				74792B6E1DFA933200A5DB41 /* DisplayArchivedTaskViewModel.swift in Sources */,
@@ -1022,6 +1039,7 @@
 				74EBE35D1DDE52FE005736B0 /* CategoryDTO.swift in Sources */,
 				74C500091DAFE3AE00CF7421 /* Constants.swift in Sources */,
 				748CCFFF1DF13611008EF0A8 /* FilterViewModel.swift in Sources */,
+				746CE9B91E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift in Sources */,
 				740CB4691DCAC95100ABF0BD /* DisplayInactiveTaskViewController.swift in Sources */,
 				747F16991E0519EE000108FF /* ArchivedTaskChildTableViewDataSource.swift in Sources */,
 				74EBE3681DDF7DD1005736B0 /* CalendarHelper.swift in Sources */,
@@ -1062,10 +1080,12 @@
 				74792B781DFBBD5200A5DB41 /* RepeatableUnwrapper.swift in Sources */,
 				74EBE3781DE0D2C0005736B0 /* ColumnarLabelsHelper.swift in Sources */,
 				74EBE3611DDEA7A3005736B0 /* CheckboxesHelper.swift in Sources */,
+				746CE9B71E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift in Sources */,
 				74A0E4AC1DFD1F690010CB9D /* EnumConverter.swift in Sources */,
 				74EBE36E1DE0288C005736B0 /* ArchiveTaskTableViewController.swift in Sources */,
 				7471539D1DF52549008BBF7C /* AddCategoriesViewModel.swift in Sources */,
 				747153961DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift in Sources */,
+				746CE9B11E11B02A00743775 /* UnitOfTimePickerDelegateViewDelegate.swift in Sources */,
 				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
 				74792B761DFBBC4B00A5DB41 /* TaskCRUDTableViewModel.swift in Sources */,
 				741DF07C1DB492FE00E9B785 /* FloatToTimeConverter.swift in Sources */,

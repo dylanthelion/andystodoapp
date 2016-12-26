@@ -27,7 +27,3 @@ class TimecatPickerDelegate : NSObject, UIPickerViewDelegate {
         viewDelegate?.handleDidSelect(timecat: allTimeCategories![row], name: allTimeCategories![row].Name!)
     }
 }
-
-protocol TimecatPickerDelegateViewDelegate {
-    func handleDidSelect(timecat : TimeCategory, name : String)
-}

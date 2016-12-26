@@ -46,8 +46,3 @@ class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
         viewDelegate?.handleDidSelect(months: Constants.all_months_as_strings[date.0 - 1], days: Constants.all_days_as_strings[date.1 - 1], fulldate: TimeConverter.dateToShortDateConverter(_time: NSDate()))
     }
 }
-
-protocol  DatePickerViewDelegateViewDelegate {
-    
-    func handleDidSelect(months : String, days: String, fulldate : String)
-}
