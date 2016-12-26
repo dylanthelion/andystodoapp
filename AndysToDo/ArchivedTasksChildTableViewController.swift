@@ -58,7 +58,7 @@ class ArchivedTasksChildTableViewController : UITableViewController {
     // View presentation
     
     func presentArchivedTask(at index : Int) {
-        let taskVC : DisplayArchivedTaskViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
+        let taskVC : DisplayArchivedTaskViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
         taskVC.viewModel.setTask(newTask: viewModel.tasksToPopulate!.value[index].value)
         self.navigationController?.pushViewController(taskVC, animated: true)
     }

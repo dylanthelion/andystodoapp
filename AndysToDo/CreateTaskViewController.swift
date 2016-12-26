@@ -260,14 +260,14 @@ class CreateTaskViewController: CreateTaskParentViewController,  DatePickerViewD
                 self.startDateTextView.text = ""
             }
         case false:
-            let nextViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.create_repeatable_task_VC_id) as! CreateRepeatableTaskOccurrenceViewController
+            let nextViewController = Constants.task_cruds_storyboard.instantiateViewController(withIdentifier: Constants.create_repeatable_task_VC_id) as! CreateRepeatableTaskOccurrenceViewController
             self.navigationController?.pushViewController(nextViewController, animated: true)
             viewModel?.repeatable.value = true
         }
     }
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
-        let modifyVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_add_category_VC_id) as! AddCategoriesViewController
+        let modifyVC = Constants.task_cruds_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_add_category_VC_id) as! AddCategoriesViewController
         modifyVC.viewModel.selectedCategories = Dynamic(self.viewModel!.categories!.map({ Dynamic($0) }))
         modifyVC.taskDelegate = self
         self.navigationController?.pushViewController(modifyVC, animated: true)

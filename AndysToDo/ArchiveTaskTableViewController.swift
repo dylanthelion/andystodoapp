@@ -61,7 +61,7 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
                 DispatchQueue.main.async {
-                    print("Apply filter in view")
+                    //print("Apply filter in view")
                     let archiveVM = self.viewModel! as! ArchiveTaskViewModel
                     switch archiveVM.sortParam {
                         case .Date :
@@ -96,13 +96,13 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
     // Present didselect view
     
     func pushChildrenTableView(_tasks : [Task]) {
-        let childVC : ArchivedTasksChildTableViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "archivedTasksChildVC") as! ArchivedTasksChildTableViewController
+        let childVC : ArchivedTasksChildTableViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "archivedTasksChildVC") as! ArchivedTasksChildTableViewController
         childVC.viewModel.setTasks(tasks: Dynamic.wrapArray(array: _tasks))
         self.navigationController?.pushViewController(childVC, animated: true)
     }
     
     func pushTaskInfoView(_task : Task) {
-        let taskVC : DisplayArchivedTaskViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
+        let taskVC : DisplayArchivedTaskViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
         taskVC.viewModel.setTask(newTask: _task)
         self.navigationController?.pushViewController(taskVC, animated: true)
     }

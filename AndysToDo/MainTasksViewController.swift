@@ -85,13 +85,13 @@ class MainTasksViewController : TaskFilterableViewController {
     // Present task
     
     func presentActiveTaskController(_task : Task) {
-        let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
+        let displayActiveTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
         displayActiveTaskVC.viewModel.task = Dynamic(_task)
         self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
     }
     
     func presentInactiveTaskController(_task : Task) {
-        let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
+        let displayInactiveTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
         displayInactiveTaskVC.viewModel!.setTask(newTask: _task)
         self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
     }}

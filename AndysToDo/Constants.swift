@@ -37,6 +37,10 @@ struct Constants {
     // Storyboard
     
     static let main_storyboard_id = "Main"
+    static let populated_storyboard_id = "PopulatedTasksStoryboard"
+    static let archives_storyboard_id = "Archives"
+    static let task_cruds_storyboard_id = "TaskCRUDs"
+    static let category_cruds_storyboard_id = "CategoryCRUDs"
     static let main_tab_storyboard_id = "mainTabBarController"
     static let task_table_view_cell_id = "taskTableViewCell"
     static let create_repeatable_task_VC_id = "createRepeatableTaskVC"
@@ -49,6 +53,10 @@ struct Constants {
     static let main_storyboard_main_tasks_VC_index = 0
     static let main_storyboard_create_tasks_VC_index = 0
     static let main_storyboard : UIStoryboard = UIStoryboard(name: main_storyboard_id, bundle:nil)
+    static let populated_storyboard : UIStoryboard = UIStoryboard(name: populated_storyboard_id, bundle:nil)
+    static let archives_storyboard : UIStoryboard = UIStoryboard(name: archives_storyboard_id, bundle:nil)
+    static let task_cruds_storyboard : UIStoryboard = UIStoryboard(name: task_cruds_storyboard_id, bundle:nil)
+    static let category_cruds_storyboard : UIStoryboard = UIStoryboard(name: category_cruds_storyboard_id, bundle:nil)
     
     // Time constants
     
