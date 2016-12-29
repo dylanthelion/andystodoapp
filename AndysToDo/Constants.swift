@@ -79,6 +79,7 @@ struct Constants {
     static let seconds_per_hour = 3600
     static let seconds_per_week = 604800
     static let seconds_per_month = 2592000
+    static let time_interval_for_next_month_occurrence : TimeInterval = TimeInterval(seconds_per_month)
     static let all_months_as_strings = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
     static let all_days_as_strings = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"]
     static let all_hours_as_ints = [1,2,3,4,5,6,7,8,9,10,11,12]
