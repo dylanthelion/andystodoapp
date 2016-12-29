@@ -17,11 +17,11 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     
     override init() {
         super.init()
-        self.tasksToPopulate = Dynamic(ArchivedTaskDTO.shared.archivedTasks!.value.map({ $0 }))
+        self.tasksToPopulate = Dynamic(ArchivedTaskDTO.shared.allTasks!.value.map({ $0 }))
         filteredTasks = Dynamic([Dynamic<Task>]())
-        localTasks = Dynamic(ArchivedTaskDTO.shared.archivedTasks!.value.map({ $0 }))
+        localTasks = Dynamic(ArchivedTaskDTO.shared.allTasks!.value.map({ $0 }))
         localFilteredTasks = Dynamic([Dynamic<Task>]())
-        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.archivedTasks!)
+        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.allTasks!)
         removeChildren()
         sortDisplayedTasks()
     }
@@ -45,7 +45,7 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     
     func setup() {
         localTasks!.value.removeAll()
-        localTasks!.value.append(contentsOf: ArchivedTaskDTO.shared.archivedTasks!.value)
+        localTasks!.value.append(contentsOf: ArchivedTaskDTO.shared.allTasks!.value)
         removeChildren()
         sortDisplayedTasks()
     }
@@ -72,7 +72,7 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
             localTasks!.value.remove(at: index)
             sortDisplayedTasks()
         } else {
-            ArchivedTaskDTO.shared.deleteArchivedTask(_tasksToPopulate!.value[index].value)
+            ArchivedTaskDTO.shared.deleteTask(_tasksToPopulate!.value[index].value)
         }
     }
     

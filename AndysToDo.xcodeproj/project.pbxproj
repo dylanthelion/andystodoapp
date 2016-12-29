@@ -53,6 +53,7 @@
 		746CE9B51E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B41E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift */; };
 		746CE9B71E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B61E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift */; };
 		746CE9B91E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9B81E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift */; };
+		746CE9BC1E15A8E900743775 /* TaskCRUDDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746CE9BB1E15A8E900743775 /* TaskCRUDDTO.swift */; };
 		747153941DF28AE2008BBF7C /* CreateCategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747153931DF28AE2008BBF7C /* CreateCategoryViewModel.swift */; };
 		747153961DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747153951DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift */; };
 		747153981DF2A9D7008BBF7C /* CreateTaskViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747153971DF2A9D7008BBF7C /* CreateTaskViewModel.swift */; };
@@ -218,6 +219,7 @@
 		746CE9B41E11B0C900743775 /* TimePickerViewDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimePickerViewDelegateViewDelegate.swift; sourceTree = "<group>"; };
 		746CE9B61E11B0E700743775 /* TimecatPickerDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimecatPickerDelegateViewDelegate.swift; sourceTree = "<group>"; };
 		746CE9B81E11B0FF00743775 /* DayOfWeekPickerDelegateViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayOfWeekPickerDelegateViewDelegate.swift; sourceTree = "<group>"; };
+		746CE9BB1E15A8E900743775 /* TaskCRUDDTO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCRUDDTO.swift; sourceTree = "<group>"; };
 		747153931DF28AE2008BBF7C /* CreateCategoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateCategoryViewModel.swift; sourceTree = "<group>"; };
 		747153951DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTimeCategoryViewModel.swift; sourceTree = "<group>"; };
 		747153971DF2A9D7008BBF7C /* CreateTaskViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTaskViewModel.swift; sourceTree = "<group>"; };
@@ -418,6 +420,7 @@
 		741DF0381DB43F3000E9B785 /* DTO */ = {
 			isa = PBXGroup;
 			children = (
+				746CE9BA1E15A8D500743775 /* Protocols */,
 				741DF0391DB43F5000E9B785 /* TaskDTO.swift */,
 				74EBE35C1DDE52FE005736B0 /* CategoryDTO.swift */,
 				74EBE35E1DDE5347005736B0 /* TimeCategoryDTO.swift */,
@@ -476,6 +479,14 @@
 				746CE9AE1E115EAA00743775 /* CategoryCRUDs.storyboard */,
 			);
 			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		746CE9BA1E15A8D500743775 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				746CE9BB1E15A8E900743775 /* TaskCRUDDTO.swift */,
+			);
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 		747153991DF51ECC008BBF7C /* UIKitHelpers */ = {
@@ -1077,6 +1088,7 @@
 				74EBE36E1DE0288C005736B0 /* ArchiveTaskTableViewController.swift in Sources */,
 				7471539D1DF52549008BBF7C /* AddCategoriesViewModel.swift in Sources */,
 				747153961DF29C44008BBF7C /* CreateTimeCategoryViewModel.swift in Sources */,
+				746CE9BC1E15A8E900743775 /* TaskCRUDDTO.swift in Sources */,
 				746CE9B11E11B02A00743775 /* UnitOfTimePickerDelegateViewDelegate.swift in Sources */,
 				741DEF7C1DB34DA800E9B785 /* Category.swift in Sources */,
 				74792B761DFBBC4B00A5DB41 /* TaskCRUDTableViewModel.swift in Sources */,

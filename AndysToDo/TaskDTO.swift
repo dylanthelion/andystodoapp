@@ -10,7 +10,7 @@ import UIKit
 
 private let sharedTasks = TaskDTO()
 
-class TaskDTO {
+class TaskDTO : TaskCRUDDTO {
     
     var allTasks : Dynamic<[Dynamic<Task>]>?
     
@@ -78,15 +78,15 @@ class TaskDTO {
     func updateTask(_ task : Task) -> Bool {
         for checkTask in allTasks!.value {
             if checkTask.value.ID! == task.ID && task.isValid() {
-                editTask(checkTask.value, indexOf: allTasks!.value.index(of: checkTask)!, populated: false)
+                editTask(checkTask.value)
                 return true
             }
         }
         return false
     }
     
-    func editTask(_ task : Task, indexOf: Int, populated : Bool) {
-        allTasks!.value[indexOf] = Dynamic(task)
+    func editTask(_ task : Task) {
+        allTasks!.value[allTasks!.value.index(of: Dynamic(task))!] = Dynamic(task)
         if task.finishTime != nil && !NumberHelper.isNilOrZero(task.timeOnTask) && !task.inProgress {
             let _ = archiveTask(task)
         }
@@ -118,7 +118,7 @@ class TaskDTO {
         let index = allTasks!.value.index(of: Dynamic(task))
         if let _ = index {
             allTasks!.value.remove(at: index!)
-            ArchivedTaskDTO.shared.addToArchive(task)
+            let _ = ArchivedTaskDTO.shared.archiveTask(task)
             return true
         }
         return false

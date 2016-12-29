@@ -18,7 +18,7 @@ class ArchivedTaskChildrenViewModel {
     // Binding
     
     init() {
-        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.archivedTasks!)
+        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.allTasks!)
     }
     
     var taskDTOBond: Bond<[Dynamic<Task>]> {
@@ -48,7 +48,7 @@ class ArchivedTaskChildrenViewModel {
     func setup() {
         var tasksToRemove = [Dynamic<Task>]()
         for task in tasksToPopulate!.value {
-            if ArchivedTaskDTO.shared.archivedTasks!.value.index(of: task) == nil {
+            if ArchivedTaskDTO.shared.allTasks!.value.index(of: task) == nil {
                 tasksToRemove.append(task)
             }
         }
