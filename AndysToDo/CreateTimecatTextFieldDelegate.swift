@@ -26,10 +26,10 @@ class CreateTimecatTextFieldDelegate : NSObject, UITextFieldDelegate {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0:
+        case _ where Constants.timecatVC_normal_txtfield_tags.contains(textField.tag):
             viewDelegate!.removePickerViewDoneButton()
             return true
-        case 1,2:
+        case _ where Constants.timecatVC_picker_view_txtfield_tags.contains(textField.tag):
             viewDelegate!.addPickerViewDoneButton()
             return true
         default:
@@ -46,10 +46,10 @@ class CreateTimecatTextFieldDelegate : NSObject, UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         viewDelegate!.textFieldSelected = textField.tag
         switch textField.tag {
-        case 0:
+        case Constants.timecatVC_name_txtField_tag:
             viewModel!.name = (textField.text! as NSString).replacingCharacters(in: range, with: string)
             return true
-        case 1,2:
+        case _ where Constants.timecatVC_picker_view_txtfield_tags.contains(textField.tag):
             return true
         default:
             print("Invalid text field tag")
@@ -58,7 +58,9 @@ class CreateTimecatTextFieldDelegate : NSObject, UITextFieldDelegate {
     }
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        viewDelegate!.removePickerViewDoneButton()
+        if !Constants.timecatVC_picker_view_txtfield_tags.contains(viewDelegate!.textFieldSelected) {
+            viewDelegate!.removePickerViewDoneButton()
+        }
         return true
     }
 }

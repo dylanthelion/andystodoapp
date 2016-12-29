@@ -9,13 +9,42 @@
 import UIKit
 
 private var taskHandle : UInt8 = 0
+private var timecatHandle : UInt8 = 0
 
-class DisplayInactiveTaskViewController : CreateTaskParentViewController, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate, PickerViewViewDelegate {
+class DisplayInactiveTaskViewController : UIViewController, CreateTaskParentViewController, TimecatPickerDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DatePickerViewDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
+    
+    // UI
+    
+    var textFieldSelected = 0
+    
+    // View Model
+    
+    var viewModel : TaskCRUDViewModel?
+    
+    // Picker views
+    
+    var pickerView = UIPickerView()
+    var timeCatPickerView = UIPickerView()
+    var datePickerView = UIPickerView()
+    var expectedUnitOfTimePickerView = UIPickerView()
+    var timePickerDelegate : TimePickerViewDelegate?
+    var timePickerDataSource = TimePickerViewDataSource()
+    var timeCatPickerDataSource : TimecatPickerDataSource?
+    var timeCatDelegate : TimecatPickerDelegate?
+    var datePickerDelegate : DatePickerViewDelegate?
+    var datePickerDataSource = DatePickerDataSource()
+    var expectedPickerDataSource = ExpectedUnitOfTimePickerDataSource()
+    var expectedPickerDelegate : ExpectedUnitOfTimePickerDelegate?
     
     // Text Fields
     
     var textFieldDelegate : DisplayInactiveTaskTextFieldDelegate?
     var textViewDelegate : PickerViewDelegateTextViewDelegate?
+    
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
     
     // Outlets
     
@@ -29,6 +58,7 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         viewModel = DisplayInactiveTaskViewModel()
+        timecatDTOBond.bind(dynamic: (viewModel! as! DisplayInactiveTaskViewModel).allTimeCategories!)
     }
     
     override func viewDidLoad() {
@@ -53,6 +83,34 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
         datePickerView.dataSource = datePickerDataSource
     }
     
+    // Binding
+    
+    var timecatDTOBond: Bond<[TimeCategory]> {
+        if let b: AnyObject = objc_getAssociatedObject(self, &timecatHandle) as AnyObject? {
+            return b as! Bond<[TimeCategory]>
+        } else {
+            let b = Bond<[TimeCategory]>() { [unowned self] v in
+                //print("Update timecats in view")
+                let closure = {
+                    DispatchQueue.main.async {
+                        self.timeCatPickerDataSource!.allTimeCategories = self.viewModel!.allTimeCategories!.value
+                        self.timeCatDelegate!.allTimeCategories = self.viewModel!.allTimeCategories!.value
+                        self.timeCatPickerView.reloadAllComponents()
+                    }
+                }
+                if self.alertIsVisible {
+                    self.completionHandlers.append(closure)
+                } else {
+                    closure()
+                }
+            }
+            objc_setAssociatedObject(self, &timecatHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return b
+        }
+    }
+    
+    // Setup
+    
     func setupTextFieldInput() {
         start_txtField.inputView = pickerView
         timeCat_txtField.inputView = timeCatPickerView
@@ -60,14 +118,14 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     }
     
     func populateTaskInfo() {
-        self.name_txtField.text = viewModel!.task!.value.Name!
-        self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(_time: viewModel!.task!.value.StartTime!)
-        self.startDateTextView.text = TimeConverter.dateToShortDateConverter(_time: viewModel!.task!.value.StartTime!)
-        self.description_txtView.text = viewModel!.task!.value.Description!
-        if let _ = viewModel!.task!.value.TimeCategory {
-            self.timeCat_txtField.text = viewModel!.task!.value.TimeCategory!.Name!
-            if let _ = viewModel!.task!.value.TimeCategory?.color {
-                self.view.backgroundColor = UIColor(cgColor: viewModel!.task!.value.TimeCategory!.color!)
+        self.name_txtField.text = viewModel!.task!.value.name!
+        self.start_txtField.text = TimeConverter.dateToTimeWithMeridianConverter(viewModel!.task!.value.startTime!)
+        self.startDateTextView.text = TimeConverter.dateToShortDateConverter(viewModel!.task!.value.startTime!)
+        self.description_txtView.text = viewModel!.task!.value.description!
+        if let _ = viewModel!.task!.value.timeCategory {
+            self.timeCat_txtField.text = viewModel!.task!.value.timeCategory!.name!
+            if let _ = viewModel!.task!.value.timeCategory?.color {
+                self.view.backgroundColor = UIColor(cgColor: viewModel!.task!.value.timeCategory!.color!)
             }
         }
         if viewModel!.task!.value.expectedTimeRequirement.unit == nil {
@@ -88,15 +146,22 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     
     // Reset
     
-    func updateForSuccessfulSubmit() {
-        if let _ = viewModel!.task!.value.TimeCategory?.color {
-            DispatchQueue.main.async {
-                self.view.backgroundColor = UIColor(cgColor: self.viewModel!.task!.value.TimeCategory!.color!)
+    func resetForSuccessfulSubmit() {
+        let closure = {
+            if let _ = self.viewModel!.task!.value.timeCategory?.color {
+                DispatchQueue.main.async {
+                    self.view.backgroundColor = UIColor(cgColor: self.viewModel!.task!.value.timeCategory!.color!)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view.backgroundColor = UIColor.white
+                }
             }
+        }
+        if alertIsVisible {
+            completionHandlers.append(closure)
         } else {
-            DispatchQueue.main.async {
-                self.view.backgroundColor = UIColor.white
-            }
+            closure()
         }
     }
     
@@ -149,6 +214,15 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
         self.viewModel!.timeCategory = timecat
     }
     
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
+    }
+    
     // IBActions
     
     @IBAction func modifyCategories(_ sender: AnyObject) {
@@ -164,14 +238,18 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
         }
         let displayInactiveTaskVM = viewModel! as! DisplayInactiveTaskViewModel
         let check = displayInactiveTaskVM.submit()
-        AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        let alertController = AlertHelper.presentAlertController(self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+        self.present(alertController, animated: true, completion: nil)
+        if check.0 {
+            resetForSuccessfulSubmit()
+        }
     }
     
     
     @IBAction func postpone(_ sender: AnyObject) {
         let displayInactiveTaskVM = viewModel! as! DisplayInactiveTaskViewModel
         if displayInactiveTaskVM.postpone() {
-            self.navigationController?.popViewController(animated: true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -179,7 +257,8 @@ class DisplayInactiveTaskViewController : CreateTaskParentViewController, Timeca
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" || start_txtField.text! == "" && startDateTextView.text! == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createTaskVC_alert_no_name_description_or_time_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true

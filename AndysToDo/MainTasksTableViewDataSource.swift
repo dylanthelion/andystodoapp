@@ -26,30 +26,26 @@ class MainTasksTableViewDataSource : NSObject, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.row == viewModel!.tasksToPopulate.value.count {
-            // Until I find a good GCD solution to KVO-cuased race conditions, return an empty cell as a safe out
-            return UITableViewCell()
-        }
         let cell : TaskTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.task_table_view_cell_id) as! TaskTableViewCell
         let cellTask : Task = viewModel!.tasksToPopulate.value[indexPath.row].value
-        cell.setTask(_task: cellTask)
+        cell.setTask(cellTask)
         switch cellTask.inProgress {
         case true :
             cell.onItButton.alpha = Constants.alpha_solid
         case false :
             cell.onItButton.alpha = Constants.alpha_faded
         }
-        cell.taskTitleLabel.text = cellTask.Name!
-        if let _ = cellTask.StartTime {
-            cell.timeLabel.text = TimeConverter.dateToTimeWithMeridianConverter(_time: cellTask.StartTime!)
+        cell.taskTitleLabel.text = cellTask.name!
+        if let _ = cellTask.startTime {
+            cell.timeLabel.text = TimeConverter.dateToTimeWithMeridianConverter(cellTask.startTime!)
         }
-        if let _ = cellTask.FinishTime {
+        if let _ = cellTask.finishTime {
             cell.onItButton.setTitle(Constants.taskTableViewCell_done, for: .normal)
         } else {
             cell.onItButton.setTitle(Constants.taskTableViewCell_onIt, for: .normal)
         }
-        if let _ = cellTask.TimeCategory?.color {
-            cell.backgroundColor = UIColor(cgColor: cellTask.TimeCategory!.color!)
+        if let _ = cellTask.timeCategory?.color {
+            cell.backgroundColor = UIColor(cgColor: cellTask.timeCategory!.color!)
         } else {
             cell.backgroundColor = UIColor.clear
         }
@@ -59,7 +55,7 @@ class MainTasksTableViewDataSource : NSObject, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            viewModel?.deleteAt(index: indexPath.row)
+            viewModel?.deleteAt(indexPath.row)
         }
     }
 }

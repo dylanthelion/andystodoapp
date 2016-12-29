@@ -15,8 +15,8 @@ class CreateTaskViewModel : TaskCRUDViewModel {
     
     override init() {
         super.init()
-        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.AllTimeCategories!)
-        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
+        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.allTimeCategories!)
+        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.allTasks!)
     }
     
     // Binding
@@ -51,13 +51,13 @@ class CreateTaskViewModel : TaskCRUDViewModel {
     
     func submit() -> (Bool, String, String) {
         if repeatable.value {
-            if CollectionHelper.IsNilOrEmpty(_coll: multipleRepeatables) {
+            if CollectionHelper.IsNilOrEmpty(multipleRepeatables) {
                 let check = validateRepeatable()
                 if !check.0 {
                     return (false, Constants.standard_alert_error_title, check.1)
                 }
             } else {
-                let check = validateMultipleRepeatables(_repeatables: multipleRepeatables!)
+                let check = validateMultipleRepeatables(multipleRepeatables!)
                 if !check.0 {
                     return (false, Constants.standard_alert_error_title, check.1)
                 }
@@ -75,32 +75,33 @@ class CreateTaskViewModel : TaskCRUDViewModel {
     // Validation
     
     func validateRepeatable() -> (Bool, String) {
-        let task = Task(_name: name!, _description: description!, _start: startTime, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: repeatableTask, _dueDate: dueDate, _parent: parentID, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
-        if TaskDTO.globalManager.createNewTask(_task: task) {
+        let task = Task(name: name!, description: description!, start: startTime, finish: finishTime, category: categories, timeCategory: timeCategory, repeatable: repeatableTask, dueDate: dueDate, parent: parentID, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
+        if TaskDTO.globalManager.createNewTask(task) {
             return (true, Constants.createTaskVC_alert_success_message)
         } else {
             return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
         }
     }
     
-    func validateMultipleRepeatables(_repeatables : [RepeatableTaskOccurrence]) -> (Bool, String) {
-        task = Dynamic(Task(_name: name!, _description: description!, _start: startTime, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: repeatableTask, _dueDate: dueDate, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement._numberOfUnits))
-        if let newTasks = RepeatableUnwrapper.generateRepeatablesFrom(repeatables: _repeatables, ofParent: Task(_name: name!, _description: description!, _start: startTime, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: repeatableTask, _dueDate: dueDate, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement._numberOfUnits), withID: task!.value.ID!) {
-            if !TaskDTO.globalManager.createNewTask(_task: task!.value) {
-                return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
-            }
-            for _task in newTasks {
-                let _ = TaskDTO.globalManager.createNewTask(_task: _task)
-            }
-            return (true, Constants.createTaskVC_alert_success_message)
+    func validateMultipleRepeatables(_ repeatables : [RepeatableTaskOccurrence]) -> (Bool, String) {
+        task = Dynamic(Task(name: name!, description: description!, start: startTime, finish: finishTime, category: categories, timeCategory: timeCategory, repeatable: repeatableTask, dueDate: dueDate, parent: nil, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement._numberOfUnits))
+        guard let newTasks = RepeatableUnwrapper.generateRepeatablesFrom(repeatables: repeatables, ofParent: Task(name: name!, description: description!, start: startTime, finish: finishTime, category: categories, timeCategory: timeCategory, repeatable: repeatableTask, dueDate: dueDate, parent: nil, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement._numberOfUnits), withID: task!.value.ID!) else  {
+            return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
         }
-        return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
+        if !TaskDTO.globalManager.createNewTask(task!.value) {
+            return (false, Constants.createTaskVC_alert_invalid_repeatable_information_failure_message)
+        }
+        for task in newTasks {
+            let _ = TaskDTO.globalManager.createNewTask(task)
+        }
+        return (true, Constants.createTaskVC_alert_success_message)
+        
     }
     
     func validateNonRepeatableTask() -> (Bool, String) {
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
-        let task = Task(_name: name!, _description: description!, _start: date, _finish: finishTime, _category: categories, _timeCategory: timeCategory, _repeatable: repeatableTask, _dueDate: dueDate, _parent: parentID, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
-        if TaskDTO.globalManager.createNewTask(_task: task) {
+        let task = Task(name: name!, description: description!, start: date, finish: finishTime, category: categories, timeCategory: timeCategory, repeatable: repeatableTask, dueDate: dueDate, parent: parentID, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
+        if TaskDTO.globalManager.createNewTask(task) {
             return (true, Constants.createTaskVC_alert_success_message)
         } else {
             return (false, Constants.createTaskVC_alert_invalid_nonrepeatable_failure_message)

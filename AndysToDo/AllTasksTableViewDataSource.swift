@@ -34,17 +34,17 @@ class AllTasksTableViewDataSource : NSObject, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell : AllTasksTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.main_storyboard_display_task_table_view_cell_id) as! AllTasksTableViewCell
         let cellTask : Task = viewModel!.tasksToPopulate.value[indexPath.row].value
-        cell.setTask(_task: cellTask)
-        cell.name_lbl.text = cellTask.Name!
+        cell.setTask(cellTask)
+        cell.name_lbl.text = cellTask.name!
         if cellTask.isRepeatable() {
             cell.time_lbl.text = Constants.displayAllTasksVC_string_repeatable
-        } else if let _ = cellTask.StartTime {
-            cell.time_lbl.text = TimeConverter.dateToShortDateConverter(_time: cellTask.StartTime!)
+        } else if let _ = cellTask.startTime {
+            cell.time_lbl.text = TimeConverter.dateToShortDateConverter(cellTask.startTime!)
         } else {
             cell.time_lbl.text = Constants.displayAllTasksVC_string_no_time
         }
-        if let _ = cellTask.TimeCategory?.color {
-            cell.backgroundColor = UIColor.init(cgColor: (cellTask.TimeCategory?.color!)!)
+        if let _ = cellTask.timeCategory?.color {
+            cell.backgroundColor = UIColor.init(cgColor: (cellTask.timeCategory?.color!)!)
         } else {
             cell.backgroundColor = UIColor.clear
         }

@@ -43,11 +43,6 @@ class DatePickerViewDelegate : NSObject, UIPickerViewDelegate {
         let date = CalendarHelper.shortDateAsInt
         pickerView.selectRow(date.0 - 1, inComponent: 0, animated: true)
         pickerView.selectRow(date.1 - 1, inComponent: 1, animated: true)
-        viewDelegate?.handleDidSelect(months: Constants.all_months_as_strings[date.0 - 1], days: Constants.all_days_as_strings[date.1 - 1], fulldate: TimeConverter.dateToShortDateConverter(_time: NSDate()))
+        viewDelegate?.handleDidSelect(months: Constants.all_months_as_strings[date.0 - 1], days: Constants.all_days_as_strings[date.1 - 1], fulldate: TimeConverter.dateToShortDateConverter(NSDate()))
     }
-}
-
-protocol  DatePickerViewDelegateViewDelegate {
-    
-    func handleDidSelect(months : String, days: String, fulldate : String)
 }

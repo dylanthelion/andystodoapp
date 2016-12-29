@@ -14,14 +14,4 @@ class ArchivedTasksChildTableViewCell: UITableViewCell {
     
     @IBOutlet weak var name_lbl: UILabel!
     @IBOutlet weak var time_lbl: UILabel!
-    
-    override func awakeFromNib() {
-        
-    }
-    
-    func setTask(_task : Task) {
-        if _task.isValid() {
-            task = _task
-        }
-    }
 }

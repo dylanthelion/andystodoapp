@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateCategoryViewController : UIViewController {
+class CreateCategoryViewController : UIViewController, AlertPresenter {
     
     // View Model
     
@@ -18,6 +18,11 @@ class CreateCategoryViewController : UIViewController {
     
     var textFieldDelegate : CreateCategoryTextFieldDelegate?
     var textViewDelegate : CreateCategoryTextViewDelegate?
+    
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
     
     // Outlets
     
@@ -33,8 +38,8 @@ class CreateCategoryViewController : UIViewController {
     
     func populateViews() {
         if let _ = viewModel.category {
-            name_txtField.text = viewModel.category!.Name!
-            description_txtView.text = viewModel.category!.Description!
+            name_txtField.text = viewModel.category!.name!
+            description_txtView.text = viewModel.category!.description!
         }
     }
     
@@ -48,10 +53,26 @@ class CreateCategoryViewController : UIViewController {
     // Reset
     
     func resetAfterSuccessfulSubmit() {
-        DispatchQueue.main.async {
-            self.name_txtField.text = ""
-            self.description_txtView.text = ""
+        let closure = {
+            DispatchQueue.main.async {
+                self.name_txtField.text = ""
+                self.description_txtView.text = ""
+            }
         }
+        if alertIsVisible {
+            completionHandlers.append(closure)
+        } else {
+            closure()
+        }
+    }
+    
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
     }
     
     // IBActions
@@ -60,7 +81,6 @@ class CreateCategoryViewController : UIViewController {
         if !validateForSubmit() {
             return
         }
-        
         if !validateAndSubmitCategory() {
             return
         } else if viewModel.category == nil {
@@ -72,7 +92,8 @@ class CreateCategoryViewController : UIViewController {
     
     func validateForSubmit() -> Bool {
         if name_txtField.text! == "" || description_txtView.text == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_no_name_or_description_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_no_name_or_description_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true
@@ -80,10 +101,12 @@ class CreateCategoryViewController : UIViewController {
     
     func validateAndSubmitCategory() -> Bool {
         if viewModel.validateAndSubmitCategory() {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_ok_title, message: Constants.createCatVC_alert_success_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return true
         } else {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_fail_title, message: Constants.createCatVC_alert_name_uniqueness_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
     }

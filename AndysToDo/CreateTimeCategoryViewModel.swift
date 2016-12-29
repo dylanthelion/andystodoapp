@@ -23,7 +23,7 @@ class CreateTimeCategoryViewModel : CategoryCRUDViewModel {
     var description : String?
     
     init() {
-        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.AllTimeCategories!)
+        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.allTimeCategories!)
     }
     
     // Binding
@@ -42,22 +42,21 @@ class CreateTimeCategoryViewModel : CategoryCRUDViewModel {
     
     // Updates
     
-    func setCategory(timecat: TimeCategory) {
+    func setCategory(_ timecat: TimeCategory) {
         timeCategory = timecat
-        name = timecat.Name!
-        description = timecat.Description!
+        name = timecat.name!
+        description = timecat.description!
         color = timecat.color
-        startOfTimeWindow = timecat.StartOfTimeWindow
-        endOfTimeWindow = timecat.EndOfTimeWindow
+        startOfTimeWindow = timecat.startOfTimeWindow
+        endOfTimeWindow = timecat.endOfTimeWindow
     }
     
     func updateCategory() {
-        if timeCategory == nil {
-            return
-        }
-        for cat in TimeCategoryDTO.shared.AllTimeCategories!.value {
-            if cat.value == timeCategory! {
-                timeCategory = cat.value
+        if let _ = timeCategory {
+            for cat in TimeCategoryDTO.shared.allTimeCategories!.value {
+                if cat.value == timeCategory! {
+                    timeCategory = cat.value
+                }
             }
         }
     }
@@ -66,14 +65,14 @@ class CreateTimeCategoryViewModel : CategoryCRUDViewModel {
     
     func validateAndSubmitCategory() -> Bool {
         if let _ = timeCategory {
-            if TimeCategoryDTO.shared.updateTimeCategory(_oldCategory: timeCategory!, _category: TimeCategory(_name: name!, _description: description!, _start: startOfTimeWindow!, _end: endOfTimeWindow!, _color: color)) {
+            if TimeCategoryDTO.shared.updateTimeCategory(oldCategory: timeCategory!, newCategory: TimeCategory(name: name!, description: description!, start: startOfTimeWindow!, end: endOfTimeWindow!, color: color)) {
                 return true
             } else {
                 return false
             }
         }
         
-        if TimeCategoryDTO.shared.createNewTimeCategory(_category: TimeCategory(_name: name!, _description: description!, _start: startOfTimeWindow!, _end: endOfTimeWindow!, _color: color)) {
+        if TimeCategoryDTO.shared.createNewTimeCategory(TimeCategory(name: name!, description: description!, start: startOfTimeWindow!, end: endOfTimeWindow!, color: color)) {
             return true
         } else {
             return false

@@ -15,9 +15,11 @@ class AllTasksViewModel : TaskFilterableViewModel {
     
     override init() {
         super.init()
-        self.tasksToPopulate = Dynamic(TaskDTO.globalManager.AllTasks!.value.map({ $0 }))
+        self.tasksToPopulate = Dynamic(TaskDTO.globalManager.allTasks!.value.map({ $0 }))
         filteredTasks = Dynamic([Dynamic<Task>]())
-        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
+        localTasks = Dynamic(TaskDTO.globalManager.allTasks!.value.map({ $0 }))
+        localFilteredTasks = Dynamic([Dynamic<Task>]())
+        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.allTasks!)
         sortDisplayedTasks()
     }
     
@@ -28,7 +30,7 @@ class AllTasksViewModel : TaskFilterableViewModel {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
-                //print("Update in view model")/
+                //print("Update in view model")
                 self.setup()
             }
             objc_setAssociatedObject(self, &handle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -39,38 +41,17 @@ class AllTasksViewModel : TaskFilterableViewModel {
     // Model setup
     
     func setup() {
-        tasksToPopulate.value.removeAll()
-        tasksToPopulate.value.append(contentsOf: TaskDTO.globalManager.AllTasks!.value)
+        localTasks!.value.removeAll()
+        localTasks!.value.append(contentsOf: TaskDTO.globalManager.allTasks!.value)
         sortDisplayedTasks()
     }
     
     // Table view actions
     
     func moveTaskToDayPlanner(index : Int) {
-        let _task = tasksToPopulate.value[index].value
-        _task.inProgress = true
-        _task.StartTime = NSDate()
-        if TaskDTO.globalManager.updateTask(_task: _task) {
-            // handle success
-        }
-    }
-    
-    // on update
-    
-    override func removeDeletedTasks() {
-        let tempTasks = tasksToPopulate
-        for _task in tempTasks.value {
-            if _task.value.parentID == nil && TaskDTO.globalManager.AllTasks!.value.index(of: _task) == nil {
-                _tasksToPopulate!.value.remove(at: _tasksToPopulate!.value.index(of: _task)!)
-            }
-        }
-    }
-    
-    override func addNewTasks() {
-        for _task in TaskDTO.globalManager.AllTasks!.value {
-            if tasksToPopulate.value.index(of: _task) == nil {
-                tasksToPopulate.value.append(_task)
-            }
-        }
+        let task = localTasks!.value[index].value
+        task.inProgress = true
+        task.startTime = NSDate()
+        let _ = TaskDTO.globalManager.updateTask(task)
     }
 }

@@ -15,7 +15,7 @@ class DisplayArchivedTaskViewModel {
     var task : Dynamic<Task>?
     
     init() {
-        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
+        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.allTasks!)
     }
     
     var taskDTOBond: Bond<[Dynamic<Task>]> {
@@ -33,7 +33,7 @@ class DisplayArchivedTaskViewModel {
     
     // Update
     
-    func setTask(newTask: Task) {
+    func setTask(_ newTask: Task) {
         if task == nil {
             task = Dynamic(newTask)
         } else {
@@ -45,9 +45,9 @@ class DisplayArchivedTaskViewModel {
         if task == nil {
             return
         }
-        for t in ArchivedTaskDTO.shared.archivedTasks!.value {
+        for t in ArchivedTaskDTO.shared.allTasks!.value {
             if t.value == task?.value {
-                setTask(newTask: t.value)
+                setTask(t.value)
                 break
             }
         }

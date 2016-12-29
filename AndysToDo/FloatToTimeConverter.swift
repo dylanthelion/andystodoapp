@@ -10,13 +10,13 @@ import Foundation
 
 class TimeConverter {
     
-    class func convertFloatToTimeString(_time : Float) -> String {
-        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * Constants.seconds_per_minute)))
+    class func convertFloatToTimeString(_ time : Float) -> String {
+        let minutes : String = String(format: "%02d", (Int((time - floor(time)) * Constants.seconds_per_minute)))
         var hours : String
-        if(_time > Constants.hours_per_meridian) {
-            hours = String(Int(floor(_time - Constants.hours_per_meridian)))
+        if(time > Constants.hours_per_meridian) {
+            hours = String(Int(floor(time - Constants.hours_per_meridian)))
         } else {
-            hours = String(Int(floor(_time)))
+            hours = String(Int(floor(time)))
         }
         if hours == "0" || hours == "00" {
             hours = Constants.hours_per_meridian_as_string
@@ -24,15 +24,15 @@ class TimeConverter {
         return "\(hours):\(minutes)"
     }
     
-    class func convertFloatToTimeStringWithMeridian(_time: Float) -> String {
-        let minutes : String = String(format: "%02d", (Int((_time - floor(_time)) * Constants.seconds_per_minute)))
+    class func convertFloatToTimeStringWithMeridian(_ time: Float) -> String {
+        let minutes : String = String(format: "%02d", (Int((time - floor(time)) * Constants.seconds_per_minute)))
         var hours : String
         var meridian = Constants.meridian_am
-        if(_time > Constants.hours_per_meridian) {
-            hours = String(Int(floor(_time - Constants.hours_per_meridian)))
+        if(time > Constants.hours_per_meridian) {
+            hours = String(Int(floor(time - Constants.hours_per_meridian)))
             meridian = Constants.meridian_pm
         } else {
-            hours = String(Int(floor(_time)))
+            hours = String(Int(floor(time)))
         }
         if hours == "0" || hours == "00" {
             hours = Constants.hours_per_meridian_as_string
@@ -40,39 +40,39 @@ class TimeConverter {
         return "\(hours):\(minutes) \(meridian)"
     }
     
-    class func dateToTimeConverter(_time : NSDate) -> String {
+    class func dateToTimeConverter(_ time : NSDate) -> String {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = Constants.standard_hours_and_minutes_format
-        return dateformatter.string(from: _time as Date)
+        return dateformatter.string(from: time as Date)
     }
     
-    class func dateToTimeWithMeridianConverter(_time : NSDate) -> String {
+    class func dateToTimeWithMeridianConverter(_ time : NSDate) -> String {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = Constants.standard_hours_meridian_format
-        return dateformatter.string(from: _time as Date)
+        return dateformatter.string(from: time as Date)
     }
     
-    class func dateToShortDateConverter(_time: NSDate) -> String {
+    class func dateToShortDateConverter(_ time: NSDate) -> String {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = Constants.standard_months_and_days_format
-        return dateformatter.string(from: _time as Date)
+        return dateformatter.string(from: time as Date)
     }
     
-    class func dateToMonthConverter(_time: NSDate) -> String {
+    class func dateToMonthConverter(_ time: NSDate) -> String {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = Constants.standard_month_format
-        return dateformatter.string(from: _time as Date)
+        return dateformatter.string(from: time as Date)
     }
     
-    class func dateToDateOfMonthConverter(_time: NSDate) -> String {
+    class func dateToDateOfMonthConverter(_ time: NSDate) -> String {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = Constants.standard_days_format
-        return dateformatter.string(from: _time as Date)
+        return dateformatter.string(from: time as Date)
     }
     
-    class func convertTimeIntervalToCalendarUnits(_interval : TimeInterval, _units : Calendar.Component) -> Int {
+    class func convertTimeIntervalToCalendarUnits(interval : TimeInterval, units : Calendar.Component) -> Int {
         let denominator : Int
-        switch _units {
+        switch units {
         case .day:
             denominator = Constants.seconds_per_day
         case .hour:
@@ -86,7 +86,7 @@ class TimeConverter {
             return 0
         }
         
-        return Int(_interval) / denominator
+        return Int(interval) / denominator
     }
     
     class func hoursDaysAndMonthToDate(startMonth : String, startDay : String, startHours : String) -> NSDate {

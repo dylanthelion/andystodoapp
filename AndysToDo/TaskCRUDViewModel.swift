@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TaskCRUDViewModel : LoadAllTasksViewModel, DatePickerViewModel, CategoryCRUDViewModel {
+class TaskCRUDViewModel : DatePickerViewModel, CategoryCRUDViewModel {
     
     // Model
     
@@ -37,61 +37,64 @@ class TaskCRUDViewModel : LoadAllTasksViewModel, DatePickerViewModel, CategoryCR
     
     // Date Picker
     
-    override init() {
+    init() {
         expectedTimeRequirement = ExpectedTimeRequirement(_unit: .Null, _numberOfUnits: 0)
-        super.init()
-        updateCategories()
-        updateTimecats()
+        allCategories = CategoryDTO.shared.allCategories!.value.map({ $0.value })
+        var allTimecats : [TimeCategory] = TimeCategoryDTO.shared.allTimeCategories!.value.map({ $0.value })
+        allTimecats.append(Constants.timecat_none)
+        allTimeCategories = Dynamic(allTimecats)
     }
     
     // Update
     
-    func setTask(newTask: Task) {
+    func setTask(_ newTask: Task) {
         if task == nil {
             task = Dynamic(newTask)
         } else {
-            task?.value = newTask
+            task!.value = newTask
         }
-        name = newTask.Name
-        description = newTask.Description
-        if let _ = newTask.Categories {
-            categories = newTask.Categories
+        name = newTask.name
+        description = newTask.description
+        if let _ = newTask.categories {
+            categories = newTask.categories
         } else {
             categories = [Category]()
         }
-        timeCategory = newTask.TimeCategory
-        startTime = newTask.StartTime
+        timeCategory = newTask.timeCategory
+        startTime = newTask.startTime
         dueDate = newTask.dueDate
         expectedTimeRequirement = newTask.expectedTimeRequirement
-        finishTime = newTask.FinishTime
+        finishTime = newTask.finishTime
         inProgress = newTask.inProgress
-        repeatableTask = newTask.RepeatableTask
+        repeatableTask = newTask.repeatableTask
         unwrappedRepeatables = newTask.unwrappedRepeatables
         siblingRepeatables = newTask.siblingRepeatables
         parentID = newTask.parentID
         timeOnTask = newTask.timeOnTask
-        startHours = TimeConverter.dateToTimeWithMeridianConverter(_time: task!.value.StartTime!)
-        startMonth = TimeConverter.dateToMonthConverter(_time: task!.value.StartTime!)
-        startDay = TimeConverter.dateToDateOfMonthConverter(_time: task!.value.StartTime!)
+        startHours = TimeConverter.dateToTimeWithMeridianConverter(task!.value.startTime!)
+        startMonth = TimeConverter.dateToMonthConverter(task!.value.startTime!)
+        startDay = TimeConverter.dateToDateOfMonthConverter(task!.value.startTime!)
     }
     
     func updateTask() {
-        if task == nil {
-            return
-        }
-        for t in TaskDTO.globalManager.AllTasks!.value {
-            if t.value == task!.value {
-                task!.value = t.value
+        if let _ = task {
+            for t in TaskDTO.globalManager.allTasks!.value {
+                if t.value == task!.value {
+                    task!.value = t.value
+                }
             }
         }
     }
     
     func updateTimecats() {
-        allTimeCategories = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0.value }))
+        var allTimecats : [TimeCategory] = TimeCategoryDTO.shared.allTimeCategories!.value.map({ $0.value })
+        allTimecats.append(Constants.timecat_none)
+        allTimeCategories = Dynamic(allTimecats)
+        allTimeCategories!.value = allTimecats
     }
     
     func updateCategories() {
-        allCategories = CategoryDTO.shared.AllCategories!.value.map({ $0.value })
+        allCategories = CategoryDTO.shared.allCategories!.value.map({ $0.value })
     }
     
     // reset
@@ -105,16 +108,16 @@ class TaskCRUDViewModel : LoadAllTasksViewModel, DatePickerViewModel, CategoryCR
     
     // Chosen categories
     
-    func addCategory(_category : Category) {
+    func addCategory(_ category : Category) {
         if let _ = categories {
-            categories!.append(_category)
+            categories!.append(category)
         } else {
-            categories = [_category]
+            categories = [category]
         }
     }
     
-    func removeCategory(_category : Category) {
-        let indexOf = categories!.index(of: _category)
+    func removeCategory(_ category : Category) {
+        let indexOf = categories!.index(of: category)
         categories!.remove(at: indexOf!)
     }
 }

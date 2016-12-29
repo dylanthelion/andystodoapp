@@ -8,49 +8,49 @@
 
 import Foundation
 
-private let _DTO = CategoryDTO()
+private let sharedDTO = CategoryDTO()
 
 class CategoryDTO {
     
-    var AllCategories : Dynamic<[Dynamic<Category>]>?
+    var allCategories : Dynamic<[Dynamic<Category>]>?
     
     init() {
         loadCategories()
     }
     
     class var shared : CategoryDTO {
-        return _DTO
+        return sharedDTO
     }
     
     func loadCategories() {
         // logic to load categories from file and/or server
         
         // Until persistence is finished, load fake categories
-        if AllCategories == nil {
-            AllCategories = Dynamic(loadFakeCategories())
+        if allCategories == nil {
+            allCategories = Dynamic(loadFakeCategories())
         }
     }
     
     func loadFakeCategories() -> [Dynamic<Category>] {
-        let category1 = Dynamic(Category(_name: "Category 1", _description: "Fake Category"))
-        let category2 = Dynamic(Category(_name: "Category 2", _description: "Another fake Category"))
-        let category3 = Dynamic(Category(_name: "Category 3", _description: "The worst fake category"))
+        let category1 = Dynamic(Category(name: "Category 1", description: "Fake Category"))
+        let category2 = Dynamic(Category(name: "Category 2", description: "Another fake Category"))
+        let category3 = Dynamic(Category(name: "Category 3", description: "The worst fake category"))
         return [category1, category2, category3]
     }
     
     // CRUD
     
-    func createNewCategory(_category : Category) -> Bool {
-        if _category.isValid() {
+    func createNewCategory(_ category : Category) -> Bool {
+        if category.isValid() {
             var isUnique = true
-            for _cat in AllCategories!.value {
-                if _cat.value == _category {
+            for cat in allCategories!.value {
+                if cat.value == category {
                     isUnique = false
                     break
                 }
             }
             if isUnique {
-                AllCategories!.value.append(Dynamic(_category))
+                allCategories!.value.append(Dynamic(category))
                 return true
             } else {
                 return false
@@ -59,12 +59,12 @@ class CategoryDTO {
         return false
     }
     
-    func updateCategory(_oldCategory: Category, _category : Category) -> Bool {
-        if _category.isValid() {
-            for _cat in AllCategories!.value {
-                if _cat.value.Name == _oldCategory.Name! {
-                    _cat.value.Name = _category.Name!
-                    _cat.value.Description = _category.Description!
+    func updateCategory(oldCategory: Category, newCategory : Category) -> Bool {
+        if newCategory.isValid() {
+            for cat in allCategories!.value {
+                if cat.value.name == oldCategory.name! {
+                    cat.value.name = newCategory.name!
+                    cat.value.description = newCategory.description!
                     return true
                 }
             }

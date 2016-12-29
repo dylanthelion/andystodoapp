@@ -38,7 +38,7 @@ struct ExpectedTimeRequirement {
         }
     }
     
-    mutating func update(newUnitOfTime : UnitOfTime?, newValue: Int?) {
+    mutating func update(_ newUnitOfTime : UnitOfTime?, _ newValue: Int?) {
         if let _ = newUnitOfTime {
             unit = newUnitOfTime!
         }
@@ -48,6 +48,6 @@ struct ExpectedTimeRequirement {
     }
     
     func isValid() -> Bool {
-        return unit! != nil
+        return unit != nil
     }
 }

@@ -28,7 +28,3 @@ class DayOfWeekPickerDelegate : NSObject, UIPickerViewDelegate {
         viewDelegate?.handleDidSelect(day: days[row], enumValue: daysOfWeek[row])
     }
 }
-
-protocol DayOfWeekPickerDelegateViewDelegate {
-    func handleDidSelect(day : String, enumValue : DayOfWeek?)
-}

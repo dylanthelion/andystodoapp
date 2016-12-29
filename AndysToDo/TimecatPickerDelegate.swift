@@ -20,14 +20,10 @@ class TimecatPickerDelegate : NSObject, UIPickerViewDelegate {
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.allTimeCategories![row].Name!
+        return self.allTimeCategories![row].name!
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        viewDelegate?.handleDidSelect(timecat: allTimeCategories![row], name: allTimeCategories![row].Name!)
+        viewDelegate?.handleDidSelect(timecat: allTimeCategories![row], name: allTimeCategories![row].name!)
     }
-}
-
-protocol TimecatPickerDelegateViewDelegate {
-    func handleDidSelect(timecat : TimeCategory, name : String)
 }

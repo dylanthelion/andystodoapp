@@ -10,31 +10,28 @@ import UIKit
 
 // Shared parent for CreateTaskVC and AllTasksIndividualTaskVC
 
-class CreateTaskParentViewController : UIViewController {
+protocol CreateTaskParentViewController {
     
     // UI
     
-    var textFieldSelected = 0
+    var textFieldSelected : Int { get set }
     
     // View Model
     
-    var viewModel : TaskCRUDViewModel?
+    var viewModel : TaskCRUDViewModel? { get set }
     
     // Picker views
     
-    let pickerView = UIPickerView()
-    let timeCatPickerView = UIPickerView()
-    var datePickerView = UIPickerView()
-    var expectedUnitOfTimePickerView = UIPickerView()
-    var timePickerDelegate : TimePickerViewDelegate?
-    let timePickerDataSource : TimePickerViewDataSource = TimePickerViewDataSource()
-    var timeCatPickerDataSource : TimecatPickerDataSource?
-    var timeCatDelegate : TimecatPickerDelegate?
-    var datePickerDelegate : DatePickerViewDelegate?
-    let datePickerDataSource = DatePickerDataSource()
-    let expectedPickerDataSource = ExpectedUnitOfTimePickerDataSource()
-    var expectedPickerDelegate : ExpectedUnitOfTimePickerDelegate?
-    
-    override func viewDidLoad() {
-    }
+    var pickerView : UIPickerView { get set }
+    var timeCatPickerView : UIPickerView { get set }
+    var datePickerView : UIPickerView { get set }
+    var expectedUnitOfTimePickerView : UIPickerView { get set }
+    var timePickerDelegate : TimePickerViewDelegate? { get set }
+    var timePickerDataSource : TimePickerViewDataSource { get set }
+    var timeCatPickerDataSource : TimecatPickerDataSource? { get set }
+    var timeCatDelegate : TimecatPickerDelegate? { get set }
+    var datePickerDelegate : DatePickerViewDelegate? { get set }
+    var datePickerDataSource : DatePickerDataSource { get set }
+    var expectedPickerDataSource : ExpectedUnitOfTimePickerDataSource { get set }
+    var expectedPickerDelegate : ExpectedUnitOfTimePickerDelegate? { get set }
 }

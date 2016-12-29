@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DayOfWeekPickerDelegateViewDelegate, UnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate {
+class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePickerViewDelegateViewDelegate, TimePickerViewDelegateViewDelegate, DayOfWeekPickerDelegateViewDelegate, UnitOfTimePickerDelegateViewDelegate, PickerViewViewDelegate, AlertPresenter {
     
     // UI
     
@@ -40,6 +40,11 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     var textFieldDelegate : CreateRepeatableTaskOccurenceTextFieldDelegate?
     
+    // Alert Presenter
+    
+    var completionHandlers : [() -> Void] = [() -> Void]()
+    var alertIsVisible = false
+    
     // Outlets
     
     @IBOutlet weak var unitOfTime_txtField: UITextField!
@@ -57,9 +62,9 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     override func viewWillDisappear(_ animated: Bool) {
         if !viewModel.validRepeatableSubmitted {
-            if let rootVC = self.navigationController?.viewControllers[0] as? CreateTaskParentViewController {
-                rootVC.viewModel?.resetModel()
-            }
+            let rootVC = self.navigationController?.viewControllers[0] as! CreateTaskViewController
+            rootVC.viewModel?.resetModel()
+            rootVC.repeatable_btn.toggleChecked()
         }
     }
     
@@ -85,12 +90,13 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         unitOfTime_txtField.inputView = unitOfTimePickerView
         firstTimeOfDay_txtField.inputView = timeOfDayPickerView
         firstDate_txtField.inputView = datePickerView
+        unitsPerTask_txtField.keyboardType = .numberPad
     }
     
     func addDayOfWeekCheckBoxes() {
         let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: Array(Constants.days_of_week_as_strings.prefix(7)), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord)
         for checkbox in checkboxesAndLabels.0 {
-            checkbox.addTarget(self, action: #selector(toggleDidSelectDate(sender:)), for: .touchUpInside)
+            checkbox.addTarget(self, action: #selector(toggleDidSelectDate), for: .touchUpInside)
             checkboxesToAdd.append(checkbox)
             DispatchQueue.main.async {
                 self.view.addSubview(checkbox)
@@ -111,17 +117,18 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         firstTimeOfDay_txtField.delegate = textFieldDelegate
         firstDate_txtField.delegate = textFieldDelegate
         dayOfWeek_txtField.delegate = textFieldDelegate
+        self.datePickerDelegate!.setStartingDate(self.datePickerView)
     }
     
     // View reset
     
     func removeCheckboxesFromView() {
         DispatchQueue.main.async {
-            for _label in self.labelsToAdd {
-                _label.removeFromSuperview()
+            for label in self.labelsToAdd {
+                label.removeFromSuperview()
             }
-            for _checkbox in self.checkboxesToAdd {
-                _checkbox.removeFromSuperview()
+            for checkbox in self.checkboxesToAdd {
+                checkbox.removeFromSuperview()
             }
         }
     }
@@ -181,7 +188,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         self.dayOfWeek_txtField.text = day
         viewModel.dayOfWeek = enumValue
         if enumValue! != DayOfWeek.Multiple {
-            if !CollectionHelper.IsNilOrEmpty(_coll: labelsToAdd) {
+            if !CollectionHelper.IsNilOrEmpty(labelsToAdd) {
                 removeCheckboxesFromView()
                 viewModel.daysOfWeek?.removeAll()
             }
@@ -206,9 +213,18 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         }
     }
     
+    // Alert Presenter
+    
+    func handleWillDisappear() {
+        for f in completionHandlers {
+            f()
+        }
+        completionHandlers.removeAll()
+    }
+    
     // Day of week checkboxes
     
-    func toggleDidSelectDate(sender: CheckboxButton) {
+    func toggleDidSelectDate(_ sender: CheckboxButton) {
         if sender.checked {
             let index = viewModel.daysOfWeek!.index(of: Constants.dayOfWeek_all[sender.tag])!
             viewModel.daysOfWeek!.remove(at: index)
@@ -226,7 +242,8 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
         }
         let check = viewModel.submit()
         if !check.0 {
-            AlertHelper.PresentAlertController(sender: self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: check.1, message: check.2, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
         } else {
             // handle success
             unwindToTaskCreate()
@@ -237,11 +254,13 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
     
     func validateForSubmit() -> Bool {
         if unitOfTime_txtField.text == "" || unitsPerTask_txtField.text! == "" {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_no_unitOfTime_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_no_unitOfTime_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         if(firstDate_txtField.text! == "" || firstTimeOfDay_txtField.text! == "" || (unitOfTime_txtField.text == Constants.timeOfDay_All_As_Strings[2] && dayOfWeek_txtField.text! == "")) {
-            AlertHelper.PresentAlertController(sender: self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_missing_data_failure_message, actions: [Constants.standard_ok_alert_action])
+            let alertController = AlertHelper.presentAlertController(self, title: Constants.standard_alert_error_title, message: Constants.createRepeatableVC_alert_missing_data_failure_message, actions: [Constants.standard_ok_alert_action])
+            self.present(alertController, animated: true, completion: nil)
             return false
         }
         return true
@@ -258,7 +277,7 @@ class CreateRepeatableTaskOccurrenceViewController : UIViewController,  DatePick
             }
             rootVC.viewModel?.repeatable.value = true
             rootVC.viewModel?.startTime = viewModel.date
-            self.navigationController?.popToViewController(rootVC, animated: true)
+            _ = self.navigationController?.popToViewController(rootVC as! UIViewController, animated: true)
         }
     }
 }

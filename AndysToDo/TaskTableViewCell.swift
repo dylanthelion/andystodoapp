@@ -21,7 +21,7 @@ class TaskTableViewCell : UITableViewCell {
             if task!.inProgress {
                 return .Active
             }
-            if let _ = task!.FinishTime {
+            if let _ = task!.finishTime {
                 return .Finished
             }
             return .Inactive
@@ -34,13 +34,9 @@ class TaskTableViewCell : UITableViewCell {
     @IBOutlet weak var taskTitleLabel: UILabel!
     @IBOutlet weak var onItButton: UIButton!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    func setTask(_task : Task) {
-        if _task.isValid() {
-            task = _task
+    func setTask(_ task : Task) {
+        if task.isValid() {
+            self.task = task
         }
     }
     
@@ -48,15 +44,15 @@ class TaskTableViewCell : UITableViewCell {
         if let _ = task {
             if (onItState == OnItButtonState.Inactive) {
                 self.task?.inProgress = true
-                self.task?.StartTime = NSDate()
+                self.task?.startTime = NSDate()
             } else if onItState == OnItButtonState.Active {
                 self.task?.inProgress = false
-                self.task?.FinishTime = NSDate()
+                self.task?.finishTime = NSDate()
             } else if onItState == OnItButtonState.Finished {
                 self.task?.inProgress = false
-                self.task?.FinishTime = nil
+                self.task?.finishTime = nil
             }
-            let update = TaskDTO.globalManager.updateTask(_task: task!)
+            _ = TaskDTO.globalManager.updateTask(task!)
         }
     }
     

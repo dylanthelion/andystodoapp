@@ -11,7 +11,11 @@ import UIKit
 private var handle: UInt8 = 0
 private var filteredHandle : UInt8 = 0
 
-class MainTasksViewController : TaskFilterableViewController {
+class MainTasksViewController : UITableViewController, TaskFilterableViewController {
+    
+    // View Model
+    
+    var viewModel : TaskFilterableViewModel?
     
     // Table view
     
@@ -24,7 +28,7 @@ class MainTasksViewController : TaskFilterableViewController {
         setupTableView()
         for _task in (viewModel?.tasksToPopulate.value)! {
             if _task.value.inProgress {
-                self.presentActiveTaskController(_task: _task.value)
+                self.presentActiveTaskController(_task.value)
                 break
             }
         }
@@ -37,11 +41,13 @@ class MainTasksViewController : TaskFilterableViewController {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
-                
-                //print("Update all in view")
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                Constants.mainTaskQueue.async {
+                    //print("Update all in view")
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }
+                
             }
             objc_setAssociatedObject(self, &handle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return b
@@ -53,9 +59,11 @@ class MainTasksViewController : TaskFilterableViewController {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
-                //print("Apply filter in view")
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
+                Constants.mainTaskQueue.async {
+                    //print("Apply filter in view")
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                 }
             }
             objc_setAssociatedObject(self, &filteredHandle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -80,14 +88,14 @@ class MainTasksViewController : TaskFilterableViewController {
     
     // Present task
     
-    func presentActiveTaskController(_task : Task) {
-        let displayActiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
-        displayActiveTaskVC.viewModel.task = Dynamic(_task)
+    func presentActiveTaskController(_ task : Task) {
+        let displayActiveTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_activeTask_VC_id) as! DisplayActiveTaskViewController
+        displayActiveTaskVC.viewModel.task = Dynamic(task)
         self.navigationController?.pushViewController(displayActiveTaskVC, animated: true)
     }
     
-    func presentInactiveTaskController(_task : Task) {
-        let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
-        displayInactiveTaskVC.viewModel!.setTask(newTask: _task)
+    func presentInactiveTaskController(_ task : Task) {
+        let displayInactiveTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
+        displayInactiveTaskVC.viewModel!.setTask(task)
         self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
     }}

@@ -72,24 +72,24 @@ class AllCategoriesTableViewController : UITableViewController {
     // View presentation
     
     func pushCategoryEditView(at index : Int) {
-        let createCatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_category_VC_id) as! CreateCategoryViewController
+        let createCatVC = Constants.category_cruds_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_category_VC_id) as! CreateCategoryViewController
         createCatVC.viewModel.setCategory(cat: viewModel.categories!.value[index].value)
         self.navigationController?.pushViewController(createCatVC, animated: true)
     }
     
     func pushTimecatEdit(at index : Int) {
-        let createTimecatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
-        createTimecatVC.viewModel.setCategory(timecat: viewModel.timeCategories!.value[index].value)
+        let createTimecatVC = Constants.category_cruds_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
+        createTimecatVC.viewModel.setCategory(viewModel.timeCategories!.value[index].value)
         self.navigationController?.pushViewController(createTimecatVC, animated: true)
     }
     
     func pushCreateCategory() {
-        let createCatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_category_VC_id) as! CreateCategoryViewController
+        let createCatVC = Constants.category_cruds_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_category_VC_id) as! CreateCategoryViewController
         self.navigationController?.pushViewController(createCatVC, animated: true)
     }
     
     func pushCreateTimecat() {
-        let createTimecatVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
+        let createTimecatVC = Constants.category_cruds_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_create_timecat_VC_id) as! CreateTimeCategoryViewController
         self.navigationController?.pushViewController(createTimecatVC, animated: true)
     }
 }

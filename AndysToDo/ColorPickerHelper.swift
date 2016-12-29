@@ -40,7 +40,7 @@ class ColorPickerHelper {
             for innerIndex in 1...currentDenominator {
                 for cubicIndex in 1...currentDenominator {
                     let totalIndex = (outerIndex - 1) * Int(pow(Double(currentDenominator), 2.0)) + (innerIndex - 1) * currentDenominator + cubicIndex - 1
-                    let button = ColorPickerButton(frame: CGRect(x: xCoord + (buttonWidth * CGFloat(totalIndex % numberOfElementsPerRow)), y: yCoord + (buttonWidth * CGFloat(totalIndex / numberOfElementsPerRow)), width: buttonWidth, height: buttonWidth), _r: 1.0 / Float(outerIndex), _g: 1.0 / Float(innerIndex), _b: 1.0 / Float(cubicIndex))
+                    let button = ColorPickerButton(frame: CGRect(x: xCoord + (buttonWidth * CGFloat(totalIndex % numberOfElementsPerRow)), y: yCoord + (buttonWidth * CGFloat(totalIndex / numberOfElementsPerRow)), width: buttonWidth, height: buttonWidth), r: 1.0 / Float(outerIndex), g: 1.0 / Float(innerIndex), b: 1.0 / Float(cubicIndex))
                     
                     pickers.append(button)
                     totalButtons += 1

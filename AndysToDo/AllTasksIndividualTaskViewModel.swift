@@ -18,9 +18,9 @@ class AllTasksIndividualTaskViewModel : TaskCRUDViewModel {
     
     override init() {
         super.init()
-        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.AllTimeCategories!)
-        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
-        allTimeCategories = Dynamic(TimeCategoryDTO.shared.AllTimeCategories!.value.map({ $0.value }))
+        self.timecatDTOBond.bind(dynamic: TimeCategoryDTO.shared.allTimeCategories!)
+        self.taskDTOBond.bind(dynamic: TaskDTO.globalManager.allTasks!)
+        allTimeCategories = Dynamic(TimeCategoryDTO.shared.allTimeCategories!.value.map({ $0.value }))
     }
     
     // Binding
@@ -90,9 +90,9 @@ class AllTasksIndividualTaskViewModel : TaskCRUDViewModel {
     func validateRepeatable() -> Bool {
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
         //print(date)
-        let newTask = Task(_name: name!, _description: description!, _start: date, _finish: nil, _category: categories, _timeCategory: timeCategory, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
+        let newTask = Task(name: name!, description: description!, start: date, finish: nil, category: categories, timeCategory: timeCategory, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
         newTask.ID = task!.value.ID!
-        if TaskDTO.globalManager.updateTask(_task: newTask) {
+        if TaskDTO.globalManager.updateTask(newTask) {
             return true
         } else {
             return false
@@ -102,9 +102,9 @@ class AllTasksIndividualTaskViewModel : TaskCRUDViewModel {
     func validateNonRepeatableTask() -> Bool {
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
         //print(date)
-        let newTask = Task(_name: name!, _description: description!, _start: date, _finish: nil, _category: categories, _timeCategory: timeCategory, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
+        let newTask = Task(name: name!, description: description!, start: date, finish: nil, category: categories, timeCategory: timeCategory, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
         newTask.ID = task!.value.ID!
-        if TaskDTO.globalManager.updateTask(_task: newTask) {
+        if TaskDTO.globalManager.updateTask(newTask) {
             return true
         } else {
             return false
@@ -113,9 +113,9 @@ class AllTasksIndividualTaskViewModel : TaskCRUDViewModel {
     
     func validateNewInstance() -> Bool {
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
-        print(date)
-        let newTask = Task(_name: "Temp \(name!)", _description: description!, _start: date, _finish: nil, _category: categories, _timeCategory: timeCategory, _repeatable: nil, _dueDate: nil, _parent: nil, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
-        if TaskDTO.globalManager.createNewTask(_task: newTask) {
+        //print(date)
+        let newTask = Task(name: "Temp \(name!)", description: description!, start: date, finish: nil, category: categories, timeCategory: timeCategory, repeatable: nil, dueDate: nil, parent: nil, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
+        if TaskDTO.globalManager.createNewTask(newTask) {
             return true
         } else {
             return false
@@ -125,8 +125,8 @@ class AllTasksIndividualTaskViewModel : TaskCRUDViewModel {
     func validateNewRepeatableInstance() -> Bool {
         let date = TimeConverter.hoursDaysAndMonthToDate(startMonth: startMonth!, startDay: startDay!, startHours: startHours!)
         print(date)
-        let newTask = Task(_name: "Temp \(name!) instance", _description: description!, _start: date, _finish: nil, _category: categories, _timeCategory: timeCategory, _repeatable: nil, _dueDate: nil, _parent: self.task!.value.ID!, _expectedUnitOfTime: expectedTimeRequirement.unit, _expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
-        if TaskDTO.globalManager.createNewTempRepeatableTask(_task: newTask) {
+        let newTask = Task(name: "Temp \(name!) instance", description: description!, start: date, finish: nil, category: categories, timeCategory: timeCategory, repeatable: nil, dueDate: nil, parent: self.task!.value.ID!, expectedUnitOfTime: expectedTimeRequirement.unit, expectedTotalUnits: expectedTimeRequirement.numberOfUnits)
+        if TaskDTO.globalManager.createNewTempRepeatableTask(newTask) {
             return true
         } else {
             return false

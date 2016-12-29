@@ -33,7 +33,7 @@ class FilterViewController : UIViewController {
         addTimecatFilterViews()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? TaskFilterableViewController {
             rootVC.viewModel?.clearFilter()
         }
@@ -78,14 +78,14 @@ class FilterViewController : UIViewController {
     // Add filter UI
     
     func addCategoryFilterViews() {
-        if CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
+        if CollectionHelper.IsNilOrEmpty(viewModel.categories?.value) {
             allLabels = [UILabel]()
             allCheckboxes = [CheckboxButton]()
             return
         }
-        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.viewModel.categories!.value.map({ $0.value.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.viewModel.categories!.value.map({ $0.value.name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
         for btn in checkboxesAndLabels.0 {
-            btn.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
+            btn.addTarget(self, action: #selector(toggleFilter), for: .touchUpInside)
             self.view.addSubview(btn)
         }
         for lbl in checkboxesAndLabels.1 {
@@ -98,7 +98,7 @@ class FilterViewController : UIViewController {
     }
     
     func addTimecatFilterViews() {
-        if CollectionHelper.IsNilOrEmpty(_coll: viewModel.timeCategories?.value) {
+        if CollectionHelper.IsNilOrEmpty(viewModel.timeCategories?.value) {
             return
         }
         addTimeCategoriesHeader(y_coord: top_y_coord!)
@@ -110,9 +110,9 @@ class FilterViewController : UIViewController {
         } else {
             startingIndex = 0
         }
-        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.viewModel.timeCategories!.value.map({ $0.value.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!, startingIndex: startingIndex)
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: self.viewModel.timeCategories!.value.map({ $0.value.name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!, startingIndex: startingIndex)
         for btn in checkboxesAndLabels.0 {
-            btn.addTarget(self, action: #selector(toggleFilter(sender:)), for: .touchUpInside)
+            btn.addTarget(self, action: #selector(toggleFilter), for: .touchUpInside)
             self.view.addSubview(btn)
         }
         for lbl in checkboxesAndLabels.1 {
@@ -149,33 +149,29 @@ class FilterViewController : UIViewController {
     
     // Handle checkboxes
     
-    func toggleFilter(sender : CheckboxButton) {
+    func toggleFilter(_ sender : CheckboxButton) {
         
-        if let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as? TaskFilterableViewController {
-            if !CollectionHelper.IsNilOrEmpty(_coll: viewModel.categories?.value) {
-                if sender.tag > (viewModel.categories!.value.count - 1) {
-                    if sender.checked {
-                        rootVC.viewModel?.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
-                    } else {
-                        rootVC.viewModel?.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
-                    }
-                    
+        let rootVC = self.navigationController?.viewControllers[Constants.main_storyboard_main_tasks_VC_index] as! TaskFilterableViewController
+        if !CollectionHelper.IsNilOrEmpty(viewModel.categories?.value) {
+            if sender.tag > (viewModel.categories!.value.count - 1) {
+                if sender.checked {
+                    rootVC.viewModel?.removeTimeCategoryFilter(viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
                 } else {
-                    if sender.checked {
-                        rootVC.viewModel?.removeCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
-                    } else {
-                        rootVC.viewModel?.addCategoryFilter(_category: viewModel.categories!.value[sender.tag].value)
-                    }
-                    
+                    rootVC.viewModel?.addTimeCategoryFilter(viewModel.timeCategories!.value[sender.tag - viewModel.categories!.value.count].value)
                 }
             } else {
-                if(sender.checked) {
-                    rootVC.viewModel?.removeTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                if sender.checked {
+                    rootVC.viewModel?.removeCategoryFilter(viewModel.categories!.value[sender.tag].value)
                 } else {
-                    rootVC.viewModel?.addTimeCategoryFilter(_category: viewModel.timeCategories!.value[sender.tag].value)
+                    rootVC.viewModel?.addCategoryFilter(viewModel.categories!.value[sender.tag].value)
                 }
-                
             }
+        } else {
+            if(sender.checked) {
+                rootVC.viewModel?.removeTimeCategoryFilter(viewModel.timeCategories!.value[sender.tag].value)
+            } else {
+                rootVC.viewModel?.addTimeCategoryFilter(viewModel.timeCategories!.value[sender.tag].value)
+            }    
         }
         sender.toggleChecked()
     }

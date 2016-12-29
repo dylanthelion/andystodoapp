@@ -27,6 +27,11 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
         }
     }
     
+    // Local model. These classes are used to prevent excessive view updates, caused by frequent model changes
+    
+    var localTasks : Dynamic<[Dynamic<Task>]>?
+    var localFilteredTasks : Dynamic<[Dynamic<Task>]>?
+    
     // Filters
     
     var categoryFilters : [Category]?
@@ -45,19 +50,18 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
     // Filter
     
     func applyFilter() {
-        //print("Apply filter")
-        if(CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) && CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters)) {
+        if(CollectionHelper.IsNilOrEmpty(categoryFilters) && CollectionHelper.IsNilOrEmpty(timeCategoryFilters)) {
             clearFilter()
             return
         }
-        filteredTasks!.value.removeAll()
+        localFilteredTasks!.value.removeAll()
         filterActive = false
-        for _task in tasksToPopulate.value {
+        for task in localTasks!.value {
             var addToFilter : Bool = false
-            if _task.value.Categories != nil && !CollectionHelper.IsNilOrEmpty(_coll: categoryFilters) {
-                for _category in _task.value.Categories! {
-                    for _checkCategory in categoryFilters! {
-                        if(_category.Name! == _checkCategory.Name!) {
+            if task.value.categories != nil && !CollectionHelper.IsNilOrEmpty(categoryFilters) {
+                for category in task.value.categories! {
+                    for checkCategory in categoryFilters! {
+                        if(category.name! == checkCategory.name!) {
                             addToFilter = true
                             break
                         }
@@ -65,9 +69,9 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
                 }
             }
             
-            if _task.value.TimeCategory != nil && !CollectionHelper.IsNilOrEmpty(_coll: timeCategoryFilters) {
-                for _checkCategory in timeCategoryFilters! {
-                    if(_task.value.TimeCategory!.Name! == _checkCategory.Name!) {
+            if task.value.timeCategory != nil && !CollectionHelper.IsNilOrEmpty(timeCategoryFilters) {
+                for checkCategory in timeCategoryFilters! {
+                    if(task.value.timeCategory!.name! == checkCategory.name!) {
                         addToFilter = true
                         break
                     }
@@ -75,49 +79,50 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
             }
             
             if(addToFilter) {
-                filteredTasks!.value.append(_task)
+                localFilteredTasks!.value.append(task)
                 addToFilter = false
             }
         }
+        filteredTasks!.value = localFilteredTasks!.value
         filterActive = true
     }
     
     
     // Filter add/remove
     
-    func removeCategoryFilter(_category: Category) {
-        let indexOf = self.categoryFilters?.index(of: _category)
+    func removeCategoryFilter(_ category: Category) {
+        let indexOf = self.categoryFilters?.index(of: category)
         self.categoryFilters?.remove(at: indexOf!)
         applyFilter()
     }
     
-    func removeTimeCategoryFilter(_category: TimeCategory) {
-        let indexOf = self.timeCategoryFilters?.index(of: _category)
+    func removeTimeCategoryFilter(_ category: TimeCategory) {
+        let indexOf = self.timeCategoryFilters?.index(of: category)
         self.timeCategoryFilters?.remove(at: indexOf!)
         applyFilter()
     }
     
-    func addCategoryFilter(_category : Category) {
+    func addCategoryFilter(_ category : Category) {
         if let _ = self.categoryFilters {
-            self.categoryFilters?.append(_category)
+            self.categoryFilters?.append(category)
         } else {
-            self.categoryFilters = [_category]
+            self.categoryFilters = [category]
         }
         applyFilter()
     }
     
-    func addTimeCategoryFilter(_category: TimeCategory) {
+    func addTimeCategoryFilter(_ category: TimeCategory) {
         if let _ = self.timeCategoryFilters {
-            self.timeCategoryFilters?.append(_category)
+            self.timeCategoryFilters?.append(category)
         } else {
-            self.timeCategoryFilters = [_category]
+            self.timeCategoryFilters = [category]
         }
         applyFilter()
     }
     
     func clearFilter() {
-        //print("Clear filter")
         filterActive = false
+        localFilteredTasks!.value.removeAll()
         filteredTasks!.value.removeAll()
     }
     
@@ -133,37 +138,33 @@ class TaskFilterableViewModel : TaskCRUDTableViewModel {
         timeInterval! *= Double(units)
         let df = StandardDateFormatter()
         let upperLimit = df.date(from: df.string(from: Date().addingTimeInterval(timeInterval!)))
-        var tempTasks = _tasksToPopulate
+        let tempTasks = localTasks
         for _task in tempTasks!.value {
-            if (_task.value.StartTime! as Date) > upperLimit! {
-                let indexOf = _tasksToPopulate!.value.index(of: _task)
-                _tasksToPopulate!.value.remove(at: indexOf!)
+            if (_task.value.startTime! as Date) > upperLimit! {
+                let indexOf = localTasks!.value.index(of: _task)
+                localTasks!.value.remove(at: indexOf!)
             }
         }
         sortDisplayedTasks()
     }
     
     func sortDisplayedTasks() {
-        _tasksToPopulate!.value.sort(by: {
-            return ($0.value.StartTime! as Date) < ($1.value.StartTime! as Date)
+        localTasks!.value.sort(by: {
+            return ($0.value.startTime! as Date) < ($1.value.startTime! as Date)
         })
+        Constants.mainTaskQueue.async {
+            self._tasksToPopulate!.value = self.localTasks!.value
+        }
     }
     
     // Task CRUDs
     
-    func deleteAt(index : Int) {
-        if let _ =  _tasksToPopulate!.value[index].value.parentID {
-            _tasksToPopulate!.value.remove(at: index)
+    func deleteAt(_ index : Int) {
+        if let _ =  localTasks!.value[index].value.parentID {
+            localTasks!.value.remove(at: index)
+            sortDisplayedTasks()
         } else {
-            TaskDTO.globalManager.deleteTask(_task: _tasksToPopulate!.value[index].value)
+            TaskDTO.globalManager.deleteTask(_tasksToPopulate!.value[index].value)
         }
-    }
-    
-    func addNewTasks() {
-        // Currently no shared or default behavior
-    }
-    
-    func removeDeletedTasks() {
-        // Currently no shared or default behavior
     }
 }

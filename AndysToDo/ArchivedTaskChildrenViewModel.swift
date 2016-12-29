@@ -18,7 +18,7 @@ class ArchivedTaskChildrenViewModel {
     // Binding
     
     init() {
-        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.archivedTasks!)
+        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.allTasks!)
     }
     
     var taskDTOBond: Bond<[Dynamic<Task>]> {
@@ -36,7 +36,7 @@ class ArchivedTaskChildrenViewModel {
     
     // Model setup
     
-    func setTasks(tasks : [Dynamic<Task>]) {
+    func setTasks(_ tasks : [Dynamic<Task>]) {
         if tasksToPopulate == nil {
             tasksToPopulate = Dynamic([Dynamic<Task>]())
         }
@@ -48,7 +48,7 @@ class ArchivedTaskChildrenViewModel {
     func setup() {
         var tasksToRemove = [Dynamic<Task>]()
         for task in tasksToPopulate!.value {
-            if ArchivedTaskDTO.shared.archivedTasks!.value.index(of: task) == nil {
+            if ArchivedTaskDTO.shared.allTasks!.value.index(of: task) == nil {
                 tasksToRemove.append(task)
             }
         }
@@ -65,7 +65,7 @@ class ArchivedTaskChildrenViewModel {
     
     func sortDisplayedTasks() {
         tasksToPopulate!.value.sort(by: {
-            return ($0.value.StartTime! as Date) < ($1.value.StartTime! as Date)
+            return ($0.value.startTime! as Date) < ($1.value.startTime! as Date)
         })
     }
 }

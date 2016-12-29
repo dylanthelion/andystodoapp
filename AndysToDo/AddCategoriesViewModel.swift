@@ -17,9 +17,14 @@ class AddCategoriesViewModel {
     var categories : Dynamic<[Dynamic<Category>]>?
     var selectedCategories : Dynamic<[Dynamic<Category>]>?
     
+    // Local model. These classes are used to prevent excessive view updates, caused by frequent model changes
+    
+    private var localCats : Dynamic<[Dynamic<Category>]>?
+    
     init() {
-        self.categories = Dynamic(CategoryDTO.shared.AllCategories!.value.map({ $0 }))
-        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.AllCategories!)
+        self.localCats = Dynamic(CategoryDTO.shared.allCategories!.value.map({ $0 }))
+        sort()
+        self.categoryDTOBond.bind(dynamic: CategoryDTO.shared.allCategories!)
     }
     
     // Binding
@@ -40,7 +45,21 @@ class AddCategoriesViewModel {
     // Updates
     
     func updateCategories() {
-        categories!.value.removeAll()
-        categories!.value.append(contentsOf: CategoryDTO.shared.AllCategories!.value)
+        localCats!.value.removeAll()
+        localCats!.value.append(contentsOf: CategoryDTO.shared.allCategories!.value)
+        sort()
+    }
+    
+    // Sorting
+    
+    func sort() {
+        localCats!.value.sort(by: {
+            return ($0.value.name! < $1.value.name!)
+        })
+        if let _ = categories {
+            categories!.value = localCats!.value
+        } else {
+            categories = localCats
+        }
     }
 }

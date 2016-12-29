@@ -28,6 +28,7 @@ class AddCategoriesViewController: UIViewController {
     
     override func viewDidLoad() {
         top_y_coord = Constants.addCatVC_starting_y_coord
+        categoryModelBond.bind(dynamic: viewModel.categories!)
         addCategoryButtons()
     }
     
@@ -52,9 +53,9 @@ class AddCategoriesViewController: UIViewController {
     // View setup
     
     func addCategoryButtons() {
-        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: viewModel.categories!.value.map({ $0.value.Name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
+        let checkboxesAndLabels = CheckboxesHelper.generateCheckboxesAndLabels(titles: viewModel.categories!.value.map({ $0.value.name! }), cols: 2, viewWidth: self.view.frame.width, top_y_coord: top_y_coord!)
         for (index, checkbox) in checkboxesAndLabels.0.enumerated() {
-            checkbox.addTarget(self, action: #selector(toggle_category(sender:)), for: .touchUpInside)
+            checkbox.addTarget(self, action: #selector(toggle_category), for: .touchUpInside)
             for _cat in viewModel.selectedCategories!.value {
                 if viewModel.categories!.value[index].value == _cat.value {
                     checkbox.setImage(UIImage(named: Constants.img_checkbox_checked), for: .normal)
@@ -84,7 +85,7 @@ class AddCategoriesViewController: UIViewController {
             chkbx.removeFromSuperview()
         }
         self.visibleButtons.removeAll()
-        self.top_y_coord = Constants.filterVC_starting_y_coord
+        self.top_y_coord = Constants.addCatVC_starting_y_coord
     }
     
     func refreshLabelsAndButtons(checkboxesAndLabels : ([CheckboxButton], [UILabel])) {
@@ -96,16 +97,13 @@ class AddCategoriesViewController: UIViewController {
     
     // Handle checkboxes
     
-    func toggle_category(sender : CheckboxButton) {
-        if let rootVC = taskDelegate! as? CreateTaskParentViewController {
-            if sender.checked {
-                rootVC.viewModel?.removeCategory(_category: viewModel.categories!.value[sender.tag].value)
-            } else {
-                rootVC.viewModel?.addCategory(_category: viewModel.categories!.value[sender.tag].value)
-            }
-            sender.toggleChecked()
-        }  else {
-            print("Problem casting parent view controller")
+    func toggle_category(_ sender : CheckboxButton) {
+        let rootVC = taskDelegate! as! CreateTaskParentViewController
+        if sender.checked {
+            rootVC.viewModel?.removeCategory(viewModel.categories!.value[sender.tag].value)
+        } else {
+            rootVC.viewModel?.addCategory(viewModel.categories!.value[sender.tag].value)
         }
+        sender.toggleChecked()
     }
 }

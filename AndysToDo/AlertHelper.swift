@@ -10,11 +10,14 @@ import UIKit
 
 class AlertHelper {
     
-    class func PresentAlertController(sender : UIViewController, title: String, message: String, actions: [UIAlertAction]) {
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    class func presentAlertController(_ sender : AlertPresenter, title: String, message: String, actions: [UIAlertAction]) -> UIAlertController {
+        var senderVC = sender
+        let alertController = NotifyingAlertController(title: title, message: message, preferredStyle: .alert)
+            alertController.delegate = sender
+            senderVC.alertIsVisible = true
         for action in actions {
             alertController.addAction(action)
         }
-        sender.present(alertController, animated: true, completion: nil)
+        return alertController
     }
 }

@@ -11,7 +11,11 @@ import UIKit
 private var taskHandle : UInt8 = 0
 private var filteredHandle : UInt8 = 0
 
-class ArchiveTaskTableViewController : TaskFilterableViewController {
+class ArchiveTaskTableViewController : UITableViewController, TaskFilterableViewController {
+    
+    // View Model
+    
+    var viewModel : TaskFilterableViewModel?
     
     // Table view
     
@@ -39,7 +43,7 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
                 DispatchQueue.main.async {
-                    //print("Apply filter in view")
+                    //print("Update all in view")
                     let archiveVM = self.viewModel! as! ArchiveTaskViewModel
                     switch archiveVM.sortParam {
                     case .Date :
@@ -95,15 +99,15 @@ class ArchiveTaskTableViewController : TaskFilterableViewController {
     
     // Present didselect view
     
-    func pushChildrenTableView(_tasks : [Task]) {
-        let childVC : ArchivedTasksChildTableViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "archivedTasksChildVC") as! ArchivedTasksChildTableViewController
-        childVC.viewModel.setTasks(tasks: Dynamic.wrapArray(array: _tasks))
+    func pushChildrenTableView(_ tasks : [Task]) {
+        let childVC : ArchivedTasksChildTableViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "archivedTasksChildVC") as! ArchivedTasksChildTableViewController
+        childVC.viewModel.setTasks(Dynamic.wrapArray(array: tasks))
         self.navigationController?.pushViewController(childVC, animated: true)
     }
     
-    func pushTaskInfoView(_task : Task) {
-        let taskVC : DisplayArchivedTaskViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
-        taskVC.viewModel.setTask(newTask: _task)
+    func pushTaskInfoView(_ task : Task) {
+        let taskVC : DisplayArchivedTaskViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
+        taskVC.viewModel.setTask(task)
         self.navigationController?.pushViewController(taskVC, animated: true)
     }
 }

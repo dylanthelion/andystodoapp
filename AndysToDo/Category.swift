@@ -10,38 +10,38 @@ import Foundation
 import UIKit
 
 class  Category : Equatable {
-    var Name : String?
-    var Description : String?
+    var name : String?
+    var description : String?
     
-    init(_name : String, _description : String) {
-        Name = _name
-        Description = _description
+    init(name : String, description : String) {
+        self.name = name
+        self.description = description
     }
     
     func isValid() -> Bool {
-        return Name != nil && Description != nil
+        return name != nil && description != nil
     }
     
     static func == (lhs: Category, rhs: Category) -> Bool {
         return
-            lhs.Name! == rhs.Name!
+            lhs.name! == rhs.name!
     }
 }
 
 class TimeCategory : Category {
     
     var color : CGColor?
-    var StartOfTimeWindow : Float?
-    var EndOfTimeWindow : Float?
+    var startOfTimeWindow : Float?
+    var endOfTimeWindow : Float?
     
-    init(_name : String, _description : String, _start : Float, _end: Float, _color: CGColor?) {
-        super.init(_name: _name, _description: _description)
-        StartOfTimeWindow = _start
-        EndOfTimeWindow = _end
-        color = _color
+    init(name : String, description : String, start : Float, end: Float, color: CGColor?) {
+        super.init(name: name, description: description)
+        startOfTimeWindow = start
+        endOfTimeWindow = end
+        self.color = color
     }
     
     override func isValid() -> Bool {
-        return Name != nil && Description != nil && StartOfTimeWindow != nil && EndOfTimeWindow != nil
+        return name != nil && description != nil && startOfTimeWindow != nil && endOfTimeWindow != nil
     }
 }

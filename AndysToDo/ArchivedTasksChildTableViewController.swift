@@ -35,7 +35,7 @@ class ArchivedTasksChildTableViewController : UITableViewController {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
                 //print("Update tasks in view")
                 if self.viewModel.emptied {
-                    self.navigationController?.popViewController(animated: true)
+                    _ = self.navigationController?.popViewController(animated: true)
                 }
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -58,8 +58,8 @@ class ArchivedTasksChildTableViewController : UITableViewController {
     // View presentation
     
     func presentArchivedTask(at index : Int) {
-        let taskVC : DisplayArchivedTaskViewController = Constants.main_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
-        taskVC.viewModel.setTask(newTask: viewModel.tasksToPopulate!.value[index].value)
+        let taskVC : DisplayArchivedTaskViewController = Constants.archives_storyboard.instantiateViewController(withIdentifier: "displayArchiveVC") as! DisplayArchivedTaskViewController
+        taskVC.viewModel.setTask(viewModel.tasksToPopulate!.value[index].value)
         self.navigationController?.pushViewController(taskVC, animated: true)
     }
 }

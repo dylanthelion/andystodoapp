@@ -8,18 +8,18 @@
 
 import UIKit
 
-private let _DTO = TimeCategoryDTO()
+private let sharedDTO = TimeCategoryDTO()
 
 class TimeCategoryDTO {
     
-    var AllTimeCategories : Dynamic<[Dynamic<TimeCategory>]>?
+    var allTimeCategories : Dynamic<[Dynamic<TimeCategory>]>?
     
     init() {
         loadTimeCategories()
     }
     
     class var shared : TimeCategoryDTO {
-        return _DTO
+        return sharedDTO
     }
     
     func loadTimeCategories() {
@@ -27,33 +27,32 @@ class TimeCategoryDTO {
         
         // Until persistence is finished, load fake categories
         
-        if AllTimeCategories == nil {
-            AllTimeCategories = Dynamic(loadFakeTimeCategories())
+        if allTimeCategories == nil {
+            allTimeCategories = Dynamic(loadFakeTimeCategories())
         }
-        
     }
     
     func loadFakeTimeCategories() -> [Dynamic<TimeCategory>] {
-        let category1 = Dynamic(TimeCategory(_name: "Time Cat 1", _description: "Fake Morning", _start: 8.5, _end: 11.0, _color: UIColor.red.cgColor))
-        let category2 = Dynamic(TimeCategory(_name: "Time Cat 2", _description: "Fake Lunch Hours", _start: 12.25, _end: 13.25, _color: UIColor.green.cgColor))
-        let category3 = Dynamic(TimeCategory(_name: "Time Cat 3", _description: "Fake Afternoon", _start: 14.0, _end: 17.0, _color: UIColor.green.cgColor))
-        let category4 = Dynamic(TimeCategory(_name: "Time Cat 4", _description: "Fake evening", _start: 18.5, _end: 21.75, _color: nil))
+        let category1 = Dynamic(TimeCategory(name: "Time Cat 1", description: "Fake Morning", start: 8.5, end: 11.0, color: UIColor.red.cgColor))
+        let category2 = Dynamic(TimeCategory(name: "Time Cat 2", description: "Fake Lunch Hours", start: 12.25, end: 13.25, color: UIColor.green.cgColor))
+        let category3 = Dynamic(TimeCategory(name: "Time Cat 3", description: "Fake Afternoon", start: 14.0, end: 17.0, color: UIColor.green.cgColor))
+        let category4 = Dynamic(TimeCategory(name: "Time Cat 4", description: "Fake evening", start: 18.5, end: 21.75, color: nil))
         return [category1, category2, category3, category4]
     }
     
     // Time Category CRUD
     
-    func createNewTimeCategory(_category : TimeCategory) -> Bool {
-        if _category.isValid() {
+    func createNewTimeCategory(_ category : TimeCategory) -> Bool {
+        if category.isValid() {
             var isUnique = true
-            for _cat in AllTimeCategories!.value {
-                if _cat.value == _category {
+            for cat in allTimeCategories!.value {
+                if cat.value == category {
                     isUnique = false
                     break
                 }
             }
             if isUnique {
-                AllTimeCategories!.value.append(Dynamic(_category))
+                allTimeCategories!.value.append(Dynamic(category))
                 return true
             } else {
                 return false
@@ -63,15 +62,15 @@ class TimeCategoryDTO {
         return false
     }
     
-    func updateTimeCategory(_oldCategory : TimeCategory, _category: TimeCategory) -> Bool {
-        if _category.isValid() {
-            for _cat in AllTimeCategories!.value {
-                if _cat.value.Name == _oldCategory.Name! {
-                    _cat.value.Name = _category.Name!
-                    _cat.value.Description = _category.Description!
-                    _cat.value.StartOfTimeWindow = _category.StartOfTimeWindow
-                    _cat.value.EndOfTimeWindow = _category.EndOfTimeWindow
-                    _cat.value.color = _category.color
+    func updateTimeCategory(oldCategory : TimeCategory, newCategory: TimeCategory) -> Bool {
+        if newCategory.isValid() {
+            for cat in allTimeCategories!.value {
+                if cat.value.name == oldCategory.name! {
+                    cat.value.name = newCategory.name!
+                    cat.value.description = newCategory.description!
+                    cat.value.startOfTimeWindow = newCategory.startOfTimeWindow
+                    cat.value.endOfTimeWindow = newCategory.endOfTimeWindow
+                    cat.value.color = newCategory.color
                     return true
                 }
             }

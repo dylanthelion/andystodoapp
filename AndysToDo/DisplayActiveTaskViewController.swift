@@ -1,3 +1,4 @@
+
 //
 //  DisplayActiveTaskViewController.swift
 //  AndysToDo
@@ -55,17 +56,17 @@ class DisplayActiveTaskViewController : UIViewController {
     // UI setup
     
     func populateLabels() {
-        if let _ = viewModel.task?.value.StartTime {
-            startTime_lbl.text = TimeConverter.dateToTimeConverter(_time: viewModel.task!.value.StartTime!)
+        if let _ = viewModel.task!.value.startTime {
+            startTime_lbl.text = TimeConverter.dateToTimeConverter(viewModel.task!.value.startTime!)
         }
         
-        if let _ = viewModel.task?.value.Description {
-            description_txtView.text = viewModel.task!.value.Description!
+        if let _ = viewModel.task!.value.description {
+            description_txtView.text = viewModel.task!.value.description!
         }
     }
     
     func setupTimer() {
-        if (viewModel.task?.value.inProgress)! {
+        if viewModel.task!.value.inProgress {
             timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
         } else {
             timer?.invalidate()
@@ -73,11 +74,11 @@ class DisplayActiveTaskViewController : UIViewController {
     }
     
     func checkTask() {
-        if let _ = viewModel.task?.value.TimeCategory?.color {
-            self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.TimeCategory!.color!)
+        if let _ = viewModel.task!.value.timeCategory?.color {
+            self.view.backgroundColor = UIColor(cgColor: viewModel.task!.value.timeCategory!.color!)
         }
         if !viewModel.task!.value.inProgress {
-            self.navigationController?.popViewController(animated: true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
@@ -99,13 +100,13 @@ class DisplayActiveTaskViewController : UIViewController {
     
     @IBAction func endTask(_ sender: AnyObject) {
         if viewModel.endTask() {
-            self.navigationController?.popViewController(animated: true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
     }
     
     @IBAction func goToEdit(_ sender: AnyObject) {
         let displayInactiveTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_inactiveTask_VC_id) as! DisplayInactiveTaskViewController
-        displayInactiveTaskVC.viewModel!.setTask(newTask: viewModel.task!.value)
+        displayInactiveTaskVC.viewModel!.setTask(viewModel.task!.value)
         self.navigationController?.pushViewController(displayInactiveTaskVC, animated: true)
     }
 }

@@ -17,9 +17,11 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     
     override init() {
         super.init()
-        self.tasksToPopulate = Dynamic(ArchivedTaskDTO.shared.archivedTasks!.value.map({ $0 }))
+        self.tasksToPopulate = Dynamic(ArchivedTaskDTO.shared.allTasks!.value.map({ $0 }))
         filteredTasks = Dynamic([Dynamic<Task>]())
-        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.archivedTasks!)
+        localTasks = Dynamic(ArchivedTaskDTO.shared.allTasks!.value.map({ $0 }))
+        localFilteredTasks = Dynamic([Dynamic<Task>]())
+        self.taskDTOBond.bind(dynamic: ArchivedTaskDTO.shared.allTasks!)
         removeChildren()
         sortDisplayedTasks()
     }
@@ -31,7 +33,7 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
             return b as! Bond<[Dynamic<Task>]>
         } else {
             let b = Bond<[Dynamic<Task>]>() { [unowned self] v in
-                print("Update in view model")
+                //print("Update in view model")
                 self.setup()
             }
             objc_setAssociatedObject(self, &handle, b, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -42,8 +44,8 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     // Model setup
     
     func setup() {
-        tasksToPopulate.value.removeAll()
-        tasksToPopulate.value.append(contentsOf: ArchivedTaskDTO.shared.archivedTasks!.value)
+        localTasks!.value.removeAll()
+        localTasks!.value.append(contentsOf: ArchivedTaskDTO.shared.allTasks!.value)
         removeChildren()
         sortDisplayedTasks()
     }
@@ -51,37 +53,26 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
     // Filter children from model
     
     func removeChildren() {
-        let unwrappedTasks = RepeatableUnwrapper.removeChildren(allTasks: tasksToPopulate.value.map({ $0.value }))
-        tasksToPopulate.value = unwrappedTasks.0.map({ Dynamic($0) })
+        let unwrappedTasks = RepeatableUnwrapper.removeChildren(localTasks!.value.map({ $0.value }))
+        localTasks!.value = unwrappedTasks.0.map({ Dynamic($0) })
         childTasks = unwrappedTasks.1
     }
     
     // Table view actions
     
     func deArchive(index : Int) {
-        let _task = tasksToPopulate.value[index].value
-        if ArchivedTaskDTO.shared.deArchive(_task: _task) {
-            // handle success
-        }
-        // handle failure
+        let task = localTasks!.value[index].value
+        let _ = ArchivedTaskDTO.shared.deArchive(task)
     }
     
-    // on update
+    // CRUD
     
-    override func removeDeletedTasks() {
-        let tempTasks = tasksToPopulate
-        for _task in tempTasks.value {
-            if _task.value.parentID == nil && ArchivedTaskDTO.shared.archivedTasks!.value.index(of: _task) == nil {
-                _tasksToPopulate!.value.remove(at: _tasksToPopulate!.value.index(of: _task)!)
-            }
-        }
-    }
-    
-    override func addNewTasks() {
-        for _task in ArchivedTaskDTO.shared.archivedTasks!.value {
-            if tasksToPopulate.value.index(of: _task) == nil {
-                tasksToPopulate.value.append(_task)
-            }
+    override func deleteAt(_ index: Int) {
+        if let _ =  localTasks!.value[index].value.parentID {
+            localTasks!.value.remove(at: index)
+            sortDisplayedTasks()
+        } else {
+            ArchivedTaskDTO.shared.deleteTask(_tasksToPopulate!.value[index].value)
         }
     }
     
@@ -91,14 +82,28 @@ class ArchiveTaskViewModel : TaskFilterableViewModel {
         switch sortParam {
         case .Date:
             sortParam = .Name
-            tasksToPopulate.value.sort(by: {
-                return $0.value.Name! < $1.value.Name!
-            })
+            if filterActive {
+                localFilteredTasks!.value.sort(by: {
+                    return $0.value.name! < $1.value.name!
+                })
+            } else {
+                localTasks!.value.sort(by: {
+                    return $0.value.name! < $1.value.name!
+                })
+            }
+            
         case .Name:
             sortParam = .Date
-            tasksToPopulate.value.sort(by: {
-                return ($0.value.FinishTime! as Date) < ($1.value.FinishTime! as Date)
-            })
+            if filterActive {
+                localFilteredTasks!.value.sort(by: {
+                    return ($0.value.finishTime! as Date) < ($1.value.finishTime! as Date)
+                })
+            } else {
+                localTasks!.value.sort(by: {
+                    return ($0.value.finishTime! as Date) < ($1.value.finishTime! as Date)
+                })
+            }
         }
+        tasksToPopulate.value = localTasks!.value
     }
 }

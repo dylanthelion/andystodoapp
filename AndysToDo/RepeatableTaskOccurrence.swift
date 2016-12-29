@@ -10,29 +10,29 @@ import Foundation
 
 class RepeatableTaskOccurrence {
     
-    var UnitOfTime : RepetitionTimeCategory?
-    var UnitsPerTask : Int?
-    var TimeOfDay : Float?
-    var FirstOccurrence : NSDate?
-    var DayOfWeek : DayOfWeek?
+    var unitOfTime : RepetitionTimeCategory?
+    var unitsPerTask : Int?
+    var timeOfDay : Float?
+    var firstOccurrence : NSDate?
+    var dayOfWeek : DayOfWeek?
     
-    init(_unit : RepetitionTimeCategory, _unitCount : Int, _time : Float?, _firstOccurrence : NSDate?, _dayOfWeek: DayOfWeek?) {
-        UnitOfTime = _unit
-        UnitsPerTask = _unitCount
-        TimeOfDay = _time
-        FirstOccurrence = _firstOccurrence
-        DayOfWeek = _dayOfWeek
+    init(unit : RepetitionTimeCategory, unitCount : Int, time : Float?, firstOccurrence : NSDate?, dayOfWeek: DayOfWeek?) {
+        unitOfTime = unit
+        unitsPerTask = unitCount
+        timeOfDay = time
+        self.firstOccurrence = firstOccurrence
+        self.dayOfWeek = dayOfWeek
     }
     
     func isValid() -> Bool {
-        if let _ = UnitOfTime {
-            switch UnitOfTime! {
+        if let _ = unitOfTime {
+            switch unitOfTime! {
             case .Hourly:
-                return UnitsPerTask != nil && FirstOccurrence != nil
+                return unitsPerTask != nil && firstOccurrence != nil
             case.Daily:
-                return UnitsPerTask != nil && TimeOfDay != nil && FirstOccurrence != nil
+                return unitsPerTask != nil && timeOfDay != nil && firstOccurrence != nil
             case .Weekly:
-                return UnitsPerTask != nil && TimeOfDay != nil  && DayOfWeek != nil && FirstOccurrence != nil
+                return unitsPerTask != nil && timeOfDay != nil  && dayOfWeek != nil && firstOccurrence != nil
             }
         }
         return false

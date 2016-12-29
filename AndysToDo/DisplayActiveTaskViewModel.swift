@@ -14,7 +14,7 @@ class DisplayActiveTaskViewModel : SingleTaskViewModel {
     
     override init() {
         super.init()
-        taskDTOBond.bind(dynamic: TaskDTO.globalManager.AllTasks!)
+        taskDTOBond.bind(dynamic: TaskDTO.globalManager.allTasks!)
     }
     
     // Binding
@@ -35,8 +35,8 @@ class DisplayActiveTaskViewModel : SingleTaskViewModel {
     // Timer
     
     func updateTimer() -> String {
-        var elapsedTime = Date().timeIntervalSince(task!.value.StartTime! as Date)
-        if let check = task?.value.timeOnTask {
+        var elapsedTime = Date().timeIntervalSince(task!.value.startTime! as Date)
+        if let check = task!.value.timeOnTask {
             elapsedTime += check
         }
         let hours = String(format: "%02d", Int(elapsedTime) / Int(Constants.seconds_per_minute))
@@ -45,39 +45,37 @@ class DisplayActiveTaskViewModel : SingleTaskViewModel {
     }
     
     func pause() -> Bool {
-        if (task?.value.inProgress)! {
-            let timeToAdd : TimeInterval = Date().timeIntervalSince(task?.value.StartTime! as! Date)
-            if let _ = task?.value.timeOnTask {
-                task?.value.timeOnTask! += timeToAdd
-            } else {
-                task?.value.timeOnTask = timeToAdd
-            }
-            task?.value.StartTime = Date() as NSDate?
-            task?.value.inProgress = false
-            return TaskDTO.globalManager.updateTask(_task: task!.value)
+        if task!.value.inProgress {
+            updateTime()
+            task!.value.startTime = Date() as NSDate?
+            task!.value.inProgress = false
+            return TaskDTO.globalManager.updateTask(task!.value)
         } else {
-            task?.value.inProgress = true
-            task?.value.StartTime = Date() as NSDate?
-            return TaskDTO.globalManager.updateTask(_task: task!.value)
+            task!.value.inProgress = true
+            task!.value.startTime = Date() as NSDate?
+            return TaskDTO.globalManager.updateTask(task!.value)
         }
-        
     }
     
     func endTask() -> Bool {
-        if task!.value.inProgress {
-            let timeToAdd : TimeInterval = Date().timeIntervalSince(task?.value.StartTime! as! Date)
-            if let _ = task?.value.timeOnTask {
-                task?.value.timeOnTask! += timeToAdd
-            } else {
-                task?.value.timeOnTask = timeToAdd
-            }
-        }
-        task?.value.FinishTime = Date() as NSDate?
+        updateTime()
+        task?.value.finishTime = Date() as NSDate?
         task?.value.inProgress = false
-        if !TaskDTO.globalManager.updateTask(_task: task!.value) {
+        if !TaskDTO.globalManager.updateTask(task!.value) {
             return false
         } else {
             return true
+        }
+    }
+    
+    func updateTime() {
+        if task!.value.inProgress {
+            let timeToAdd : TimeInterval = Date().timeIntervalSince(task!.value.startTime! as Date)
+            if let _ = task?.value.timeOnTask {
+                task!.value.timeOnTask! += timeToAdd
+            } else {
+                task!.value.timeOnTask = timeToAdd
+            }
         }
     }
 }

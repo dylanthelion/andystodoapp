@@ -17,13 +17,9 @@ class AllTasksTableViewCell : UITableViewCell {
     
     @IBOutlet weak var time_lbl: UILabel!
     
-    override func awakeFromNib() {
-    
-    }
-    
-    func setTask(_task : Task) {
-        if _task.isValid() {
-            task = _task
+    func setTask(_ task : Task) {
+        if task.isValid() {
+            self.task = task
         }
     }
 }

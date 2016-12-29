@@ -11,7 +11,11 @@ import UIKit
 private var taskHandle : UInt8 = 0
 private var filteredHandle : UInt8 = 0
 
-class AllTasksViewController : TaskFilterableViewController {
+class AllTasksViewController : UITableViewController, TaskFilterableViewController {
+    
+    // View Model
+    
+    var viewModel : TaskFilterableViewModel?
     
     // Table view
     
@@ -70,8 +74,8 @@ class AllTasksViewController : TaskFilterableViewController {
     // View presentation
     
     func pushDisplayTask(at index : Int) {
-        let displayTaskVC = Constants.main_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_all_tasks_individuAL_VC_ID) as! AllTasksIndividualTaskViewController
-        displayTaskVC.viewModel!.setTask(newTask: (viewModel?.tasksToPopulate.value[index].value)!)
+        let displayTaskVC = Constants.populated_storyboard.instantiateViewController(withIdentifier: Constants.main_storyboard_all_tasks_individuAL_VC_ID) as! AllTasksIndividualTaskViewController
+        displayTaskVC.viewModel!.setTask((viewModel?.tasksToPopulate.value[index].value)!)
         self.navigationController?.pushViewController(displayTaskVC, animated: true)
     }
 }

@@ -22,22 +22,12 @@ class StandardDateFormatter : DateFormatter {
     
     func getNextMonthOccurrence(startMonth : String, startDay: String
         ) -> String {
-        let df = DateFormatter()
-        df.dateFormat = Constants.standard_month_format
-        let year : String
-        let currentMonth = Calendar.current.component(.month, from: Date())
-        let scheduledMonth = Calendar.current.component(.month, from: df.date(from: startMonth)!)
-        if currentMonth < scheduledMonth {
+        var year : String = String(Calendar.current.component(.year, from: Date()))
+        let now = Date()
+        let scheduledDate = self.date(from: "\(startMonth) \(startDay) 00:00 am \(year)")!
+        if now < (scheduledDate.addingTimeInterval(Constants.time_interval_for_next_month_occurrence)) {
             year = String(Calendar.current.component(.year, from: Date()))
-        } else if currentMonth == scheduledMonth {
-            let currentDay = Calendar.current.component(.day, from: Date())
-            let scheduledDay = Int(startDay)
-            if currentDay <= scheduledDay! {
-                year = String(Calendar.current.component(.year, from: Date()))
-            } else {
-                year = String(Calendar.current.component(.year, from: Date()) + 1)
-            }
-        } else {
+        }  else {
             year = String(Calendar.current.component(.year, from: Date()) + 1)
         }
         return year
